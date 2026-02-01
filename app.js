@@ -1,8 +1,8 @@
 const $ = (q) => document.querySelector(q);
 
 const startMenu  = $("#startMenu");
-const startBtn   = $("#startBtn");       // ★外部Start
-const dragonBtn  = $("#menuDragonBtn");  // パネル内🐉
+const startBtn   = $("#startBtn");       // topbar 🐉
+const dragonBtn  = $("#menuDragonBtn");  // panel 🐉
 const navList    = $("#navList");
 const catList    = $("#catList");
 const tagList    = $("#tagList");
@@ -27,7 +27,7 @@ function esc(s){ return String(s).replace(/[&<>"']/g, m => ({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
 }[m])); }
 
-/* ===== clock ===== */
+/* clock */
 function pad2(n){ return String(n).padStart(2,"0"); }
 function dowEN(d){
   const w = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -41,7 +41,7 @@ function tick(){
 tick();
 setInterval(tick, 1000);
 
-/* ===== menu open/close ===== */
+/* menu open/close */
 function isOpen(){ return startMenu.classList.contains("open"); }
 
 function openMenu(){
@@ -57,29 +57,23 @@ function closeMenu(){
   startBtn.setAttribute("aria-expanded","false");
   dragonBtn.setAttribute("aria-expanded","false");
 }
-function toggleMenu(){
-  isOpen() ? closeMenu() : openMenu();
-}
+function toggleMenu(){ isOpen() ? closeMenu() : openMenu(); }
 
 startBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
 dragonBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
 
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape") closeMenu();
-  if(e.altKey && e.key === "Escape") hideWindow(); // お遊び
+  if(e.altKey && e.key === "Escape") hideWindow();
 });
 
 document.addEventListener("click", (e) => {
-  // メニュー外クリックで閉じる（Startボタン・ドラゴンボタンは除外）
   if(!startMenu.contains(e.target) && !startBtn.contains(e.target) && !dragonBtn.contains(e.target)){
     closeMenu();
   }
 });
 
-/* 起動時：デスクトップ（壁紙だけ） */
-closeMenu();
-
-/* ===== window controls ===== */
+/* window controls */
 function showWindow(title, sub){
   win.classList.remove("hidden");
   winTitle.textContent = title ?? "Window";
@@ -89,14 +83,14 @@ function showWindow(title, sub){
 function hideWindow(){
   win.classList.add("hidden");
   win.classList.remove("minimized");
-  win.classList.remove("maximized");
   contentArea.innerHTML = "";
 }
 winClose.addEventListener("click", (e) => { e.preventDefault(); hideWindow(); });
 winMin.addEventListener("click", (e) => { e.preventDefault(); win.classList.toggle("minimized"); });
+// maxは見た目だけにしてるので今はトグルだけ
 winMax.addEventListener("click", (e) => { e.preventDefault(); win.classList.toggle("maximized"); });
 
-/* ===== render ===== */
+/* render */
 function renderMenu(){
   navList.innerHTML = data.nav.map(i => `
     <li><a href="${esc(i.href)}" data-view="nav:${esc(i.title)}">
@@ -130,10 +124,8 @@ function renderPosts(list){
   `).join("");
 }
 
-/* ===== app views ===== */
-function viewDesktop(){
-  hideWindow(); // デスクトップは壁紙だけ
-}
+/* views */
+function viewDesktop(){ hideWindow(); }
 function viewHome(){
   showWindow("Home", "Latest posts");
   renderPosts(data.posts);
@@ -157,24 +149,12 @@ function viewTag(tag){
   showWindow(`Tag: ${tag}`, `${list.length} posts`);
   renderPosts(list);
 }
-function viewSearch(q){
-  const query = q.trim().toLowerCase();
-  const list = !query ? data.posts : data.posts.filter(p =>
-    p.title.toLowerCase().includes(query) ||
-    p.category.toLowerCase().includes(query) ||
-    p.tags.some(t => t.toLowerCase().includes(query))
-  );
-  showWindow(`Search: ${query || "…"}`, `${list.length} hits`);
-  renderPosts(list);
-}
-
 function handleView(view){
   if(view.startsWith("nav:")){
     const name = view.slice(4);
-    if(name === "Home") return viewHome();
+    if(name === "Home") return viewDesktop();     // Desktop扱い：壁紙だけ
     if(name === "Obsidian") return viewObsidian();
     if(name === "Browser") return viewBrowser();
-    // About/Archiveなどは一旦posts
     showWindow(name, "Latest posts");
     return renderPosts(data.posts);
   }
@@ -182,30 +162,35 @@ function handleView(view){
   if(view.startsWith("tag:")) return viewTag(view.slice(4));
 }
 
-/* menu click */
+/* click: startMenu internal */
 startMenu.addEventListener("click", (e) => {
   const a = e.target.closest("a[data-view]");
   if(!a) return;
-
   e.preventDefault();
   handleView(a.dataset.view);
 });
 
-/* dock click（パネル内ショートカット） */
-startMenu.addEventListener("click", (e) => {
-  const a = e.target.closest(".dock-item[data-view]");
+/* click: top shortcuts */
+document.addEventListener("click", (e) => {
+  const a = e.target.closest(".top-ico[data-view]");
   if(!a) return;
-
   e.preventDefault();
   handleView(a.dataset.view);
 });
 
 /* search */
 menuSearch.addEventListener("input", () => {
-  viewSearch(menuSearch.value);
+  const q = menuSearch.value.trim().toLowerCase();
+  const list = !q ? data.posts : data.posts.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.category.toLowerCase().includes(q) ||
+    p.tags.some(t => t.toLowerCase().includes(q))
+  );
+  showWindow(`Search: ${q || "…"}`, `${list.length} hits`);
+  renderPosts(list);
 });
 
-/* ハッシュ遷移でも動くように */
+/* hash sync */
 function syncFromHash(){
   const h = (location.hash || "").replace(/^#/, "");
   if(!h) return;
@@ -217,5 +202,6 @@ window.addEventListener("hashchange", syncFromHash);
 
 /* init */
 renderMenu();
+closeMenu();
 viewDesktop();
 syncFromHash();
