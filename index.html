@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="wallpaper"></div>
+  <div class="wallpaper" aria-hidden="true"></div>
 
   <div class="topbar">
     <div class="topbar__left">
@@ -16,18 +16,36 @@
       <span class="workspace-dot"></span>
       <span class="workspace-dot"></span>
     </div>
+
     <div class="topbar__right">
-      <span id="clockText" class="digital-clock" aria-label="clock">--:--:--</span>
+      <div class="clock">
+        <div id="clockTime" class="clock__time">00:00:00</div>
+        <div id="clockDate" class="clock__date">1970-01-01 (Thu)</div>
+      </div>
     </div>
   </div>
 
-  <!-- Start button (Dragon) : LEFT TOP -->
-  <button id="startBtn" class="start-btn" aria-label="Start menu" aria-expanded="false">
-    <span class="start-icon">🐉</span>
-  </button>
-
-  <!-- Start menu : drops from top-left -->
+  <!-- Startメニュー（ドラゴンはパネル内左上） -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
+    <div class="start-menu__top">
+      <button id="menuDragonBtn" class="dragon-btn" aria-label="Start menu" aria-expanded="false">
+        <span class="dragon-btn__icon">🐉</span>
+        <span class="dragon-btn__label">Menu</span>
+      </button>
+
+      <div class="appdock" role="toolbar" aria-label="App shortcuts">
+        <a class="dock-item" href="#home" data-view="nav:Home" title="Desktop">
+          <span class="dock-ico">🖥️</span><span class="dock-txt">Desktop</span>
+        </a>
+        <a class="dock-item" href="#obsidian" data-view="nav:Obsidian" title="Obsidian">
+          <span class="dock-ico">🧠</span><span class="dock-txt">Obsidian</span>
+        </a>
+        <a class="dock-item" href="#browser" data-view="nav:Browser" title="Browser">
+          <span class="dock-ico">🌐</span><span class="dock-txt">Browser</span>
+        </a>
+      </div>
+    </div>
+
     <div class="start-menu__search">
       <input id="menuSearch" type="search" placeholder="Search…" />
     </div>
@@ -55,8 +73,8 @@
     </div>
   </aside>
 
-  <!-- Home screen is wallpaper only -->
-  <main class="main" aria-hidden="true"></main>
+  <!-- Home(デスクトップ)は壁紙だけ。mainは透明＆最小にする -->
+  <main class="main desktop-only" aria-label="Desktop"></main>
 
   <script src="./data.js"></script>
   <script src="./app.js"></script>

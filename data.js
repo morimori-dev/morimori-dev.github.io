@@ -1,8 +1,8 @@
 window.SITE_DATA = {
   nav: [
-    { title: "Home",   icon: "🏠", href: "#home" },
-    { title: "About",  icon: "👤", href: "#about" },
-    { title: "Archive",icon: "🗂️", href: "#archive" },
+    { title: "Home",    icon: "🏠", href: "#home" },
+    { title: "About",   icon: "👤", href: "#about" },
+    { title: "Archive", icon: "🗂️", href: "#archive" },
   ],
   categories: [
     { name: "Recon",  icon:"🛰️", count: 12 },

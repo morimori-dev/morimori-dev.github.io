@@ -1,7 +1,7 @@
 const $ = (q) => document.querySelector(q);
 
-const startBtn   = $("#startBtn");
 const startMenu  = $("#startMenu");
+const dragonBtn  = $("#menuDragonBtn");
 const navList    = $("#navList");
 const catList    = $("#catList");
 const tagList    = $("#tagList");
@@ -11,56 +11,60 @@ const contentTitle = $("#contentTitle");
 const contentSub   = $("#contentSub");
 const contentArea  = $("#contentArea");
 
-const clockText = $("#clockText");
+const clockTime = $("#clockTime");
+const clockDate = $("#clockDate");
 
 const data = window.SITE_DATA;
 
-function esc(s){
-  return String(s).replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[m]));
-}
+function esc(s){ return String(s).replace(/[&<>"']/g, m => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[m])); }
 
-/* ===== Clock ===== */
+/* ===== clock ===== */
 function pad2(n){ return String(n).padStart(2,"0"); }
-function tickClock(){
-  const d = new Date();
-  const hh = pad2(d.getHours());
-  const mm = pad2(d.getMinutes());
-  const ss = pad2(d.getSeconds());
-  clockText.textContent = `${hh}:${mm}:${ss}`;
+function dowJP(d){
+  const w = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  return w[d.getDay()];
 }
-tickClock();
-setInterval(tickClock, 1000);
+function tick(){
+  const d = new Date();
+  const t = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  const dt = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} (${dowJP(d)})`;
+  clockTime.textContent = t;
+  clockDate.textContent = dt;
+}
+tick();
+setInterval(tick, 1000);
 
-/* ===== Menu open/close ===== */
+/* ===== menu open/close ===== */
 function openMenu(){
   startMenu.classList.add("open");
-  startBtn.setAttribute("aria-expanded","true");
+  dragonBtn.setAttribute("aria-expanded","true");
   startMenu.setAttribute("aria-hidden","false");
   setTimeout(()=>menuSearch.focus(), 0);
 }
 function closeMenu(){
   startMenu.classList.remove("open");
-  startBtn.setAttribute("aria-expanded","false");
+  dragonBtn.setAttribute("aria-expanded","false");
   startMenu.setAttribute("aria-hidden","true");
 }
-
-startBtn.addEventListener("click", () => {
+dragonBtn.addEventListener("click", () => {
   startMenu.classList.contains("open") ? closeMenu() : openMenu();
 });
-
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape") closeMenu();
 });
-
 document.addEventListener("click", (e) => {
-  if(!startMenu.contains(e.target) && !startBtn.contains(e.target)){
+  // パネル外クリックで閉じる（ドラゴンボタン自体は除外）
+  if(!startMenu.contains(e.target) && !dragonBtn.contains(e.target)){
     closeMenu();
   }
 });
 
-/* ===== Render ===== */
+/* 起動時は「デスクトップっぽく」：メニューは閉じた状態 */
+closeMenu();
+
+/* ===== render ===== */
 function renderMenu(){
   navList.innerHTML = data.nav.map(i => `
     <li><a href="${esc(i.href)}" data-view="nav:${esc(i.title)}">
@@ -98,7 +102,16 @@ function renderPosts(list, title, sub){
 
 function handleView(view){
   if(view.startsWith("nav:")){
-    renderPosts(data.posts, view.slice(4), "Latest posts");
+    const name = view.slice(4);
+    if(name === "Home"){
+      renderPosts(data.posts, "Home", "Latest posts");
+    } else if(name === "Obsidian"){
+      renderPosts(data.posts.filter(p => p.tags.includes("oscp")), "Obsidian", "Notes-like view (sample)");
+    } else if(name === "Browser"){
+      renderPosts(data.posts, "Browser", "Tabs? maybe later. For now: posts.");
+    } else {
+      renderPosts(data.posts, name, "Latest posts");
+    }
     return;
   }
   if(view.startsWith("cat:")){
@@ -115,7 +128,7 @@ function handleView(view){
   }
 }
 
-/* Menu click */
+/* menu click */
 startMenu.addEventListener("click", (e) => {
   const a = e.target.closest("a[data-view]");
   if(!a) return;
@@ -123,7 +136,7 @@ startMenu.addEventListener("click", (e) => {
   handleView(a.dataset.view);
 });
 
-/* Search */
+/* search */
 menuSearch.addEventListener("input", () => {
   const q = menuSearch.value.trim().toLowerCase();
   const list = !q ? data.posts : data.posts.filter(p =>
@@ -134,6 +147,5 @@ menuSearch.addEventListener("input", () => {
   renderPosts(list, q ? `Search: ${q}` : "Home", q ? `${list.length} hits` : "Latest posts");
 });
 
-/* Init */
 renderMenu();
 renderPosts(data.posts, "Home", "Latest posts");

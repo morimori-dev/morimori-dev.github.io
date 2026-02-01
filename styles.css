@@ -7,6 +7,7 @@
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.66);
   --accent:#6aa9ff;
+  --accent2:#65f0ff;
   --shadow: 0 18px 60px rgba(0,0,0,.45);
   --radius: 18px;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -25,34 +26,31 @@ body{
   overflow:hidden;
 }
 
-/* Wallpaper
-   GitHub Pages can't read /usr/share/...
-   Copy: /usr/share/backgrounds/kali-16x9/kali4kids.png -> ./assets/kali4kids.png
-*/
+/* ===== Wallpaper ===== */
 .wallpaper{
   position:fixed; inset:0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.40)),
-    url("./assets/kali4kids.png");
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.58)),
+    url("./assets/skunk.png");
   background-size:cover;
   background-position:center;
+  filter:saturate(1.05) contrast(1.05);
   z-index:-2;
 }
 
-/* Top bar */
+/* ===== Top bar ===== */
 .topbar{
   position:fixed; left:0; right:0; top:0;
-  height:34px;
+  height:42px;
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:0 12px;
-  background: rgba(0,0,0,.25);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,.28);
+  backdrop-filter: blur(12px);
   border-bottom:1px solid rgba(255,255,255,.06);
   z-index:10;
 }
-
 .workspace-dot{
   display:inline-block; width:10px; height:10px;
   border-radius:50%;
@@ -62,50 +60,42 @@ body{
 }
 .workspace-dot.on{ background: rgba(106,169,255,.75); opacity:1; }
 
-.digital-clock{
-  font-family: var(--mono);
-  font-size:12px;
-  padding:5px 10px;
-  border-radius:999px;
-  background: rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  letter-spacing:.08em;
-  user-select:none;
-}
-
-/* Start button (moved to top-left) */
-.start-btn{
-  position:fixed;
-  left:12px;
-  top:42px; /* below topbar */
-  width:44px; height:44px;
+.clock{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  line-height:1.05;
+  padding:6px 10px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.25);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow);
-  cursor:pointer;
-  color:var(--text);
-  display:grid;
-  place-items:center;
-  z-index:20;
+  background: rgba(0,0,0,.18);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
-.start-btn:hover{ border-color: rgba(106,169,255,.35); }
-.start-icon{ font-size:20px; }
+.clock__time{
+  font-family: var(--mono);
+  font-size:16px;
+  letter-spacing:.08em;
+}
+.clock__date{
+  font-family: var(--mono);
+  font-size:11px;
+  color: var(--muted);
+  margin-top:2px;
+}
 
-/* Start menu (drops from top-left now) */
+/* ===== Start menu panel ===== */
 .start-menu{
   position:fixed;
-  left:12px;
-  top:92px; /* below start button */
-  width:min(860px, calc(100vw - 24px));
-  height:min(520px, calc(100vh - 110px));
+  left:14px;
+  top:60px; /* topbarの下 */
+  width:min(920px, calc(100vw - 28px));
+  height:min(560px, calc(100vh - 86px));
   border-radius: var(--radius);
   background: linear-gradient(180deg, var(--panel), var(--panel2));
   border:1px solid var(--stroke);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   opacity:0;
   pointer-events:none;
   transition: opacity .18s ease, transform .18s ease;
@@ -118,6 +108,73 @@ body{
   pointer-events:auto;
 }
 
+/* top row inside panel */
+.start-menu__top{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.dragon-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  cursor:pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,.20);
+}
+.dragon-btn:hover{
+  border-color: rgba(106,169,255,.35);
+  background: rgba(106,169,255,.10);
+}
+.dragon-btn__icon{ font-size:20px; }
+.dragon-btn__label{
+  font-family: var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color: var(--muted);
+}
+
+/* dock icons */
+.appdock{
+  display:flex;
+  gap:10px;
+  margin-left:4px;
+  flex:1;
+  overflow:auto;
+  padding:2px 2px;
+}
+.dock-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  text-decoration:none;
+  color: var(--text);
+  white-space:nowrap;
+}
+.dock-item:hover{
+  border-color: rgba(106,169,255,.28);
+  background: rgba(106,169,255,.10);
+}
+.dock-ico{ font-size:18px; }
+.dock-txt{
+  font-family: var(--mono);
+  font-size:12px;
+  color: var(--muted);
+}
+
+/* search row */
 .start-menu__search{
   padding:12px;
   border-bottom:1px solid rgba(255,255,255,.08);
@@ -133,10 +190,11 @@ body{
   outline:none;
 }
 
+/* columns */
 .start-menu__cols{
   display:grid;
-  grid-template-columns: 300px 1fr;
-  height: calc(100% - 56px);
+  grid-template-columns: 320px 1fr;
+  height: calc(100% - 120px); /* top+search分 */
 }
 
 .menu-col{
@@ -182,6 +240,7 @@ body{
   color: var(--muted);
 }
 
+/* right side */
 .content-col{
   overflow:auto;
   padding:14px;
@@ -223,14 +282,16 @@ body{
 }
 .card a:hover{ text-decoration:underline; }
 
-/* Main is intentionally empty (desktop-like) */
-.main{
+/* ===== Desktop-only home ===== */
+.main.desktop-only{
   position:fixed;
-  inset:34px 0 0 0;
-  pointer-events:none; /* desktop feel: only menu is interactive */
+  inset:42px 0 0 0;
+  background: transparent;
+  pointer-events:none; /* デスクトップは壁紙だけ：クリックは邪魔しない */
 }
 
-@media (max-width: 860px){
+/* responsive */
+@media (max-width: 900px){
   .start-menu__cols{ grid-template-columns: 1fr; }
   .menu-col{ border-right:none; border-bottom:1px solid rgba(255,255,255,.08); }
 }
