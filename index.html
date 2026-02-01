@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Writeups Desktop</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
@@ -74,19 +74,22 @@
   <!-- Desktop is wallpaper only -->
   <main class="main desktop-only" aria-label="Desktop"></main>
 
-  <!-- Mobile bottom tabs (app-like) -->
-  <nav class="mobile-tabs" aria-label="App tabs">
-    <button class="mtab" data-view="nav:Home" aria-label="Home" title="Home">
-      <span class="mtab__ico">🖥️</span><span class="mtab__label">Home</span>
+  <!-- Mobile left dock (Ubuntu-ish) -->
+  <nav class="mobile-dock" aria-label="App dock">
+    <button class="dock-btn" data-view="nav:Home" aria-label="Home" title="Home">
+      <span class="dock-ico">🖥️</span>
     </button>
-    <button class="mtab" data-view="nav:Writeups" aria-label="Writeups" title="Writeups">
-      <span class="mtab__ico">🌐</span><span class="mtab__label">Writeups</span>
+    <button class="dock-btn" data-view="nav:Writeups" aria-label="Writeups" title="Writeups">
+      <span class="dock-ico">🌐</span>
     </button>
-    <button class="mtab" data-view="nav:Notes" aria-label="Notes" title="Notes">
-      <span class="mtab__ico">🧠</span><span class="mtab__label">Notes</span>
+    <button class="dock-btn" data-view="nav:Notes" aria-label="Notes" title="Notes">
+      <span class="dock-ico">🧠</span>
     </button>
-    <button class="mtab" data-view="menu:open" aria-label="Search" title="Search">
-      <span class="mtab__ico">🔎</span><span class="mtab__label">Search</span>
+
+    <div class="dock-sep" aria-hidden="true"></div>
+
+    <button class="dock-btn dock-btn--menu" data-view="menu:open" aria-label="Search / Menu" title="Search / Menu">
+      <span class="dock-ico">🔎</span>
     </button>
   </nav>
 

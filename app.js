@@ -68,7 +68,6 @@ document.addEventListener("click", (e) => {
   if(startBtn && !startMenu.contains(e.target) && !startBtn.contains(e.target)){
     closeMenu();
   }
-  // mobile: outside tap closes menu too
   if(!startBtn && isMobile() && isMenuOpen() && !startMenu.contains(e.target)){
     closeMenu();
   }
@@ -291,9 +290,9 @@ startMenu.addEventListener("click", (e) => {
   handleView(a.dataset.view);
 });
 
-/* Click: mobile tabs */
+/* Click: mobile dock buttons */
 document.addEventListener("click", (e) => {
-  const b = e.target.closest(".mtab[data-view]");
+  const b = e.target.closest(".dock-btn[data-view]");
   if(!b) return;
   e.preventDefault();
   handleView(b.dataset.view);

@@ -10,6 +10,8 @@
   --radius: 18px;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --ui: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+
+  --dock-w: 64px; /* mobile dock width */
 }
 
 *{ box-sizing:border-box; }
@@ -20,10 +22,10 @@ body{
   font-family: var(--ui);
   color: var(--text);
   background: linear-gradient(180deg, var(--bg0), var(--bg1));
-  overflow:hidden; /* desktop feel */
+  overflow:hidden;
 }
 
-/* Wallpaper */
+/* Wallpaper (PC default: cover) */
 .wallpaper{
   position:fixed; inset:0;
   background:
@@ -35,7 +37,7 @@ body{
   z-index:-2;
 }
 
-/* Top bar */
+/* ===== PC Topbar ===== */
 .topbar{
   position:fixed; left:0; right:0; top:0;
   height:42px;
@@ -53,8 +55,6 @@ body{
   align-items:center;
   gap:10px;
 }
-
-/* 🐉 Start (icon only) */
 .start-top-btn{
   display:grid;
   place-items:center;
@@ -73,7 +73,6 @@ body{
 }
 .start-top-btn__icon{ font-size:18px; }
 
-/* Quick apps */
 .top-shortcuts{
   display:flex;
   align-items:center;
@@ -121,7 +120,7 @@ body{
   margin-top:2px;
 }
 
-/* Start menu */
+/* ===== Start menu ===== */
 .start-menu{
   position:fixed;
   left:14px;
@@ -146,7 +145,6 @@ body{
   pointer-events:auto;
 }
 
-/* Search is the very top */
 .start-menu__search{
   padding:12px;
   border-bottom:1px solid rgba(255,255,255,.08);
@@ -164,14 +162,12 @@ body{
   color:var(--text);
   outline:none;
 }
-.start-menu__search input::placeholder{
-  color: rgba(255,255,255,.45);
-}
+.start-menu__search input::placeholder{ color: rgba(255,255,255,.45); }
 
 .start-menu__cols{
   display:grid;
   grid-template-columns: 340px 1fr;
-  height: calc(100% - 70px); /* search bar height */
+  height: calc(100% - 70px);
 }
 
 .menu-col{
@@ -186,10 +182,7 @@ body{
   color: var(--muted);
   margin:10px 4px 8px;
 }
-.menu-list{
-  list-style:none;
-  padding:0; margin:0;
-}
+.menu-list{ list-style:none; padding:0; margin:0; }
 .menu-list li{ margin:6px 0; }
 .menu-list a{
   display:flex;
@@ -200,7 +193,7 @@ body{
   color: var(--text);
   text-decoration:none;
   border:1px solid rgba(255,255,255,.06);
-  background: rgba(255,255,255,.05); /* ★コントラストUP */
+  background: rgba(255,255,255,.05);
 }
 .menu-list a:hover{
   border-color: rgba(106,169,255,.28);
@@ -217,12 +210,9 @@ body{
   color: var(--muted);
 }
 
-.content-col{
-  overflow:auto;
-  padding:14px;
-}
+.content-col{ overflow:auto; padding:14px; }
 
-/* Window UI (clean titlebar) */
+/* Window */
 .window{
   border-radius: 16px;
   border:1px solid rgba(255,255,255,.12);
@@ -245,10 +235,6 @@ body{
   backdrop-filter: blur(10px);
   user-select:none;
 }
-.window__titlebar--clean{
-  justify-content:flex-start;
-}
-
 .window__titles{
   display:flex;
   flex-direction:column;
@@ -271,13 +257,9 @@ body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
-
 .window__body{ padding:12px; overflow:auto; }
 
-.content-area{
-  display:grid;
-  gap:10px;
-}
+.content-area{ display:grid; gap:10px; }
 .card{
   border-radius: 14px;
   border:1px solid rgba(255,255,255,.10);
@@ -300,16 +282,131 @@ body{
   pointer-events:none;
 }
 
-/* Mobile pull-to-refresh helper */
+/* Mobile dock hidden on PC */
+.mobile-dock{ display:none; }
 .mobile-scroll-spacer{ display:none; }
 
-/* ===== Mobile tuning ===== */
+/* ===== Mobile ===== */
 @media (max-width: 900px){
+  .topbar{ display:none; }
+  .main.desktop-only{ inset:0; }
+
   body{
     overflow:auto;
-    overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+
+    /* Dock分の余白を左に確保 */
+    padding-left: calc(var(--dock-w) + 10px);
+  }
+
+  /* Wallpaper: 見切れゼロ + 余白はぼかしcover */
+  .wallpaper{
+    background:none;
+    filter:none;
+  }
+  .wallpaper::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.70)),
+      url("./assets/skunk.png");
+    background-size:cover;
+    background-position:center;
+    filter: blur(22px) saturate(1.1) contrast(1.05);
+    transform: scale(1.10);
+    opacity:.70;
+    z-index:-2;
+  }
+  .wallpaper::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.70)),
+      url("./assets/skunk.png");
+    background-size:contain;
+    background-position:center;
+    background-repeat:no-repeat;
+    z-index:-1;
+  }
+
+  /* Start menu: Dockの右側から開く */
+  .start-menu{
+    left: calc(var(--dock-w) + 14px);
+    right: 10px;
+    width:auto;
+
+    top: calc(12px + env(safe-area-inset-top));
+    height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 18px;
+  }
+
+  .start-menu__cols{
+    grid-template-columns: 1fr;
+    min-height: calc(100% - 70px);
+  }
+  .content-col{ display:none; }
+  .start-menu.has-window .content-col{ display:block; }
+
+  .menu-col{
+    border-right:none;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    max-height: 70vh;
+  }
+  .start-menu.has-window .menu-col{ max-height: 40vh; }
+
+  /* Ubuntu-ish vertical dock */
+  .mobile-dock{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+
+    position:fixed;
+    left: 10px;
+    top: calc(10px + env(safe-area-inset-top));
+    bottom: calc(10px + env(safe-area-inset-bottom));
+
+    width: var(--dock-w);
+    padding: 10px 8px;
+
+    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.30);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+
+    z-index: 9999;
+    transform: translateZ(0);
+    box-shadow: 0 18px 60px rgba(0,0,0,.40);
+  }
+
+  .dock-btn{
+    appearance:none;
+    border:none;
+    width: 100%;
+    height: 52px;
+    border-radius: 16px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+  }
+  .dock-btn:active{
+    transform: translateY(1px);
+    background: rgba(106,169,255,.14);
+    border-color: rgba(106,169,255,.25);
+  }
+  .dock-ico{ font-size:22px; line-height:1; }
+
+  .dock-sep{
+    height: 1px;
+    background: rgba(255,255,255,.12);
+    margin: 6px 4px;
+    border-radius: 999px;
   }
 
   .mobile-scroll-spacer{
@@ -317,45 +414,5 @@ body{
     height: 120vh;
     opacity:0;
     pointer-events:none;
-  }
-
-  .top-ico{
-    width:28px;
-    height:28px;
-    border-radius:10px;
-    font-size:15px;
-  }
-  .clock__time{ font-size:14px; }
-  .clock__date{ font-size:10px; }
-
-  .start-menu{
-    left:10px;
-    right:10px;
-    width:auto;
-    top:54px;
-    height: calc(100vh - 66px);
-    border-radius: 16px;
-  }
-
-  /* ★スマホは 1カラム */
-  .start-menu__cols{
-    grid-template-columns: 1fr;
-    height:auto;
-    min-height: calc(100% - 70px);
-  }
-
-  /* ★ウィンドウが無いときは content-col を隠して空白を消す */
-  .content-col{ display:none; }
-  .start-menu.has-window .content-col{ display:block; }
-
-  .menu-col{
-    border-right:none;
-    border-bottom:1px solid rgba(255,255,255,.08);
-    max-height: 70vh; /* メニューが主役 */
-  }
-
-  /* ウィンドウ表示時はメニュー高さを少し抑える */
-  .start-menu.has-window .menu-col{
-    max-height: 40vh;
   }
 }
