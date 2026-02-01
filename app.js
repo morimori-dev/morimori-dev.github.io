@@ -7,9 +7,16 @@ const catList    = $("#catList");
 const tagList    = $("#tagList");
 const menuSearch = $("#menuSearch");
 
-const contentTitle = $("#contentTitle");
-const contentSub   = $("#contentSub");
-const contentArea  = $("#contentArea");
+const win       = $("#win");
+const winTitle  = $("#winTitle");
+const winSub    = $("#winSub");
+const winHint   = $("#winHint");
+const winBody   = $("#winBody");
+const contentArea = $("#contentArea");
+
+const winMin   = $("#winMin");
+const winMax   = $("#winMax");
+const winClose = $("#winClose");
 
 const clockTime = $("#clockTime");
 const clockDate = $("#clockDate");
@@ -22,16 +29,14 @@ function esc(s){ return String(s).replace(/[&<>"']/g, m => ({
 
 /* ===== clock ===== */
 function pad2(n){ return String(n).padStart(2,"0"); }
-function dowJP(d){
+function dowEN(d){
   const w = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   return w[d.getDay()];
 }
 function tick(){
   const d = new Date();
-  const t = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-  const dt = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} (${dowJP(d)})`;
-  clockTime.textContent = t;
-  clockDate.textContent = dt;
+  clockTime.textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  clockDate.textContent = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} (${dowEN(d)})`;
 }
 tick();
 setInterval(tick, 1000);
@@ -53,16 +58,43 @@ dragonBtn.addEventListener("click", () => {
 });
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape") closeMenu();
+  // お遊び：Alt+Escapeでウィンドウ閉じ（ヒントに出してる）
+  if(e.altKey && e.key === "Escape") hideWindow();
 });
 document.addEventListener("click", (e) => {
-  // パネル外クリックで閉じる（ドラゴンボタン自体は除外）
   if(!startMenu.contains(e.target) && !dragonBtn.contains(e.target)){
     closeMenu();
   }
 });
 
-/* 起動時は「デスクトップっぽく」：メニューは閉じた状態 */
+/* 起動時はデスクトップ：メニューもウィンドウも閉じ */
 closeMenu();
+
+/* ===== window controls ===== */
+function showWindow(title, sub){
+  win.classList.remove("hidden");
+  winTitle.textContent = title ?? "Window";
+  winSub.textContent = sub ?? "";
+  winHint.textContent = "ALT+ESC";
+}
+function hideWindow(){
+  win.classList.add("hidden");
+  win.classList.remove("minimized");
+  win.classList.remove("maximized");
+  contentArea.innerHTML = "";
+}
+winClose.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideWindow();
+});
+winMin.addEventListener("click", (e) => {
+  e.preventDefault();
+  win.classList.toggle("minimized");
+});
+winMax.addEventListener("click", (e) => {
+  e.preventDefault();
+  win.classList.toggle("maximized");
+});
 
 /* ===== render ===== */
 function renderMenu(){
@@ -87,44 +119,74 @@ function renderMenu(){
   `).join("");
 }
 
-function renderPosts(list, title, sub){
-  contentTitle.textContent = title;
-  contentSub.textContent   = sub;
+function renderPosts(list){
   contentArea.innerHTML = list.map(p => `
     <div class="card">
       <div class="meta">${esc(p.date)} · ${esc(p.category)} · ${p.tags.map(esc).join(", ")}</div>
-      <div style="margin-top:6px;font-size:16px;font-weight:700;">
+      <div style="margin-top:6px;font-size:16px;font-weight:800;">
         <a href="${esc(p.href)}">${esc(p.title)}</a>
       </div>
     </div>
   `).join("");
 }
 
+/* それっぽい “アプリ別” ビュー */
+function viewDesktop(){
+  // デスクトップは壁紙だけ、なのでウィンドウを閉じる
+  hideWindow();
+}
+function viewObsidian(){
+  // 仮：oscpタグ中心。将来は「ノート一覧＋本文」二ペインにできる
+  const list = data.posts.filter(p => p.tags.some(t => t.toLowerCase() === "oscp"));
+  showWindow("Obsidian", "Vault: Notes (sample)");
+  renderPosts(list.length ? list : data.posts);
+}
+function viewBrowser(){
+  // 仮：最新投稿をタブっぽく見せる…の第一歩として普通にリスト
+  showWindow("Browser", "New tab: Latest posts");
+  renderPosts(data.posts);
+}
+function viewHome(){
+  showWindow("Home", "Latest posts");
+  renderPosts(data.posts);
+}
+
+function viewCategory(cat){
+  const list = data.posts.filter(p => p.category === cat);
+  showWindow(`Category: ${cat}`, `${list.length} posts`);
+  renderPosts(list);
+}
+function viewTag(tag){
+  const list = data.posts.filter(p => p.tags.includes(tag));
+  showWindow(`Tag: ${tag}`, `${list.length} posts`);
+  renderPosts(list);
+}
+function viewSearch(q){
+  const query = q.trim().toLowerCase();
+  const list = !query ? data.posts : data.posts.filter(p =>
+    p.title.toLowerCase().includes(query) ||
+    p.category.toLowerCase().includes(query) ||
+    p.tags.some(t => t.toLowerCase().includes(query))
+  );
+  showWindow(`Search: ${query || "…"}`, `${list.length} hits`);
+  renderPosts(list);
+}
+
 function handleView(view){
   if(view.startsWith("nav:")){
     const name = view.slice(4);
-    if(name === "Home"){
-      renderPosts(data.posts, "Home", "Latest posts");
-    } else if(name === "Obsidian"){
-      renderPosts(data.posts.filter(p => p.tags.includes("oscp")), "Obsidian", "Notes-like view (sample)");
-    } else if(name === "Browser"){
-      renderPosts(data.posts, "Browser", "Tabs? maybe later. For now: posts.");
-    } else {
-      renderPosts(data.posts, name, "Latest posts");
-    }
-    return;
+    if(name === "Home") return viewHome();
+    if(name === "Obsidian") return viewObsidian();
+    if(name === "Browser") return viewBrowser();
+    // About/Archiveなどはとりあえず投稿一覧で
+    showWindow(name, "Latest posts");
+    return renderPosts(data.posts);
   }
   if(view.startsWith("cat:")){
-    const cat = view.slice(4);
-    const list = data.posts.filter(p => p.category === cat);
-    renderPosts(list, `Category: ${cat}`, `${list.length} posts`);
-    return;
+    return viewCategory(view.slice(4));
   }
   if(view.startsWith("tag:")){
-    const tag = view.slice(4);
-    const list = data.posts.filter(p => p.tags.includes(tag));
-    renderPosts(list, `Tag: ${tag}`, `${list.length} posts`);
-    return;
+    return viewTag(view.slice(4));
   }
 }
 
@@ -138,14 +200,20 @@ startMenu.addEventListener("click", (e) => {
 
 /* search */
 menuSearch.addEventListener("input", () => {
-  const q = menuSearch.value.trim().toLowerCase();
-  const list = !q ? data.posts : data.posts.filter(p =>
-    p.title.toLowerCase().includes(q) ||
-    p.category.toLowerCase().includes(q) ||
-    p.tags.some(t => t.toLowerCase().includes(q))
-  );
-  renderPosts(list, q ? `Search: ${q}` : "Home", q ? `${list.length} hits` : "Latest posts");
+  viewSearch(menuSearch.value);
 });
 
+/* ハッシュ遷移（#home #obsidian #browser）でも動くように */
+function syncFromHash(){
+  const h = (location.hash || "").replace(/^#/, "");
+  if(!h) return;
+  if(h === "home") return viewDesktop();
+  if(h === "obsidian") return viewObsidian();
+  if(h === "browser") return viewBrowser();
+}
+window.addEventListener("hashchange", syncFromHash);
+
+/* init */
 renderMenu();
-renderPosts(data.posts, "Home", "Latest posts");
+viewDesktop();      // 最初は壁紙だけ（Home=Desktop）
+syncFromHash();     // 直リンク対応

@@ -68,17 +68,32 @@
       </nav>
 
       <section class="content-col">
-        <div class="content-head">
-          <div class="content-title" id="contentTitle">Home</div>
-          <div class="content-sub" id="contentSub">Latest posts</div>
-        </div>
+        <!-- 右ペイン：ウィンドウUI -->
+        <div id="win" class="window hidden" aria-label="Window">
+          <div class="window__titlebar">
+            <div class="window__controls" aria-label="Window controls">
+              <button id="winMin" class="winbtn min" aria-label="Minimize" title="Minimize">—</button>
+              <button id="winMax" class="winbtn max" aria-label="Maximize" title="Maximize">▢</button>
+              <button id="winClose" class="winbtn close" aria-label="Close" title="Close">×</button>
+            </div>
 
-        <div id="contentArea" class="content-area"></div>
+            <div class="window__titles">
+              <div id="winTitle" class="window__title">Desktop</div>
+              <div id="winSub" class="window__sub">Ready.</div>
+            </div>
+
+            <div class="window__hint" id="winHint">ALT+ESC</div>
+          </div>
+
+          <div id="winBody" class="window__body">
+            <div id="contentArea" class="content-area"></div>
+          </div>
+        </div>
       </section>
     </div>
   </aside>
 
-  <!-- Home(デスクトップ)は壁紙だけ。mainは透明＆最小にする -->
+  <!-- Home(デスクトップ)は壁紙だけ -->
   <main class="main desktop-only" aria-label="Desktop"></main>
 
   <script src="./data.js"></script>
