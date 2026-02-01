@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kali Desktop Blog</title>
+  <title>Writeups Desktop</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <div class="wallpaper" aria-hidden="true"></div>
 
-  <!-- htmlproofer対策：#home / #obsidian / #browser の受け皿 -->
+  <!-- htmlproofer対策：page anchors -->
   <div id="home" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
-  <div id="obsidian" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
-  <div id="browser" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
+  <div id="writeups" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
+  <div id="notes" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
 
   <div class="topbar">
     <div class="topbar__left">
-      <!-- 🐉だけのStart（文字なし） -->
+      <!-- 🐉 only -->
       <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false" title="Menu">
         <span class="start-top-btn__icon">🐉</span>
       </button>
 
-      <!-- 点々の代わり：トップバーにアプリショートカット -->
+      <!-- Quick apps: window-only -->
       <div class="top-shortcuts" role="toolbar" aria-label="Quick apps">
         <a class="top-ico" href="#home" data-view="nav:Home" title="Desktop" aria-label="Desktop">🖥️</a>
-        <a class="top-ico" href="#obsidian" data-view="nav:Obsidian" title="Obsidian" aria-label="Obsidian">🧠</a>
-        <a class="top-ico" href="#browser" data-view="nav:Browser" title="Browser" aria-label="Browser">🌐</a>
+        <a class="top-ico" href="#notes" data-view="nav:Notes" title="Notes" aria-label="Notes">🧠</a>
+        <a class="top-ico" href="#writeups" data-view="nav:Writeups" title="Writeups" aria-label="Writeups">🌐</a>
       </div>
     </div>
 
@@ -37,25 +37,13 @@
     </div>
   </div>
 
-  <!-- Startメニュー（パネル内左上の🐉は「閉じる/開く」トグル） -->
+  <!-- Start Menu -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
     <div class="start-menu__top">
       <button id="menuDragonBtn" class="dragon-btn" aria-label="Toggle menu" aria-expanded="false" title="Toggle">
         <span class="dragon-btn__icon">🐉</span>
         <span class="dragon-btn__label">Menu</span>
       </button>
-
-      <div class="appdock" role="toolbar" aria-label="App shortcuts">
-        <a class="dock-item" href="#home" data-view="nav:Home" title="Desktop">
-          <span class="dock-ico">🖥️</span><span class="dock-txt">Desktop</span>
-        </a>
-        <a class="dock-item" href="#obsidian" data-view="nav:Obsidian" title="Obsidian">
-          <span class="dock-ico">🧠</span><span class="dock-txt">Obsidian</span>
-        </a>
-        <a class="dock-item" href="#browser" data-view="nav:Browser" title="Browser">
-          <span class="dock-ico">🌐</span><span class="dock-txt">Browser</span>
-        </a>
-      </div>
     </div>
 
     <div class="start-menu__search">
@@ -67,7 +55,7 @@
         <div class="menu-title">Navigation</div>
         <ul id="navList" class="menu-list"></ul>
 
-        <div class="menu-title">Categories</div>
+        <div class="menu-title">Writeup Collections</div>
         <ul id="catList" class="menu-list"></ul>
 
         <div class="menu-title">Tags</div>
@@ -75,6 +63,7 @@
       </nav>
 
       <section class="content-col">
+        <!-- Window UI -->
         <div id="win" class="window hidden" aria-label="Window">
           <div class="window__titlebar">
             <div class="window__controls" aria-label="Window controls">
@@ -99,7 +88,11 @@
     </div>
   </aside>
 
+  <!-- Desktop is wallpaper only -->
   <main class="main desktop-only" aria-label="Desktop"></main>
+
+  <!-- Mobile pull-to-refresh helper: gives a bit of scrollable space -->
+  <div class="mobile-scroll-spacer" aria-hidden="true"></div>
 
   <script src="./data.js"></script>
   <script src="./app.js"></script>

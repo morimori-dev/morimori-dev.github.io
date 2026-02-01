@@ -2,16 +2,16 @@ const $ = (q) => document.querySelector(q);
 
 const startMenu  = $("#startMenu");
 const startBtn   = $("#startBtn");       // topbar 🐉
-const dragonBtn  = $("#menuDragonBtn");  // panel 🐉
+const dragonBtn  = $("#menuDragonBtn");  // menu 🐉
 const navList    = $("#navList");
 const catList    = $("#catList");
 const tagList    = $("#tagList");
 const menuSearch = $("#menuSearch");
 
-const win       = $("#win");
-const winTitle  = $("#winTitle");
-const winSub    = $("#winSub");
-const winHint   = $("#winHint");
+const win        = $("#win");
+const winTitle   = $("#winTitle");
+const winSub     = $("#winSub");
+const winHint    = $("#winHint");
 const contentArea = $("#contentArea");
 
 const winMin   = $("#winMin");
@@ -27,7 +27,7 @@ function esc(s){ return String(s).replace(/[&<>"']/g, m => ({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
 }[m])); }
 
-/* clock */
+/* ===== Clock ===== */
 function pad2(n){ return String(n).padStart(2,"0"); }
 function dowEN(d){
   const w = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -41,8 +41,8 @@ function tick(){
 tick();
 setInterval(tick, 1000);
 
-/* menu open/close */
-function isOpen(){ return startMenu.classList.contains("open"); }
+/* ===== Menu open/close ===== */
+function isMenuOpen(){ return startMenu.classList.contains("open"); }
 
 function openMenu(){
   startMenu.classList.add("open");
@@ -57,7 +57,7 @@ function closeMenu(){
   startBtn.setAttribute("aria-expanded","false");
   dragonBtn.setAttribute("aria-expanded","false");
 }
-function toggleMenu(){ isOpen() ? closeMenu() : openMenu(); }
+function toggleMenu(){ isMenuOpen() ? closeMenu() : openMenu(); }
 
 startBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
 dragonBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
@@ -73,7 +73,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* window controls */
+/* ===== Window controls ===== */
 function showWindow(title, sub){
   win.classList.remove("hidden");
   winTitle.textContent = title ?? "Window";
@@ -83,14 +83,158 @@ function showWindow(title, sub){
 function hideWindow(){
   win.classList.add("hidden");
   win.classList.remove("minimized");
+  win.classList.remove("maximized");
   contentArea.innerHTML = "";
 }
+
 winClose.addEventListener("click", (e) => { e.preventDefault(); hideWindow(); });
 winMin.addEventListener("click", (e) => { e.preventDefault(); win.classList.toggle("minimized"); });
-// maxは見た目だけにしてるので今はトグルだけ
 winMax.addEventListener("click", (e) => { e.preventDefault(); win.classList.toggle("maximized"); });
 
-/* render */
+/* ===== Render helpers ===== */
+function renderCards(list){
+  contentArea.innerHTML = list.map(p => `
+    <div class="card">
+      <div class="meta">${esc(p.date)} · ${esc(p.section)} · ${esc(p.collection)} · ${p.tags.map(esc).join(", ")}</div>
+      <div style="margin-top:6px;font-size:16px;font-weight:800;">
+        <a href="${esc(p.href)}">${esc(p.title)}</a>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderFolderGrid(items, title, subtitle){
+  showWindow(title, subtitle);
+  contentArea.innerHTML = items.map(it => `
+    <div class="card">
+      <div class="meta">${esc(it.meta || "")}</div>
+      <div style="margin-top:6px;font-size:16px;font-weight:900;">
+        <a href="${esc(it.href)}" data-view="${esc(it.view)}">${esc(it.icon || "📁")} ${esc(it.title)}</a>
+      </div>
+      <div style="margin-top:6px;color:rgba(255,255,255,.70);font-size:13px;">
+        ${esc(it.desc || "")}
+      </div>
+    </div>
+  `).join("");
+}
+
+/* ===== Views ===== */
+function viewDesktop(){
+  hideWindow(); // wallpaper only
+}
+
+function viewWriteups(){
+  // landing (career-friendly)
+  const items = [
+    { icon:"🧱", title:"Hack The Box (HTB)", view:"cat:HTB", href:"#cat/HTB", meta:"Writeups", desc:"Machines & challenges with clear attack chains." },
+    { icon:"🧩", title:"TryHackMe (THM)", view:"cat:THM", href:"#cat/THM", meta:"Writeups", desc:"Learning paths & rooms (structured notes + exploitation)." },
+    { icon:"🏋️", title:"Proving Grounds (PG)", view:"cat:Proving%20Grounds", href:"#cat/Proving%20Grounds", meta:"Writeups", desc:"OffSec-style practice with exam-aligned workflows." },
+    { icon:"⛓️", title:"Attack Chains", view:"cat:Attack%20Chains", href:"#cat/Attack%20Chains", meta:"Writeups", desc:"Initial access → privesc → pivot (reusable patterns)." },
+    { icon:"🧬", title:"Active Directory", view:"cat:Active%20Directory", href:"#cat/Active%20Directory", meta:"Writeups", desc:"Kerberos, LDAP, ACLs, cert abuse—organized by technique." },
+  ];
+  renderFolderGrid(items, "Writeups", "HTB / THM / Proving Grounds + career-oriented collections");
+}
+
+function viewNotes(){
+  const items = [
+    { icon:"📌", title:"Cheatsheets", view:"cat:Cheatsheets", href:"#cat/Cheatsheets", meta:"Notes", desc:"Command snippets & one-liners (fast recall)." },
+    { icon:"🧭", title:"Methodology", view:"cat:Methodology", href:"#cat/Methodology", meta:"Notes", desc:"Enumeration → hypothesis → validation (repeatable process)." },
+    { icon:"🛠️", title:"Tooling", view:"cat:Tooling", href:"#cat/Tooling", meta:"Notes", desc:"Burp, nmap, BloodHound, Certipy, ligolo-ng, etc." },
+  ];
+  renderFolderGrid(items, "Notes", "Your Obsidian-style knowledge base (export-friendly)");
+}
+
+function viewBlog(){
+  const items = [
+    { icon:"🔬", title:"Deep Dives", view:"cat:Deep%20Dives", href:"#cat/Deep%20Dives", meta:"Blog", desc:"One topic, deeply explained with examples." },
+    { icon:"🧾", title:"Postmortems", view:"cat:Postmortems", href:"#cat/Postmortems", meta:"Blog", desc:"What failed, why, and the improved approach." },
+  ];
+  renderFolderGrid(items, "Blog", "Long-form technical writing");
+}
+
+function viewProjects(){
+  showWindow("Projects", "Tools, scripts, and infra you built");
+  const list = data.posts.filter(p => p.section === "Projects");
+  renderCards(list);
+}
+
+function viewResume(){
+  showWindow("Resume", "A fast recruiter-friendly snapshot");
+  contentArea.innerHTML = `
+    <div class="card">
+      <div class="meta">Career</div>
+      <div style="margin-top:6px;font-size:16px;font-weight:900;">📄 Resume</div>
+      <div style="margin-top:8px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.5;">
+        Add your resume links here (PDF + LinkedIn).
+        This section is intentionally simple and scannable.
+      </div>
+    </div>
+  `;
+}
+
+function viewAbout(){
+  showWindow("About", "Who you are, what you do, and what you’re looking for");
+  contentArea.innerHTML = `
+    <div class="card">
+      <div class="meta">About</div>
+      <div style="margin-top:6px;font-size:16px;font-weight:900;">👋 About this site</div>
+      <div style="margin-top:8px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.6;">
+        A desktop-themed portfolio for security writeups (HTB/THM/PG),
+        technique notes, and career-oriented case studies.
+      </div>
+    </div>
+  `;
+}
+
+function viewContact(){
+  showWindow("Contact", "Links & handles");
+  contentArea.innerHTML = `
+    <div class="card">
+      <div class="meta">Contact</div>
+      <div style="margin-top:6px;font-size:16px;font-weight:900;">✉️ Contact</div>
+      <div style="margin-top:8px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.6;">
+        Add: Email, GitHub, LinkedIn, X, etc.
+      </div>
+    </div>
+  `;
+}
+
+/* category/tag filters */
+function viewCollection(name){
+  const list = data.posts.filter(p => p.collection === name);
+  showWindow(name, `${list.length} items`);
+  renderCards(list);
+}
+function viewTag(tag){
+  const list = data.posts.filter(p => p.tags.includes(tag));
+  showWindow(`#${tag}`, `${list.length} items`);
+  renderCards(list);
+}
+
+/* ===== Routing ===== */
+function handleNav(name){
+  // Top-level nav
+  if(name === "Home") return viewDesktop();
+  if(name === "Writeups") return viewWriteups();
+  if(name === "Notes") return viewNotes();
+  if(name === "Blog") return viewBlog();
+  if(name === "Projects") return viewProjects();
+  if(name === "Resume") return viewResume();
+  if(name === "About") return viewAbout();
+  if(name === "Contact") return viewContact();
+
+  // fallback
+  showWindow(name, "Latest");
+  renderCards(data.posts);
+}
+
+function handleView(view){
+  if(view.startsWith("nav:")) return handleNav(view.slice(4));
+  if(view.startsWith("cat:")) return viewCollection(decodeURIComponent(view.slice(4)));
+  if(view.startsWith("tag:")) return viewTag(decodeURIComponent(view.slice(4)));
+}
+
+/* ===== Menu lists ===== */
 function renderMenu(){
   navList.innerHTML = data.nav.map(i => `
     <li><a href="${esc(i.href)}" data-view="nav:${esc(i.title)}">
@@ -98,7 +242,7 @@ function renderMenu(){
     </a></li>
   `).join("");
 
-  catList.innerHTML = data.categories.map(c => `
+  catList.innerHTML = data.collections.map(c => `
     <li><a href="#cat/${encodeURIComponent(c.name)}" data-view="cat:${esc(c.name)}">
       <span>${esc(c.icon || "📁")}</span><span>${esc(c.name)}</span>
       <span class="badge">${esc(c.count)}</span>
@@ -113,56 +257,7 @@ function renderMenu(){
   `).join("");
 }
 
-function renderPosts(list){
-  contentArea.innerHTML = list.map(p => `
-    <div class="card">
-      <div class="meta">${esc(p.date)} · ${esc(p.category)} · ${p.tags.map(esc).join(", ")}</div>
-      <div style="margin-top:6px;font-size:16px;font-weight:800;">
-        <a href="${esc(p.href)}">${esc(p.title)}</a>
-      </div>
-    </div>
-  `).join("");
-}
-
-/* views */
-function viewDesktop(){ hideWindow(); }
-function viewHome(){
-  showWindow("Home", "Latest posts");
-  renderPosts(data.posts);
-}
-function viewObsidian(){
-  const list = data.posts.filter(p => p.tags.some(t => t.toLowerCase() === "oscp"));
-  showWindow("Obsidian", "Vault: Notes (sample)");
-  renderPosts(list.length ? list : data.posts);
-}
-function viewBrowser(){
-  showWindow("Browser", "New tab: Latest posts");
-  renderPosts(data.posts);
-}
-function viewCategory(cat){
-  const list = data.posts.filter(p => p.category === cat);
-  showWindow(`Category: ${cat}`, `${list.length} posts`);
-  renderPosts(list);
-}
-function viewTag(tag){
-  const list = data.posts.filter(p => p.tags.includes(tag));
-  showWindow(`Tag: ${tag}`, `${list.length} posts`);
-  renderPosts(list);
-}
-function handleView(view){
-  if(view.startsWith("nav:")){
-    const name = view.slice(4);
-    if(name === "Home") return viewDesktop();     // Desktop扱い：壁紙だけ
-    if(name === "Obsidian") return viewObsidian();
-    if(name === "Browser") return viewBrowser();
-    showWindow(name, "Latest posts");
-    return renderPosts(data.posts);
-  }
-  if(view.startsWith("cat:")) return viewCategory(view.slice(4));
-  if(view.startsWith("tag:")) return viewTag(view.slice(4));
-}
-
-/* click: startMenu internal */
+/* Click: inside start menu */
 startMenu.addEventListener("click", (e) => {
   const a = e.target.closest("a[data-view]");
   if(!a) return;
@@ -170,37 +265,49 @@ startMenu.addEventListener("click", (e) => {
   handleView(a.dataset.view);
 });
 
-/* click: top shortcuts */
+/* Click: top shortcuts -> window-only (no menu open) */
 document.addEventListener("click", (e) => {
   const a = e.target.closest(".top-ico[data-view]");
   if(!a) return;
   e.preventDefault();
-  handleView(a.dataset.view);
+  closeMenu();                // IMPORTANT: don't show the menu
+  handleView(a.dataset.view); // show window only
 });
 
-/* search */
+/* Search */
 menuSearch.addEventListener("input", () => {
   const q = menuSearch.value.trim().toLowerCase();
   const list = !q ? data.posts : data.posts.filter(p =>
     p.title.toLowerCase().includes(q) ||
-    p.category.toLowerCase().includes(q) ||
+    p.section.toLowerCase().includes(q) ||
+    p.collection.toLowerCase().includes(q) ||
     p.tags.some(t => t.toLowerCase().includes(q))
   );
-  showWindow(`Search: ${q || "…"}`, `${list.length} hits`);
-  renderPosts(list);
+  showWindow(`Search: ${q || "…"}`, `${list.length} items`);
+  renderCards(list);
 });
 
-/* hash sync */
+/* Hash sync (direct links) */
 function syncFromHash(){
-  const h = (location.hash || "").replace(/^#/, "");
-  if(!h) return;
-  if(h === "home") return viewDesktop();
-  if(h === "obsidian") return viewObsidian();
-  if(h === "browser") return viewBrowser();
+  const raw = (location.hash || "").replace(/^#/, "");
+  if(!raw) return;
+
+  if(raw === "home") return viewDesktop();
+  if(raw === "writeups") return viewWriteups();
+  if(raw === "notes") return viewNotes();
+
+  if(raw.startsWith("cat/")){
+    const name = decodeURIComponent(raw.slice(4));
+    return viewCollection(name);
+  }
+  if(raw.startsWith("tag/")){
+    const name = decodeURIComponent(raw.slice(4));
+    return viewTag(name);
+  }
 }
 window.addEventListener("hashchange", syncFromHash);
 
-/* init */
+/* Init */
 renderMenu();
 closeMenu();
 viewDesktop();
