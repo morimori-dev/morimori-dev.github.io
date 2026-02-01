@@ -2,7 +2,6 @@ const $ = (q) => document.querySelector(q);
 
 const startMenu  = $("#startMenu");
 const startBtn   = $("#startBtn");       // topbar 🐉
-const dragonBtn  = $("#menuDragonBtn");  // menu 🐉
 const navList    = $("#navList");
 const catList    = $("#catList");
 const tagList    = $("#tagList");
@@ -11,12 +10,7 @@ const menuSearch = $("#menuSearch");
 const win        = $("#win");
 const winTitle   = $("#winTitle");
 const winSub     = $("#winSub");
-const winHint    = $("#winHint");
 const contentArea = $("#contentArea");
-
-const winMin   = $("#winMin");
-const winMax   = $("#winMax");
-const winClose = $("#winClose");
 
 const clockTime = $("#clockTime");
 const clockDate = $("#clockDate");
@@ -48,48 +42,38 @@ function openMenu(){
   startMenu.classList.add("open");
   startMenu.setAttribute("aria-hidden","false");
   startBtn.setAttribute("aria-expanded","true");
-  dragonBtn.setAttribute("aria-expanded","true");
   setTimeout(()=>menuSearch.focus(), 0);
 }
 function closeMenu(){
   startMenu.classList.remove("open");
   startMenu.setAttribute("aria-hidden","true");
   startBtn.setAttribute("aria-expanded","false");
-  dragonBtn.setAttribute("aria-expanded","false");
 }
 function toggleMenu(){ isMenuOpen() ? closeMenu() : openMenu(); }
 
 startBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
-dragonBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
 
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape") closeMenu();
-  if(e.altKey && e.key === "Escape") hideWindow();
+  if(e.altKey && e.key === "Escape") hideWindow(); // window close (no buttons)
 });
 
 document.addEventListener("click", (e) => {
-  if(!startMenu.contains(e.target) && !startBtn.contains(e.target) && !dragonBtn.contains(e.target)){
+  if(!startMenu.contains(e.target) && !startBtn.contains(e.target)){
     closeMenu();
   }
 });
 
-/* ===== Window controls ===== */
+/* ===== Window helpers ===== */
 function showWindow(title, sub){
   win.classList.remove("hidden");
   winTitle.textContent = title ?? "Window";
   winSub.textContent = sub ?? "";
-  winHint.textContent = "ALT+ESC";
 }
 function hideWindow(){
   win.classList.add("hidden");
-  win.classList.remove("minimized");
-  win.classList.remove("maximized");
   contentArea.innerHTML = "";
 }
-
-winClose.addEventListener("click", (e) => { e.preventDefault(); hideWindow(); });
-winMin.addEventListener("click", (e) => { e.preventDefault(); win.classList.toggle("minimized"); });
-winMax.addEventListener("click", (e) => { e.preventDefault(); win.classList.toggle("maximized"); });
 
 /* ===== Render helpers ===== */
 function renderCards(list){
@@ -124,7 +108,6 @@ function viewDesktop(){
 }
 
 function viewWriteups(){
-  // landing (career-friendly)
   const items = [
     { icon:"🧱", title:"Hack The Box (HTB)", view:"cat:HTB", href:"#cat/HTB", meta:"Writeups", desc:"Machines & challenges with clear attack chains." },
     { icon:"🧩", title:"TryHackMe (THM)", view:"cat:THM", href:"#cat/THM", meta:"Writeups", desc:"Learning paths & rooms (structured notes + exploitation)." },
@@ -213,7 +196,6 @@ function viewTag(tag){
 
 /* ===== Routing ===== */
 function handleNav(name){
-  // Top-level nav
   if(name === "Home") return viewDesktop();
   if(name === "Writeups") return viewWriteups();
   if(name === "Notes") return viewNotes();
@@ -223,7 +205,6 @@ function handleNav(name){
   if(name === "About") return viewAbout();
   if(name === "Contact") return viewContact();
 
-  // fallback
   showWindow(name, "Latest");
   renderCards(data.posts);
 }
@@ -270,8 +251,8 @@ document.addEventListener("click", (e) => {
   const a = e.target.closest(".top-ico[data-view]");
   if(!a) return;
   e.preventDefault();
-  closeMenu();                // IMPORTANT: don't show the menu
-  handleView(a.dataset.view); // show window only
+  closeMenu();
+  handleView(a.dataset.view);
 });
 
 /* Search */
@@ -287,7 +268,7 @@ menuSearch.addEventListener("input", () => {
   renderCards(list);
 });
 
-/* Hash sync (direct links) */
+/* Hash sync */
 function syncFromHash(){
   const raw = (location.hash || "").replace(/^#/, "");
   if(!raw) return;

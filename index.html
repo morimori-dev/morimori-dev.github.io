@@ -16,7 +16,7 @@
 
   <div class="topbar">
     <div class="topbar__left">
-      <!-- 🐉 only -->
+      <!-- 🐉 only (open menu) -->
       <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false" title="Menu">
         <span class="start-top-btn__icon">🐉</span>
       </button>
@@ -37,16 +37,9 @@
     </div>
   </div>
 
-  <!-- Start Menu -->
+  <!-- Start Menu (NO dragon/MENU block, search first) -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
-    <div class="start-menu__top">
-      <button id="menuDragonBtn" class="dragon-btn" aria-label="Toggle menu" aria-expanded="false" title="Toggle">
-        <span class="dragon-btn__icon">🐉</span>
-        <span class="dragon-btn__label">Menu</span>
-      </button>
-    </div>
-
-    <div class="start-menu__search">
+    <div class="start-menu__search start-menu__search--top">
       <input id="menuSearch" type="search" placeholder="Search…" />
     </div>
 
@@ -63,21 +56,13 @@
       </nav>
 
       <section class="content-col">
-        <!-- Window UI -->
+        <!-- Window UI (NO min/max/close buttons) -->
         <div id="win" class="window hidden" aria-label="Window">
-          <div class="window__titlebar">
-            <div class="window__controls" aria-label="Window controls">
-              <button id="winMin" class="winbtn min" aria-label="Minimize" title="Minimize">—</button>
-              <button id="winMax" class="winbtn max" aria-label="Maximize" title="Maximize">▢</button>
-              <button id="winClose" class="winbtn close" aria-label="Close" title="Close">×</button>
-            </div>
-
+          <div class="window__titlebar window__titlebar--clean">
             <div class="window__titles">
               <div id="winTitle" class="window__title">Desktop</div>
               <div id="winSub" class="window__sub">Ready.</div>
             </div>
-
-            <div class="window__hint" id="winHint">ALT+ESC</div>
           </div>
 
           <div id="winBody" class="window__body">
@@ -91,7 +76,7 @@
   <!-- Desktop is wallpaper only -->
   <main class="main desktop-only" aria-label="Desktop"></main>
 
-  <!-- Mobile pull-to-refresh helper: gives a bit of scrollable space -->
+  <!-- Mobile pull-to-refresh helper -->
   <div class="mobile-scroll-spacer" aria-hidden="true"></div>
 
   <script src="./data.js"></script>
