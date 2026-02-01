@@ -10,6 +10,8 @@ const menuSearch = $("#menuSearch");
 const win        = $("#win");
 const winTitle   = $("#winTitle");
 const winSub     = $("#winSub");
+const winTitlebar = $("#winTitlebar");
+const winBody    = $("#winBody");
 const contentArea = $("#contentArea");
 
 const clockTime = $("#clockTime");
@@ -20,6 +22,10 @@ const data = window.SITE_DATA;
 function esc(s){ return String(s).replace(/[&<>"']/g, m => ({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
 }[m])); }
+
+function isMobile(){
+  return window.matchMedia("(max-width: 900px)").matches || window.matchMedia("(pointer: coarse)").matches;
+}
 
 /* ===== Clock ===== */
 function pad2(n){ return String(n).padStart(2,"0"); }
@@ -67,12 +73,59 @@ document.addEventListener("click", (e) => {
 /* ===== Window helpers ===== */
 function showWindow(title, sub){
   win.classList.remove("hidden");
+  startMenu.classList.add("has-window");  // ★スマホ空白を消す制御
   winTitle.textContent = title ?? "Window";
   winSub.textContent = sub ?? "";
 }
 function hideWindow(){
   win.classList.add("hidden");
+  startMenu.classList.remove("has-window"); // ★スマホ空白を消す制御
   contentArea.innerHTML = "";
+}
+
+/* ===== Mobile close gestures =====
+   - tap titlebar to close
+   - swipe down to close (only if window body is at top)
+*/
+if(winTitlebar){
+  winTitlebar.addEventListener("click", () => {
+    if(isMobile() && !win.classList.contains("hidden")) hideWindow();
+  });
+}
+
+let touchStartY = null;
+let touchStartX = null;
+let touchStartScrollTop = null;
+
+function onTouchStart(e){
+  if(win.classList.contains("hidden")) return;
+  const t = e.touches[0];
+  touchStartY = t.clientY;
+  touchStartX = t.clientX;
+  touchStartScrollTop = winBody ? winBody.scrollTop : 0;
+}
+
+function onTouchEnd(e){
+  if(win.classList.contains("hidden")) return;
+  if(touchStartY === null) return;
+
+  const t = e.changedTouches[0];
+  const dy = t.clientY - touchStartY;
+  const dx = t.clientX - touchStartX;
+
+  // 条件：縦スワイプが大きい・横成分が小さい・中身が上端にいる
+  if(isMobile() && dy > 90 && Math.abs(dx) < 40 && (touchStartScrollTop ?? 0) <= 2){
+    hideWindow();
+  }
+
+  touchStartY = null;
+  touchStartX = null;
+  touchStartScrollTop = null;
+}
+
+if(winBody){
+  winBody.addEventListener("touchstart", onTouchStart, {passive:true});
+  winBody.addEventListener("touchend", onTouchEnd, {passive:true});
 }
 
 /* ===== Render helpers ===== */

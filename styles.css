@@ -146,7 +146,7 @@ body{
   pointer-events:auto;
 }
 
-/* Search is the very top now */
+/* Search is the very top */
 .start-menu__search{
   padding:12px;
   border-bottom:1px solid rgba(255,255,255,.08);
@@ -157,12 +157,15 @@ body{
 .start-menu__search input{
   width:100%;
   font-size:14px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.22);
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.26);
   color:var(--text);
   outline:none;
+}
+.start-menu__search input::placeholder{
+  color: rgba(255,255,255,.45);
 }
 
 .start-menu__cols{
@@ -187,7 +190,7 @@ body{
   list-style:none;
   padding:0; margin:0;
 }
-.menu-list li{ margin:4px 0; }
+.menu-list li{ margin:6px 0; }
 .menu-list a{
   display:flex;
   align-items:center;
@@ -196,12 +199,12 @@ body{
   border-radius:12px;
   color: var(--text);
   text-decoration:none;
-  border:1px solid transparent;
-  background: rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.05); /* ★コントラストUP */
 }
 .menu-list a:hover{
   border-color: rgba(106,169,255,.28);
-  background: rgba(106,169,255,.10);
+  background: rgba(106,169,255,.12);
 }
 .badge{
   margin-left:auto;
@@ -240,6 +243,7 @@ body{
   border-bottom:1px solid rgba(255,255,255,.10);
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
   backdrop-filter: blur(10px);
+  user-select:none;
 }
 .window__titlebar--clean{
   justify-content:flex-start;
@@ -332,14 +336,26 @@ body{
     height: calc(100vh - 66px);
     border-radius: 16px;
   }
+
+  /* ★スマホは 1カラム */
   .start-menu__cols{
     grid-template-columns: 1fr;
     height:auto;
     min-height: calc(100% - 70px);
   }
+
+  /* ★ウィンドウが無いときは content-col を隠して空白を消す */
+  .content-col{ display:none; }
+  .start-menu.has-window .content-col{ display:block; }
+
   .menu-col{
     border-right:none;
     border-bottom:1px solid rgba(255,255,255,.08);
+    max-height: 70vh; /* メニューが主役 */
+  }
+
+  /* ウィンドウ表示時はメニュー高さを少し抑える */
+  .start-menu.has-window .menu-col{
     max-height: 40vh;
   }
 }

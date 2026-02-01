@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <!-- Start Menu (NO dragon/MENU block, search first) -->
+  <!-- Start Menu (search first) -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
     <div class="start-menu__search start-menu__search--top">
       <input id="menuSearch" type="search" placeholder="Search…" />
@@ -56,9 +56,9 @@
       </nav>
 
       <section class="content-col">
-        <!-- Window UI (NO min/max/close buttons) -->
+        <!-- Window UI (NO buttons) -->
         <div id="win" class="window hidden" aria-label="Window">
-          <div class="window__titlebar window__titlebar--clean">
+          <div id="winTitlebar" class="window__titlebar window__titlebar--clean" title="Tap to close on mobile">
             <div class="window__titles">
               <div id="winTitle" class="window__title">Desktop</div>
               <div id="winSub" class="window__sub">Ready.</div>
