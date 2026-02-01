@@ -7,7 +7,6 @@
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.66);
   --accent:#6aa9ff;
-  --accent2:#65f0ff;
   --shadow: 0 18px 60px rgba(0,0,0,.45);
   --radius: 18px;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -20,13 +19,11 @@ body{
   margin:0;
   font-family: var(--ui);
   color: var(--text);
-  background: radial-gradient(1200px 900px at 70% 20%, rgba(106,169,255,.20), transparent 55%),
-              radial-gradient(900px 700px at 25% 85%, rgba(101,240,255,.10), transparent 60%),
-              linear-gradient(180deg, var(--bg0), var(--bg1));
+  background: linear-gradient(180deg, var(--bg0), var(--bg1));
   overflow:hidden;
 }
 
-/* ===== Wallpaper ===== */
+/* wallpaper */
 .wallpaper{
   position:fixed; inset:0;
   background:
@@ -38,7 +35,7 @@ body{
   z-index:-2;
 }
 
-/* ===== Top bar ===== */
+/* top bar */
 .topbar{
   position:fixed; left:0; right:0; top:0;
   height:42px;
@@ -57,37 +54,50 @@ body{
   gap:10px;
 }
 
-/* ★常に表示されるStart */
+/* 🐉 Start (icon only) */
 .start-top-btn{
-  display:flex;
-  align-items:center;
-  gap:8px;
+  display:grid;
+  place-items:center;
+  width:34px;
   height:30px;
-  padding:0 10px;
+  padding:0;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.10);
   background: rgba(0,0,0,.18);
   color: var(--text);
   cursor:pointer;
-  font-family: var(--mono);
-  font-size:12px;
 }
 .start-top-btn:hover{
   border-color: rgba(106,169,255,.28);
   background: rgba(106,169,255,.10);
 }
-.start-top-btn__icon{ font-size:16px; }
-.start-top-btn__txt{ color: var(--muted); letter-spacing:.06em; }
+.start-top-btn__icon{ font-size:18px; }
 
-.workspace-dot{
-  display:inline-block; width:10px; height:10px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.25);
-  margin-right:2px;
-  opacity:.65;
+/* top shortcuts (🖥️🧠🌐) */
+.top-shortcuts{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding-left:6px;
 }
-.workspace-dot.on{ background: rgba(106,169,255,.75); opacity:1; }
+.top-ico{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:12px;
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.14);
+  color: var(--text);
+  font-size:16px;
+}
+.top-ico:hover{
+  border-color: rgba(106,169,255,.28);
+  background: rgba(106,169,255,.10);
+}
 
+/* clock */
 .clock{
   display:flex;
   flex-direction:column;
@@ -111,7 +121,7 @@ body{
   margin-top:2px;
 }
 
-/* ===== Start menu panel ===== */
+/* start menu panel */
 .start-menu{
   position:fixed;
   left:14px;
@@ -269,7 +279,7 @@ body{
   padding:14px;
 }
 
-/* ===== Window UI ===== */
+/* window ui */
 .window{
   border-radius: 16px;
   border:1px solid rgba(255,255,255,.12);
@@ -349,7 +359,6 @@ body{
 
 .window__body{ padding:12px; overflow:auto; }
 .window.minimized .window__body{ display:none; }
-.window.maximized{ height: 100%; }
 
 .content-area{
   display:grid;
@@ -369,7 +378,7 @@ body{
 .card a{ color: var(--text); text-decoration:none; }
 .card a:hover{ text-decoration:underline; }
 
-/* ===== Desktop-only home ===== */
+/* desktop-only */
 .main.desktop-only{
   position:fixed;
   inset:42px 0 0 0;
@@ -377,7 +386,6 @@ body{
   pointer-events:none;
 }
 
-/* responsive */
 @media (max-width: 900px){
   .start-menu__cols{ grid-template-columns: 1fr; }
   .menu-col{ border-right:none; border-bottom:1px solid rgba(255,255,255,.08); }

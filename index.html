@@ -16,16 +16,17 @@
 
   <div class="topbar">
     <div class="topbar__left">
-      <!-- ★常に見える Start（ここがないと開けない） -->
-      <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false">
+      <!-- 🐉だけのStart（文字なし） -->
+      <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false" title="Menu">
         <span class="start-top-btn__icon">🐉</span>
-        <span class="start-top-btn__txt">Start</span>
       </button>
 
-      <span class="workspace-dot on"></span>
-      <span class="workspace-dot"></span>
-      <span class="workspace-dot"></span>
-      <span class="workspace-dot"></span>
+      <!-- 点々の代わり：トップバーにアプリショートカット -->
+      <div class="top-shortcuts" role="toolbar" aria-label="Quick apps">
+        <a class="top-ico" href="#home" data-view="nav:Home" title="Desktop" aria-label="Desktop">🖥️</a>
+        <a class="top-ico" href="#obsidian" data-view="nav:Obsidian" title="Obsidian" aria-label="Obsidian">🧠</a>
+        <a class="top-ico" href="#browser" data-view="nav:Browser" title="Browser" aria-label="Browser">🌐</a>
+      </div>
     </div>
 
     <div class="topbar__right">
@@ -36,10 +37,10 @@
     </div>
   </div>
 
-  <!-- Startメニュー（ドラゴンはパネル内左上） -->
+  <!-- Startメニュー（パネル内左上の🐉は「閉じる/開く」トグル） -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
     <div class="start-menu__top">
-      <button id="menuDragonBtn" class="dragon-btn" aria-label="Toggle menu" aria-expanded="false">
+      <button id="menuDragonBtn" class="dragon-btn" aria-label="Toggle menu" aria-expanded="false" title="Toggle">
         <span class="dragon-btn__icon">🐉</span>
         <span class="dragon-btn__label">Menu</span>
       </button>
@@ -74,7 +75,6 @@
       </nav>
 
       <section class="content-col">
-        <!-- 右ペイン：ウィンドウUI -->
         <div id="win" class="window hidden" aria-label="Window">
           <div class="window__titlebar">
             <div class="window__controls" aria-label="Window controls">
@@ -99,7 +99,6 @@
     </div>
   </aside>
 
-  <!-- Home(デスクトップ)は壁紙だけ -->
   <main class="main desktop-only" aria-label="Desktop"></main>
 
   <script src="./data.js"></script>
