@@ -1,7 +1,7 @@
 const $ = (q) => document.querySelector(q);
 
 const startMenu  = $("#startMenu");
-const startBtn   = $("#startBtn");       // topbar 🐉
+const startBtn   = $("#startBtn");       // PC topbar 🐉
 const navList    = $("#navList");
 const catList    = $("#catList");
 const tagList    = $("#tagList");
@@ -27,7 +27,7 @@ function isMobile(){
   return window.matchMedia("(max-width: 900px)").matches || window.matchMedia("(pointer: coarse)").matches;
 }
 
-/* ===== Clock ===== */
+/* ===== Clock (PC only visible, but harmless) ===== */
 function pad2(n){ return String(n).padStart(2,"0"); }
 function dowEN(d){
   const w = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -35,8 +35,8 @@ function dowEN(d){
 }
 function tick(){
   const d = new Date();
-  clockTime.textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-  clockDate.textContent = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} (${dowEN(d)})`;
+  if(clockTime) clockTime.textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  if(clockDate) clockDate.textContent = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} (${dowEN(d)})`;
 }
 tick();
 setInterval(tick, 1000);
@@ -47,25 +47,29 @@ function isMenuOpen(){ return startMenu.classList.contains("open"); }
 function openMenu(){
   startMenu.classList.add("open");
   startMenu.setAttribute("aria-hidden","false");
-  startBtn.setAttribute("aria-expanded","true");
-  setTimeout(()=>menuSearch.focus(), 0);
+  if(startBtn) startBtn.setAttribute("aria-expanded","true");
+  setTimeout(()=>menuSearch?.focus(), 0);
 }
 function closeMenu(){
   startMenu.classList.remove("open");
   startMenu.setAttribute("aria-hidden","true");
-  startBtn.setAttribute("aria-expanded","false");
+  if(startBtn) startBtn.setAttribute("aria-expanded","false");
 }
 function toggleMenu(){ isMenuOpen() ? closeMenu() : openMenu(); }
 
-startBtn.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
+startBtn?.addEventListener("click", (e) => { e.preventDefault(); toggleMenu(); });
 
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape") closeMenu();
-  if(e.altKey && e.key === "Escape") hideWindow(); // window close (no buttons)
+  if(e.altKey && e.key === "Escape") hideWindow();
 });
 
 document.addEventListener("click", (e) => {
-  if(!startMenu.contains(e.target) && !startBtn.contains(e.target)){
+  if(startBtn && !startMenu.contains(e.target) && !startBtn.contains(e.target)){
+    closeMenu();
+  }
+  // mobile: outside tap closes menu too
+  if(!startBtn && isMobile() && isMenuOpen() && !startMenu.contains(e.target)){
     closeMenu();
   }
 });
@@ -73,25 +77,20 @@ document.addEventListener("click", (e) => {
 /* ===== Window helpers ===== */
 function showWindow(title, sub){
   win.classList.remove("hidden");
-  startMenu.classList.add("has-window");  // ★スマホ空白を消す制御
+  startMenu.classList.add("has-window");
   winTitle.textContent = title ?? "Window";
   winSub.textContent = sub ?? "";
 }
 function hideWindow(){
   win.classList.add("hidden");
-  startMenu.classList.remove("has-window"); // ★スマホ空白を消す制御
+  startMenu.classList.remove("has-window");
   contentArea.innerHTML = "";
 }
 
-/* ===== Mobile close gestures =====
-   - tap titlebar to close
-   - swipe down to close (only if window body is at top)
-*/
-if(winTitlebar){
-  winTitlebar.addEventListener("click", () => {
-    if(isMobile() && !win.classList.contains("hidden")) hideWindow();
-  });
-}
+/* ===== Mobile close gestures ===== */
+winTitlebar?.addEventListener("click", () => {
+  if(isMobile() && !win.classList.contains("hidden")) hideWindow();
+});
 
 let touchStartY = null;
 let touchStartX = null;
@@ -104,7 +103,6 @@ function onTouchStart(e){
   touchStartX = t.clientX;
   touchStartScrollTop = winBody ? winBody.scrollTop : 0;
 }
-
 function onTouchEnd(e){
   if(win.classList.contains("hidden")) return;
   if(touchStartY === null) return;
@@ -113,20 +111,13 @@ function onTouchEnd(e){
   const dy = t.clientY - touchStartY;
   const dx = t.clientX - touchStartX;
 
-  // 条件：縦スワイプが大きい・横成分が小さい・中身が上端にいる
   if(isMobile() && dy > 90 && Math.abs(dx) < 40 && (touchStartScrollTop ?? 0) <= 2){
     hideWindow();
   }
-
-  touchStartY = null;
-  touchStartX = null;
-  touchStartScrollTop = null;
+  touchStartY = null; touchStartX = null; touchStartScrollTop = null;
 }
-
-if(winBody){
-  winBody.addEventListener("touchstart", onTouchStart, {passive:true});
-  winBody.addEventListener("touchend", onTouchEnd, {passive:true});
-}
+winBody?.addEventListener("touchstart", onTouchStart, {passive:true});
+winBody?.addEventListener("touchend", onTouchEnd, {passive:true});
 
 /* ===== Render helpers ===== */
 function renderCards(list){
@@ -157,7 +148,8 @@ function renderFolderGrid(items, title, subtitle){
 
 /* ===== Views ===== */
 function viewDesktop(){
-  hideWindow(); // wallpaper only
+  hideWindow();
+  closeMenu();
 }
 
 function viewWriteups(){
@@ -202,7 +194,6 @@ function viewResume(){
       <div style="margin-top:6px;font-size:16px;font-weight:900;">📄 Resume</div>
       <div style="margin-top:8px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.5;">
         Add your resume links here (PDF + LinkedIn).
-        This section is intentionally simple and scannable.
       </div>
     </div>
   `;
@@ -263,6 +254,7 @@ function handleNav(name){
 }
 
 function handleView(view){
+  if(view === "menu:open"){ openMenu(); return; }
   if(view.startsWith("nav:")) return handleNav(view.slice(4));
   if(view.startsWith("cat:")) return viewCollection(decodeURIComponent(view.slice(4)));
   if(view.startsWith("tag:")) return viewTag(decodeURIComponent(view.slice(4)));
@@ -299,13 +291,12 @@ startMenu.addEventListener("click", (e) => {
   handleView(a.dataset.view);
 });
 
-/* Click: top shortcuts -> window-only (no menu open) */
+/* Click: mobile tabs */
 document.addEventListener("click", (e) => {
-  const a = e.target.closest(".top-ico[data-view]");
-  if(!a) return;
+  const b = e.target.closest(".mtab[data-view]");
+  if(!b) return;
   e.preventDefault();
-  closeMenu();
-  handleView(a.dataset.view);
+  handleView(b.dataset.view);
 });
 
 /* Search */
@@ -343,6 +334,5 @@ window.addEventListener("hashchange", syncFromHash);
 
 /* Init */
 renderMenu();
-closeMenu();
 viewDesktop();
 syncFromHash();

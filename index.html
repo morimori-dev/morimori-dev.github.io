@@ -14,14 +14,13 @@
   <div id="writeups" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
   <div id="notes" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
 
+  <!-- PC topbar -->
   <div class="topbar">
     <div class="topbar__left">
-      <!-- 🐉 only (open menu) -->
       <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false" title="Menu">
         <span class="start-top-btn__icon">🐉</span>
       </button>
 
-      <!-- Quick apps: window-only -->
       <div class="top-shortcuts" role="toolbar" aria-label="Quick apps">
         <a class="top-ico" href="#home" data-view="nav:Home" title="Desktop" aria-label="Desktop">🖥️</a>
         <a class="top-ico" href="#notes" data-view="nav:Notes" title="Notes" aria-label="Notes">🧠</a>
@@ -37,7 +36,7 @@
     </div>
   </div>
 
-  <!-- Start Menu (search first) -->
+  <!-- Start Menu -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
     <div class="start-menu__search start-menu__search--top">
       <input id="menuSearch" type="search" placeholder="Search…" />
@@ -56,7 +55,6 @@
       </nav>
 
       <section class="content-col">
-        <!-- Window UI (NO buttons) -->
         <div id="win" class="window hidden" aria-label="Window">
           <div id="winTitlebar" class="window__titlebar window__titlebar--clean" title="Tap to close on mobile">
             <div class="window__titles">
@@ -76,7 +74,22 @@
   <!-- Desktop is wallpaper only -->
   <main class="main desktop-only" aria-label="Desktop"></main>
 
-  <!-- Mobile pull-to-refresh helper -->
+  <!-- Mobile bottom tabs (app-like) -->
+  <nav class="mobile-tabs" aria-label="App tabs">
+    <button class="mtab" data-view="nav:Home" aria-label="Home" title="Home">
+      <span class="mtab__ico">🖥️</span><span class="mtab__label">Home</span>
+    </button>
+    <button class="mtab" data-view="nav:Writeups" aria-label="Writeups" title="Writeups">
+      <span class="mtab__ico">🌐</span><span class="mtab__label">Writeups</span>
+    </button>
+    <button class="mtab" data-view="nav:Notes" aria-label="Notes" title="Notes">
+      <span class="mtab__ico">🧠</span><span class="mtab__label">Notes</span>
+    </button>
+    <button class="mtab" data-view="menu:open" aria-label="Search" title="Search">
+      <span class="mtab__ico">🔎</span><span class="mtab__label">Search</span>
+    </button>
+  </nav>
+
   <div class="mobile-scroll-spacer" aria-hidden="true"></div>
 
   <script src="./data.js"></script>
