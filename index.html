@@ -1,22 +1,69 @@
----
-layout: page
-title: Home
----
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kali Desktop Blog</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="wallpaper"></div>
 
-<h2>morimori-dev</h2>
-<p>Security notes, writeups, and practical playbooks.</p>
+  <div class="topbar">
+    <div class="topbar__left">
+      <span class="workspace-dot on"></span>
+      <span class="workspace-dot"></span>
+      <span class="workspace-dot"></span>
+      <span class="workspace-dot"></span>
+    </div>
+    <div class="topbar__right">
+      <span class="status-pill">🕒</span>
+      <span class="status-pill">🔊</span>
+      <span class="status-pill">📶</span>
+    </div>
+  </div>
 
-<ul>
-  <li><a href="/writeups/">Writeups</a></li>
-  <li><a href="/tags/">Tags</a></li>
-  <li><a href="/about/">About</a></li>
-</ul>
+  <button id="startBtn" class="start-btn" aria-label="Start menu" aria-expanded="false">
+    <span class="start-icon">🐉</span>
+  </button>
 
-<hr>
+  <aside id="startMenu" class="start-menu" aria-hidden="true">
+    <div class="start-menu__search">
+      <input id="menuSearch" type="search" placeholder="Search…" />
+    </div>
 
-<h3>Latest</h3>
-<ul>
-{% for post in site.posts limit:5 %}
-  <li>{{ post.date | date: "%Y-%m-%d" }} — <a href="{{ post.url }}">{{ post.title }}</a></li>
-{% endfor %}
-</ul>
+    <div class="start-menu__cols">
+      <nav class="menu-col">
+        <div class="menu-title">Navigation</div>
+        <ul id="navList" class="menu-list"></ul>
+
+        <div class="menu-title">Categories</div>
+        <ul id="catList" class="menu-list"></ul>
+
+        <div class="menu-title">Tags</div>
+        <ul id="tagList" class="menu-list"></ul>
+      </nav>
+
+      <section class="content-col">
+        <div class="content-head">
+          <div class="content-title" id="contentTitle">Home</div>
+          <div class="content-sub" id="contentSub">Latest posts</div>
+        </div>
+
+        <div id="contentArea" class="content-area"></div>
+      </section>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="hero">
+      <h1>Kali Desktop Blog</h1>
+      <p>左下の🐉からメニューを開く</p>
+    </div>
+    <div id="mainFeed" class="feed"></div>
+  </main>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
