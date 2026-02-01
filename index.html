@@ -16,6 +16,12 @@
 
   <div class="topbar">
     <div class="topbar__left">
+      <!-- ★常に見える Start（ここがないと開けない） -->
+      <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false">
+        <span class="start-top-btn__icon">🐉</span>
+        <span class="start-top-btn__txt">Start</span>
+      </button>
+
       <span class="workspace-dot on"></span>
       <span class="workspace-dot"></span>
       <span class="workspace-dot"></span>
@@ -33,7 +39,7 @@
   <!-- Startメニュー（ドラゴンはパネル内左上） -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
     <div class="start-menu__top">
-      <button id="menuDragonBtn" class="dragon-btn" aria-label="Start menu" aria-expanded="false">
+      <button id="menuDragonBtn" class="dragon-btn" aria-label="Toggle menu" aria-expanded="false">
         <span class="dragon-btn__icon">🐉</span>
         <span class="dragon-btn__label">Menu</span>
       </button>

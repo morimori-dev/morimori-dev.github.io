@@ -51,11 +51,39 @@ body{
   border-bottom:1px solid rgba(255,255,255,.06);
   z-index:10;
 }
+.topbar__left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* ★常に表示されるStart */
+.start-top-btn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  height:30px;
+  padding:0 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  cursor:pointer;
+  font-family: var(--mono);
+  font-size:12px;
+}
+.start-top-btn:hover{
+  border-color: rgba(106,169,255,.28);
+  background: rgba(106,169,255,.10);
+}
+.start-top-btn__icon{ font-size:16px; }
+.start-top-btn__txt{ color: var(--muted); letter-spacing:.06em; }
+
 .workspace-dot{
   display:inline-block; width:10px; height:10px;
   border-radius:50%;
   border:1px solid rgba(255,255,255,.25);
-  margin-right:6px;
+  margin-right:2px;
   opacity:.65;
 }
 .workspace-dot.on{ background: rgba(106,169,255,.75); opacity:1; }
@@ -252,10 +280,7 @@ body{
   flex-direction:column;
   min-height: 240px;
 }
-
-.window.hidden{
-  display:none;
-}
+.window.hidden{ display:none; }
 
 .window__titlebar{
   display:flex;
@@ -266,12 +291,8 @@ body{
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
   backdrop-filter: blur(10px);
 }
+.window__controls{ display:flex; gap:8px; align-items:center; }
 
-.window__controls{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
 .winbtn{
   width:30px;
   height:26px;
@@ -315,7 +336,6 @@ body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
-
 .window__hint{
   margin-left:auto;
   font-family: var(--mono);
@@ -327,24 +347,14 @@ body{
   background: rgba(0,0,0,.14);
 }
 
-.window__body{
-  padding:12px;
-  overflow:auto;
-}
-
-.window.minimized .window__body{
-  display:none;
-}
-
-.window.maximized{
-  height: 100%;
-}
+.window__body{ padding:12px; overflow:auto; }
+.window.minimized .window__body{ display:none; }
+.window.maximized{ height: 100%; }
 
 .content-area{
   display:grid;
   gap:10px;
 }
-
 .card{
   border-radius: 14px;
   border:1px solid rgba(255,255,255,.10);
@@ -356,10 +366,7 @@ body{
   font-size:12px;
   color: var(--muted);
 }
-.card a{
-  color: var(--text);
-  text-decoration:none;
-}
+.card a{ color: var(--text); text-decoration:none; }
 .card a:hover{ text-decoration:underline; }
 
 /* ===== Desktop-only home ===== */
