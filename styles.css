@@ -300,35 +300,57 @@ body{
     padding-left: calc(var(--dock-w) + 10px);
   }
 
-  /* Wallpaper: 見切れゼロ + 余白はぼかしcover */
+  /* ✅ 壁紙：iOSで帯が出ない安定版
+     - 画像は1回だけ（containで見切れゼロ）
+     - 余白はグラデ＋ビネット＋薄ノイズで埋める */
   .wallpaper{
-    background:none;
+    background: none;
     filter:none;
   }
+
+  /* 余白を“それっぽく”埋める（画像を重ねない） */
   .wallpaper::after{
     content:"";
     position:fixed;
     inset:0;
     background:
-      linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.70)),
-      url("./assets/skunk.png");
-    background-size:cover;
-    background-position:center;
-    filter: blur(22px) saturate(1.1) contrast(1.05);
-    transform: scale(1.10);
-    opacity:.70;
+      radial-gradient(1200px 900px at 50% 35%, rgba(80, 255, 160, .10), transparent 55%),
+      radial-gradient(900px 700px at 50% 70%, rgba(80, 255, 160, .06), transparent 60%),
+      radial-gradient(900px 900px at 10% 10%, rgba(0,0,0,.35), transparent 55%),
+      radial-gradient(900px 900px at 90% 90%, rgba(0,0,0,.45), transparent 55%),
+      linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.70));
     z-index:-2;
   }
+
+  /* くっきり本体（1枚だけ） */
   .wallpaper::before{
     content:"";
     position:fixed;
     inset:0;
     background:
-      linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.70)),
       url("./assets/skunk.png");
     background-size:contain;
     background-position:center;
     background-repeat:no-repeat;
+    /* ちょい締める */
+    filter: saturate(1.08) contrast(1.06);
+    z-index:-1;
+  }
+
+  /* うっすらノイズ（帯/段差を目立たせない） */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      repeating-linear-gradient(0deg,
+        rgba(255,255,255,.018) 0px,
+        rgba(255,255,255,.018) 1px,
+        transparent 2px,
+        transparent 4px);
+    mix-blend-mode: overlay;
+    opacity:.22;
     z-index:-1;
   }
 
