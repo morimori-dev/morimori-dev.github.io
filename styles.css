@@ -7,7 +7,6 @@
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.66);
   --accent:#6aa9ff;
-  --accent2:#65f0ff;
   --shadow: 0 18px 60px rgba(0,0,0,.45);
   --radius: 18px;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -26,25 +25,21 @@ body{
   overflow:hidden;
 }
 
+/* Wallpaper
+   GitHub Pages can't read /usr/share/...
+   Copy: /usr/share/backgrounds/kali-16x9/kali4kids.png -> ./assets/kali4kids.png
+*/
 .wallpaper{
   position:fixed; inset:0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
-    url("./assets/wallpaper.jpg");
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.40)),
+    url("./assets/kali4kids.png");
   background-size:cover;
   background-position:center;
-  filter:saturate(1.1) contrast(1.05);
   z-index:-2;
 }
-.wallpaper:empty{
-  /* wallpaper.jpgを置かない場合でも破綻しない */
-  background:
-    radial-gradient(1400px 900px at 65% 15%, rgba(100,170,255,.18), transparent 60%),
-    radial-gradient(1000px 800px at 15% 80%, rgba(120,255,220,.08), transparent 60%),
-    linear-gradient(180deg, #081022, #09142b);
-}
 
-/* top bar */
+/* Top bar */
 .topbar{
   position:fixed; left:0; right:0; top:0;
   height:34px;
@@ -57,6 +52,7 @@ body{
   border-bottom:1px solid rgba(255,255,255,.06);
   z-index:10;
 }
+
 .workspace-dot{
   display:inline-block; width:10px; height:10px;
   border-radius:50%;
@@ -65,22 +61,24 @@ body{
   opacity:.65;
 }
 .workspace-dot.on{ background: rgba(106,169,255,.75); opacity:1; }
-.status-pill{
+
+.digital-clock{
   font-family: var(--mono);
   font-size:12px;
-  padding:4px 8px;
+  padding:5px 10px;
   border-radius:999px;
   background: rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.08);
-  margin-left:8px;
+  border:1px solid rgba(255,255,255,.10);
+  letter-spacing:.08em;
+  user-select:none;
 }
 
-/* start button */
+/* Start button (moved to top-left) */
 .start-btn{
   position:fixed;
-  left:14px;
-  bottom:14px;
-  width:52px; height:52px;
+  left:12px;
+  top:42px; /* below topbar */
+  width:44px; height:44px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.10);
   background: rgba(0,0,0,.25);
@@ -93,21 +91,21 @@ body{
   z-index:20;
 }
 .start-btn:hover{ border-color: rgba(106,169,255,.35); }
-.start-icon{ font-size:22px; }
+.start-icon{ font-size:20px; }
 
-/* start menu */
+/* Start menu (drops from top-left now) */
 .start-menu{
   position:fixed;
-  left:14px;
-  bottom:78px;
-  width:min(860px, calc(100vw - 28px));
-  height:min(520px, calc(100vh - 130px));
+  left:12px;
+  top:92px; /* below start button */
+  width:min(860px, calc(100vw - 24px));
+  height:min(520px, calc(100vh - 110px));
   border-radius: var(--radius);
   background: linear-gradient(180deg, var(--panel), var(--panel2));
   border:1px solid var(--stroke);
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
-  transform: translateY(10px);
+  transform: translateY(-8px);
   opacity:0;
   pointer-events:none;
   transition: opacity .18s ease, transform .18s ease;
@@ -119,6 +117,7 @@ body{
   opacity:1;
   pointer-events:auto;
 }
+
 .start-menu__search{
   padding:12px;
   border-bottom:1px solid rgba(255,255,255,.08);
@@ -133,11 +132,13 @@ body{
   color:var(--text);
   outline:none;
 }
+
 .start-menu__cols{
   display:grid;
   grid-template-columns: 300px 1fr;
   height: calc(100% - 56px);
 }
+
 .menu-col{
   padding:12px;
   border-right:1px solid rgba(255,255,255,.08);
@@ -154,9 +155,7 @@ body{
   list-style:none;
   padding:0; margin:0;
 }
-.menu-list li{
-  margin:4px 0;
-}
+.menu-list li{ margin:4px 0; }
 .menu-list a{
   display:flex;
   align-items:center;
@@ -224,27 +223,11 @@ body{
 }
 .card a:hover{ text-decoration:underline; }
 
-/* main */
+/* Main is intentionally empty (desktop-like) */
 .main{
   position:fixed;
   inset:34px 0 0 0;
-  overflow:auto;
-  padding:18px 18px 96px 18px;
-}
-.hero{
-  max-width: 1000px;
-  margin: 0 auto 14px;
-  padding:18px;
-  border-radius: var(--radius);
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  backdrop-filter: blur(8px);
-}
-.feed{
-  max-width: 1000px;
-  margin: 0 auto;
-  display:grid;
-  gap:10px;
+  pointer-events:none; /* desktop feel: only menu is interactive */
 }
 
 @media (max-width: 860px){

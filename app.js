@@ -10,14 +10,30 @@ const menuSearch = $("#menuSearch");
 const contentTitle = $("#contentTitle");
 const contentSub   = $("#contentSub");
 const contentArea  = $("#contentArea");
-const mainFeed     = $("#mainFeed");
+
+const clockText = $("#clockText");
 
 const data = window.SITE_DATA;
 
-function esc(s){ return String(s).replace(/[&<>"']/g, m => ({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[m])); }
+function esc(s){
+  return String(s).replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
 
+/* ===== Clock ===== */
+function pad2(n){ return String(n).padStart(2,"0"); }
+function tickClock(){
+  const d = new Date();
+  const hh = pad2(d.getHours());
+  const mm = pad2(d.getMinutes());
+  const ss = pad2(d.getSeconds());
+  clockText.textContent = `${hh}:${mm}:${ss}`;
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+/* ===== Menu open/close ===== */
 function openMenu(){
   startMenu.classList.add("open");
   startBtn.setAttribute("aria-expanded","true");
@@ -29,18 +45,22 @@ function closeMenu(){
   startBtn.setAttribute("aria-expanded","false");
   startMenu.setAttribute("aria-hidden","true");
 }
+
 startBtn.addEventListener("click", () => {
   startMenu.classList.contains("open") ? closeMenu() : openMenu();
 });
+
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape") closeMenu();
 });
+
 document.addEventListener("click", (e) => {
   if(!startMenu.contains(e.target) && !startBtn.contains(e.target)){
     closeMenu();
   }
 });
 
+/* ===== Render ===== */
 function renderMenu(){
   navList.innerHTML = data.nav.map(i => `
     <li><a href="${esc(i.href)}" data-view="nav:${esc(i.title)}">
@@ -76,17 +96,6 @@ function renderPosts(list, title, sub){
   `).join("");
 }
 
-function renderMainFeed(){
-  mainFeed.innerHTML = data.posts.map(p => `
-    <div class="card">
-      <div class="meta">${esc(p.date)} · ${esc(p.category)} · ${p.tags.map(esc).join(", ")}</div>
-      <div style="margin-top:6px;font-size:18px;font-weight:800;">
-        <a href="${esc(p.href)}">${esc(p.title)}</a>
-      </div>
-    </div>
-  `).join("");
-}
-
 function handleView(view){
   if(view.startsWith("nav:")){
     renderPosts(data.posts, view.slice(4), "Latest posts");
@@ -106,6 +115,7 @@ function handleView(view){
   }
 }
 
+/* Menu click */
 startMenu.addEventListener("click", (e) => {
   const a = e.target.closest("a[data-view]");
   if(!a) return;
@@ -113,6 +123,7 @@ startMenu.addEventListener("click", (e) => {
   handleView(a.dataset.view);
 });
 
+/* Search */
 menuSearch.addEventListener("input", () => {
   const q = menuSearch.value.trim().toLowerCase();
   const list = !q ? data.posts : data.posts.filter(p =>
@@ -123,6 +134,6 @@ menuSearch.addEventListener("input", () => {
   renderPosts(list, q ? `Search: ${q}` : "Home", q ? `${list.length} hits` : "Latest posts");
 });
 
+/* Init */
 renderMenu();
-renderMainFeed();
 renderPosts(data.posts, "Home", "Latest posts");

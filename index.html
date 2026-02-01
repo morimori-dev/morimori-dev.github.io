@@ -17,16 +17,16 @@
       <span class="workspace-dot"></span>
     </div>
     <div class="topbar__right">
-      <span class="status-pill">🕒</span>
-      <span class="status-pill">🔊</span>
-      <span class="status-pill">📶</span>
+      <span id="clockText" class="digital-clock" aria-label="clock">--:--:--</span>
     </div>
   </div>
 
+  <!-- Start button (Dragon) : LEFT TOP -->
   <button id="startBtn" class="start-btn" aria-label="Start menu" aria-expanded="false">
     <span class="start-icon">🐉</span>
   </button>
 
+  <!-- Start menu : drops from top-left -->
   <aside id="startMenu" class="start-menu" aria-hidden="true">
     <div class="start-menu__search">
       <input id="menuSearch" type="search" placeholder="Search…" />
@@ -55,13 +55,8 @@
     </div>
   </aside>
 
-  <main class="main">
-    <div class="hero">
-      <h1>Kali Desktop Blog</h1>
-      <p>左下の🐉からメニューを開く</p>
-    </div>
-    <div id="mainFeed" class="feed"></div>
-  </main>
+  <!-- Home screen is wallpaper only -->
+  <main class="main" aria-hidden="true"></main>
 
   <script src="./data.js"></script>
   <script src="./app.js"></script>
