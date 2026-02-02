@@ -77,6 +77,21 @@ body{
   top: 2px;
 }
 
+/* ===== Overlay ===== */
+.overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+  z-index: 25; /* topbar(10) < overlay(25) < startMenu(30) */
+}
+.overlay.open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* ===== PC Topbar ===== */
 .topbar{
   position:fixed; left:0; right:0; top:0;
@@ -341,11 +356,10 @@ body{
     filter:none;
   }
 
-  /* ぼかし背景（画面を埋める：cover） */
   .wallpaper::before{
     content:"";
     position:fixed;
-    inset:-24px; /* ぼかしの縁切れ防止で少し外に広げる */
+    inset:-24px;
     background: url("./assets/skunk_mobile.png");
     background-size: cover;
     background-position: center;
@@ -356,7 +370,6 @@ body{
     z-index:-2;
   }
 
-  /* シャープ画像（中央：contain）＋ヴィネット/光のせ */
   .wallpaper::after{
     content:"";
     position:fixed;
@@ -370,7 +383,6 @@ body{
       linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.62)),
       url("./assets/skunk_mobile.png");
 
-    /* それぞれのレイヤーにサイズを当てる（最後の画像だけcontain） */
     background-size:
       cover, cover, cover, cover, cover,
       contain;
@@ -387,29 +399,69 @@ body{
     z-index:-1;
   }
 
+  /* scanline */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      repeating-linear-gradient(0deg,
+        rgba(255,255,255,.018) 0px,
+        rgba(255,255,255,.018) 1px,
+        transparent 2px,
+        transparent 4px);
+    mix-blend-mode: overlay;
+    opacity:.22;
+    z-index:-1;
+  }
+
+  /* Start menu: safe-area + internal scroll (no clipping) */
   .start-menu{
     left: calc(var(--dock-w) + 14px);
     right: 10px;
     width:auto;
+
     top: calc(12px + env(safe-area-inset-top));
-    height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    height: auto;
+
     border-radius: 18px;
+    z-index: 30;
+    overflow: hidden;
   }
 
   .start-menu__cols{
     grid-template-columns: 1fr;
-    min-height: calc(100% - 70px);
+    height: calc(100% - 70px);
+    min-height: 0;
   }
+
   .content-col{ display:none; }
   .start-menu.has-window .content-col{ display:block; }
+
+  .menu-col,
+  .content-col{
+    min-height: 0;
+  }
 
   .menu-col{
     border-right:none;
     border-bottom:1px solid rgba(255,255,255,.08);
-    max-height: 70vh;
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .start-menu.has-window .menu-col{ max-height: 40vh; }
 
+  .content-col{
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .start-menu.has-window .menu-col{
+    max-height: 40vh;
+  }
+
+  /* Ubuntu-ish dock: long & left-bottom style */
   .mobile-dock{
     display:flex;
     flex-direction:column;

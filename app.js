@@ -5,6 +5,7 @@
   const startBtn = $("#startBtn");              // PC start
   const startMenu = $("#startMenu");
   const menuSearch = $("#menuSearch");
+  const overlay = $("#overlay");
 
   const navList = $("#navList");
   const catList = $("#catList");
@@ -69,9 +70,13 @@
 
   function setMenuOpen(open) {
     if (!startMenu) return;
+
     startMenu.classList.toggle("open", !!open);
     startMenu.setAttribute("aria-hidden", open ? "false" : "true");
     if (startBtn) startBtn.setAttribute("aria-expanded", open ? "true" : "false");
+
+    overlay?.classList.toggle("open", !!open);
+    overlay?.setAttribute("aria-hidden", open ? "false" : "true");
 
     if (open) {
       setTimeout(() => menuSearch && menuSearch.focus({ preventScroll: true }), 0);
@@ -161,7 +166,7 @@
   renderList(catList, DATA_SRC.categories || []);
   renderList(tagList, DATA_SRC.tags || []);
 
-  // ===== Start toggle: 1イベントに統一（pointerupのみ） =====
+  // Start toggle: single event (pointerup)
   function bindStartToggle(el) {
     if (!el) return;
     el.addEventListener("pointerup", (e) => {
@@ -173,14 +178,21 @@
   bindStartToggle(startBtn);
   bindStartToggle(mobileMenuBtn);
 
-  // ===== Dock buttons open views =====
+  // Overlay click closes
+  overlay?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMenuOpen(false);
+  });
+
+  // Dock buttons open views
   dockButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const view = btn.dataset.view;
       if (!view) return;
 
       if (view === "menu:open") {
-        // menuはpointerupで処理済み
+        // menu handled by pointerup
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -193,7 +205,7 @@
     });
   });
 
-  // ===== Menu item click =====
+  // Menu item click
   startMenu?.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-view]");
     if (!a) return;
@@ -204,7 +216,7 @@
     openView(view);
   });
 
-  // ===== Outside click closes (clickのみで判断) =====
+  // Outside click closes (still works on PC; overlay handles most cases)
   document.addEventListener("click", (e) => {
     if (!isMenuOpen()) return;
 
@@ -212,7 +224,8 @@
     const inside =
       (startMenu && startMenu.contains(t)) ||
       (startBtn && startBtn.contains(t)) ||
-      (mobileMenuBtn && mobileMenuBtn.contains(t));
+      (mobileMenuBtn && mobileMenuBtn.contains(t)) ||
+      (overlay && overlay.contains(t)); // overlay is allowed; it closes itself
 
     if (!inside) setMenuOpen(false);
   });
@@ -234,7 +247,7 @@
     }
   });
 
-  // ===== Clock =====
+  // Clock
   function pad2(n){ return String(n).padStart(2, "0"); }
   function tickClock() {
     const d = new Date();
