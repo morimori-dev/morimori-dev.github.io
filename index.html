@@ -25,12 +25,13 @@
         <a class="top-ico" href="#notes" data-view="nav:Notes" title="Notes" aria-label="Notes">🧠</a>
         <a class="top-ico" href="#writeups" data-view="nav:Writeups" title="Writeups" aria-label="Writeups">🌐</a>
 
-        <!-- ✅ Contact (whoami) -->
+        <!-- Contact (whoami) -->
         <a class="top-ico" href="./contact.html" title="Contact" aria-label="Contact">👤</a>
       </div>
     </div>
 
     <div class="topbar__right">
+      <!-- PC clock -->
       <div class="clock">
         <div id="clockTime" class="clock__time">00:00:00</div>
         <div id="clockDate" class="clock__date">1970-01-01 (Thu)</div>
@@ -80,6 +81,12 @@
 
   <!-- Mobile left dock -->
   <nav class="mobile-dock" aria-label="App dock">
+    <!-- ✅ Mobile clock (top of dock) -->
+    <div class="dock-clock" aria-label="Clock">
+      <div id="mClockTime" class="dock-clock__time">00:00:00</div>
+      <div id="mClockDate" class="dock-clock__date">1970-01-01 (Thu)</div>
+    </div>
+
     <button class="dock-btn" data-view="nav:Home" aria-label="Home" title="Home">
       <span class="dock-ico">🖥️</span>
     </button>
@@ -90,7 +97,6 @@
       <span class="dock-ico">🧠</span>
     </button>
 
-    <!-- ✅ Contact (whoami) -->
     <button class="dock-btn" data-view="nav:Contact" aria-label="Contact" title="Contact">
       <span class="dock-ico">👤</span>
     </button>

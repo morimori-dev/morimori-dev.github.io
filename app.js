@@ -2,7 +2,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const startBtn = $("#startBtn");              // PC start
+  const startBtn = $("#startBtn");
   const startMenu = $("#startMenu");
   const menuSearch = $("#menuSearch");
   const overlay = $("#overlay");
@@ -16,11 +16,15 @@
   const winSub = $("#winSub");
   const contentArea = $("#contentArea");
 
+  // PC clock
   const clockTime = $("#clockTime");
   const clockDate = $("#clockDate");
+  // Mobile dock clock
+  const mClockTime = $("#mClockTime");
+  const mClockDate = $("#mClockDate");
 
-  const mobileMenuBtn = $(".dock-btn--menu");   // Mobile start
-  const dockButtons = $$("[data-view]");        // All dock buttons
+  const mobileMenuBtn = $(".dock-btn--menu");
+  const dockButtons = $$("[data-view]");
 
   const DATA_FALLBACK = {
     nav: [
@@ -98,7 +102,6 @@
       .replaceAll("'", "&#039;");
   }
 
-  // ✅ view があるときだけ data-view を付ける（Contactはただのリンクにする）
   function renderList(ul, items) {
     if (!ul) return;
     ul.innerHTML = "";
@@ -107,10 +110,7 @@
       const a = document.createElement("a");
 
       a.href = it.href || "#";
-
-      if (it.view) {
-        a.dataset.view = it.view;
-      }
+      if (it.view) a.dataset.view = it.view;
 
       a.innerHTML =
         `<span aria-hidden="true">${it.icon || "•"}</span>` +
@@ -156,7 +156,7 @@
 
   function applyFilter(q) {
     const query = (q || "").trim().toLowerCase();
-    const anchors = $$("a[data-view]", startMenu); // viewのある項目だけ対象
+    const anchors = $$("a[data-view]", startMenu);
     anchors.forEach((a) => {
       const t = a.textContent.toLowerCase();
       const ok = !query || t.includes(query);
@@ -164,12 +164,11 @@
     });
   }
 
-  // ===== Init =====
+  // Init lists
   renderList(navList, DATA_SRC.nav || []);
   renderList(catList, DATA_SRC.categories || []);
   renderList(tagList, DATA_SRC.tags || []);
 
-  // Start toggle: single event (pointerup)
   function bindStartToggle(el) {
     if (!el) return;
     el.addEventListener("pointerup", (e) => {
@@ -181,20 +180,17 @@
   bindStartToggle(startBtn);
   bindStartToggle(mobileMenuBtn);
 
-  // Overlay click closes
   overlay?.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     setMenuOpen(false);
   });
 
-  // Dock buttons open views
   dockButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const view = btn.dataset.view;
       if (!view) return;
 
-      // ✅ Contact は別ページへ即移動
       if (view === "nav:Contact") {
         e.preventDefault();
         e.stopPropagation();
@@ -215,14 +211,12 @@
     });
   });
 
-  // Menu item click (data-view のあるものだけ window に出す)
   startMenu?.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-view]");
     if (!a) return;
     const view = a.dataset.view;
     if (!view) return;
 
-    // ✅ Contact は別ページへ即移動
     if (view === "nav:Contact") {
       e.preventDefault();
       window.location.href = "./contact.html";
@@ -233,7 +227,6 @@
     openView(view);
   });
 
-  // Outside click closes
   document.addEventListener("click", (e) => {
     if (!isMenuOpen()) return;
 
@@ -247,38 +240,43 @@
     if (!inside) setMenuOpen(false);
   });
 
-  // Esc closes
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") setMenuOpen(false);
   });
 
-  // Search filter
   menuSearch?.addEventListener("input", (e) => {
     applyFilter(e.target.value);
   });
 
-  // Tap titlebar to close window on mobile (optional)
   $("#winTitlebar")?.addEventListener("click", () => {
     if (window.matchMedia("(max-width: 900px)").matches) {
       ensureWindowVisible(false);
     }
   });
 
-  // Clock
+  // Clock (PC + Mobile)
   function pad2(n){ return String(n).padStart(2, "0"); }
+
   function tickClock() {
     const d = new Date();
     const hh = pad2(d.getHours());
     const mm = pad2(d.getMinutes());
     const ss = pad2(d.getSeconds());
-    if (clockTime) clockTime.textContent = `${hh}:${mm}:${ss}`;
+    const timeStr = `${hh}:${mm}:${ss}`;
 
     const y = d.getFullYear();
     const mo = pad2(d.getMonth()+1);
     const da = pad2(d.getDate());
     const wd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()];
-    if (clockDate) clockDate.textContent = `${y}-${mo}-${da} (${wd})`;
+    const dateStr = `${y}-${mo}-${da} (${wd})`;
+
+    if (clockTime) clockTime.textContent = timeStr;
+    if (clockDate) clockDate.textContent = dateStr;
+
+    if (mClockTime) mClockTime.textContent = timeStr;
+    if (mClockDate) mClockDate.textContent = dateStr;
   }
+
   tickClock();
   setInterval(tickClock, 1000);
 })();

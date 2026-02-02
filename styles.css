@@ -85,7 +85,7 @@ body{
   opacity: 0;
   pointer-events: none;
   transition: opacity .18s ease;
-  z-index: 25; /* topbar(10) < overlay(25) < startMenu(30) */
+  z-index: 25;
 }
 .overlay.open{
   opacity: 1;
@@ -150,7 +150,7 @@ body{
   background: rgba(106,169,255,.10);
 }
 
-/* Clock */
+/* Clock (PC) */
 .clock{
   display:flex;
   flex-direction:column;
@@ -330,7 +330,7 @@ body{
   color: rgba(255,255,255,.55);
 }
 
-/* Desktop-only main surface (kept empty; wallpaper shows through) */
+/* Desktop-only main surface */
 .main.desktop-only{
   position:fixed;
   inset:42px 0 0 0;
@@ -344,34 +344,20 @@ body{
 
 /* ===== Mobile ===== */
 @media (max-width: 900px){
-  /* Show clock on mobile (PC-like) */
-  .topbar{
-    display:flex;
-    top: env(safe-area-inset-top);
-    height:44px;
-    padding:0 10px 0 calc(var(--dock-w) + 10px);
-  }
-  .topbar__left{ display:none; }
-
-  /* slightly tighter clock on mobile */
-  .clock{
-    padding:6px 10px;
-    border-radius:14px;
-  }
-  .clock__time{ font-size:15px; }
-  .clock__date{ font-size:10px; }
-
-  .main.desktop-only{ inset:0; }
+  /* ✅ スマホは上部topbarを消す（時計は左ドックへ） */
+  .topbar{ display:none; }
 
   body{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+
+    /* ✅ topbar分のpadding-topは不要 */
     padding-left: calc(var(--dock-w) + 10px);
-    padding-top: calc(44px + env(safe-area-inset-top) + 10px);
+    padding-top: calc(10px + env(safe-area-inset-top));
   }
 
-  /* Mobile wallpaper: blur-fill + sharp center */
+  /* Mobile wallpaper */
   .wallpaper{
     background: none;
     filter:none;
@@ -436,7 +422,7 @@ body{
     z-index:-1;
   }
 
-  /* Start menu: safe-area + internal scroll (no clipping) */
+  /* Start menu on mobile */
   .start-menu{
     left: calc(var(--dock-w) + 14px);
     right: 10px;
@@ -481,7 +467,7 @@ body{
     max-height: 40vh;
   }
 
-  /* Mobile dock */
+  /* ✅ Mobile dock */
   .mobile-dock{
     display:flex;
     flex-direction:column;
@@ -501,6 +487,32 @@ body{
     box-shadow: 0 18px 60px rgba(0,0,0,.35);
 
     z-index: 40;
+  }
+
+  /* ✅ Dock clock (top of bar) */
+  .dock-clock{
+    width: 100%;
+    padding: 10px 8px;
+    border-radius: 16px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.16);
+    box-shadow: 0 12px 35px rgba(0,0,0,.22);
+    text-align: center;
+    user-select: none;
+  }
+  .dock-clock__time{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .08em;
+    line-height: 1.15;
+  }
+  .dock-clock__date{
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: rgba(255,255,255,.70);
+    line-height: 1.1;
+    white-space: nowrap;
   }
 
   .dock-btn{
@@ -553,7 +565,6 @@ body{
   }
 }
 
-/* Smaller screens: window titlebar a bit tighter */
 @media (max-width: 900px){
   .window__titlebar{ padding: 12px; }
 }
