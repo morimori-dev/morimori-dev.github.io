@@ -314,39 +314,35 @@ body.contact-v2 .wallpaper::after{
   display:none;
 }
 
-/* ===== ✅ Mobile: logo left + text right ===== */
+/* ===== ✅ Mobile: logo left + text right (NO accidental stacking) ===== */
 @media (max-width: 900px){
-  /* hide sidebars / heavy header / big title */
   .cv2-side,
   .cv2-right,
   .cv2-header,
   .cv2-title{ display:none; }
 
-  /* page uses full width */
   .cv2{
     grid-template-columns: 1fr;
     padding: 0;
     gap: 0;
   }
 
-  /* main panel becomes transparent; the card is the surface */
   .cv2-main{
     padding: 0;
     border-radius: 0;
     border: 0;
     background: transparent;
     box-shadow: none;
-    width: 100vw; /* ✅ “余白が残る”系の保険 */
+    width: 100vw;
   }
 
-  /* mobile top bar */
   .cv2-mobilebar{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap: 10px;
 
-    padding: 14px 14px 12px;
+    padding: 12px 14px 10px;
     border-bottom: 1px solid rgba(255,255,255,.08);
     background: linear-gradient(180deg, rgba(15, 25, 45, 0.70), rgba(10, 18, 34, 0.70));
     backdrop-filter: blur(18px);
@@ -380,7 +376,13 @@ body.contact-v2 .wallpaper::after{
     margin: 0;
   }
 
-  /* card surface */
+  :root{
+    --cv2-name: 22px;
+    --cv2-body: 15px;
+    --cv2-links: 14px;
+  }
+
+  /* ✅ Force two-column layout */
   .cv2-profile{
     padding: 16px;
     border-radius: 18px;
@@ -388,51 +390,54 @@ body.contact-v2 .wallpaper::after{
     backdrop-filter: blur(18px);
     box-shadow: 0 18px 60px rgba(0,0,0,.35);
 
-    /* ✅ ここが本命：ロゴ左 / 本文右 */
     display: grid;
-    grid-template-columns: 120px minmax(0, 1fr);
-    gap: 14px;
+    grid-template-columns: 104px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 10px;
     align-items: start;
   }
 
-  /* ✅ ロゴは左上に固定（小さめ） */
+  /* ✅ Pin logo to top-left (no centering, no auto margin) */
   .cv2-profile__logo{
-    width: 120px;
-    max-width: 120px;
-    margin: 0;              /* ← 中央寄せを殺す */
+    width: 104px;
+    max-width: 104px;
+    margin: 0;
+    justify-self: start;
+    align-self: start;
+
     border-radius: 14px;
     box-shadow: 0 14px 40px rgba(0,0,0,.35);
   }
 
-  /* Typography a bit tighter for mobile */
-  :root{
-    --cv2-name: 22px;
-    --cv2-body: 15px;
-    --cv2-links: 14px;
-  }
-
-  /* ✅ 本文を“ロゴと同じ高さから”開始 */
+  /* ✅ Make sure text starts from the same top line */
   .cv2-profile__body{
     min-width: 0;
   }
   .cv2-profile__name{
-    margin-top: 2px; /* 微調整：ロゴ上端と揃いを良くする */
+    margin-top: 0;
+    line-height: 1.15;
+  }
+  .cv2-profile__handle{
+    margin-top: 6px;
+  }
+  .cv2-profile__desc{
+    margin-top: 10px;
+    max-width: 100%;
   }
 
-  /* 長いURLで崩れない */
-  .cv2-links li,
-  .cv2-links a{
-    overflow-wrap: anywhere;
-    word-break: break-word;
+  .cv2-links{
+    margin-top: 12px;
   }
 }
 
-/* 超狭い端末では縦積みに戻す（安全装置） */
-@media (max-width: 420px){
+/* ✅ Only stack on VERY tiny screens */
+@media (max-width: 330px){
   .cv2-profile{
     grid-template-columns: 1fr;
   }
   .cv2-profile__logo{
-    margin: 0 auto 8px auto;
+    width: 120px;
+    max-width: 60vw;
+    margin: 0 auto 10px auto;
   }
 }
