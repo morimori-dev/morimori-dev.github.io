@@ -9,7 +9,6 @@
 <body>
   <div class="wallpaper" aria-hidden="true"></div>
 
-  <!-- htmlproofer対策：page anchors -->
   <div id="home" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
   <div id="writeups" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
   <div id="notes" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;"></div>
@@ -17,8 +16,8 @@
   <!-- PC topbar -->
   <div class="topbar">
     <div class="topbar__left">
-      <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false" title="Menu">
-        <span class="start-top-btn__icon">🐉</span>
+      <button id="startBtn" class="start-top-btn" aria-label="Open menu" aria-expanded="false" title="Applications">
+        <span class="apps-grid" aria-hidden="true"></span>
       </button>
 
       <div class="top-shortcuts" role="toolbar" aria-label="Quick apps">
@@ -71,10 +70,9 @@
     </div>
   </aside>
 
-  <!-- Desktop is wallpaper only -->
   <main class="main desktop-only" aria-label="Desktop"></main>
 
-  <!-- Mobile left dock (Ubuntu-ish) -->
+  <!-- Mobile left dock -->
   <nav class="mobile-dock" aria-label="App dock">
     <button class="dock-btn" data-view="nav:Home" aria-label="Home" title="Home">
       <span class="dock-ico">🖥️</span>
@@ -88,8 +86,8 @@
 
     <div class="dock-sep" aria-hidden="true"></div>
 
-    <button class="dock-btn dock-btn--menu" data-view="menu:open" aria-label="Search / Menu" title="Search / Menu">
-      <span class="dock-ico">🔎</span>
+    <button class="dock-btn dock-btn--menu" data-view="menu:open" aria-label="Applications" title="Applications">
+      <span class="apps-grid apps-grid--dock" aria-hidden="true"></span>
     </button>
   </nav>
 

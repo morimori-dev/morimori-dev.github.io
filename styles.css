@@ -11,7 +11,7 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --ui: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
 
-  --dock-w: 64px; /* mobile dock width */
+  --dock-w: 64px;
 }
 
 *{ box-sizing:border-box; }
@@ -25,7 +25,7 @@ body{
   overflow:hidden;
 }
 
-/* Wallpaper (PC default: cover) */
+/* Wallpaper (PC) */
 .wallpaper{
   position:fixed; inset:0;
   background:
@@ -35,6 +35,36 @@ body{
   background-position:center;
   filter:saturate(1.05) contrast(1.05);
   z-index:-2;
+}
+
+/* ===== 9-dot apps grid icon (CSS) ===== */
+.apps-grid{
+  width:18px;
+  height:18px;
+  display:inline-block;
+  border-radius:6px;
+  /* 9個の点を box-shadow で作る */
+  background: rgba(255,255,255,.85);
+  box-shadow:
+    0 0 0 0 rgba(255,255,255,.85),
+    6px 0 0 0 rgba(255,255,255,.85),
+    12px 0 0 0 rgba(255,255,255,.85),
+
+    0 6px 0 0 rgba(255,255,255,.85),
+    6px 6px 0 0 rgba(255,255,255,.85),
+    12px 6px 0 0 rgba(255,255,255,.85),
+
+    0 12px 0 0 rgba(255,255,255,.85),
+    6px 12px 0 0 rgba(255,255,255,.85),
+    12px 12px 0 0 rgba(255,255,255,.85);
+  /* 点を小さく見せる */
+  transform: scale(.22);
+  transform-origin: top left;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+  opacity:.9;
+}
+.apps-grid--dock{
+  transform: scale(.25);
 }
 
 /* ===== PC Topbar ===== */
@@ -71,7 +101,6 @@ body{
   border-color: rgba(106,169,255,.28);
   background: rgba(106,169,255,.10);
 }
-.start-top-btn__icon{ font-size:18px; }
 
 .top-shortcuts{
   display:flex;
@@ -295,20 +324,14 @@ body{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
-
-    /* Dock分の余白を左に確保 */
     padding-left: calc(var(--dock-w) + 10px);
   }
 
-  /* ✅ 壁紙：iOSで帯が出ない安定版
-     - 画像は1回だけ（containで見切れゼロ）
-     - 余白はグラデ＋ビネット＋薄ノイズで埋める */
+  /* Mobile wallpaper stable */
   .wallpaper{
     background: none;
     filter:none;
   }
-
-  /* 余白を“それっぽく”埋める（画像を重ねない） */
   .wallpaper::after{
     content:"";
     position:fixed;
@@ -321,23 +344,17 @@ body{
       linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.70));
     z-index:-2;
   }
-
-  /* くっきり本体（1枚だけ） */
   .wallpaper::before{
     content:"";
     position:fixed;
     inset:0;
-    background:
-      url("./assets/skunk.png");
+    background: url("./assets/skunk.png");
     background-size:contain;
     background-position:center;
     background-repeat:no-repeat;
-    /* ちょい締める */
     filter: saturate(1.08) contrast(1.06);
     z-index:-1;
   }
-
-  /* うっすらノイズ（帯/段差を目立たせない） */
   body::before{
     content:"";
     position:fixed;
@@ -359,7 +376,6 @@ body{
     left: calc(var(--dock-w) + 14px);
     right: 10px;
     width:auto;
-
     top: calc(12px + env(safe-area-inset-top));
     height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     border-radius: 18px;
