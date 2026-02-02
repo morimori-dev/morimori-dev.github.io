@@ -2,7 +2,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const startBtn = $("#startBtn");                 // PC topbar start
+  const startBtn = $("#startBtn");            // PC start
   const startMenu = $("#startMenu");
   const menuSearch = $("#menuSearch");
 
@@ -18,9 +18,8 @@
   const clockTime = $("#clockTime");
   const clockDate = $("#clockDate");
 
-  // Mobile dock
-  const dockButtons = $$("[data-view]");
-  const mobileMenuBtn = $(".dock-btn--menu");      // ✅ mobile start (apps)
+  const mobileMenuBtn = $(".dock-btn--menu"); // Mobile start
+  const dockButtons = $$("[data-view]");      // All dock buttons (incl menu)
 
   const DATA_FALLBACK = {
     nav: [
@@ -59,9 +58,17 @@
     }
   };
 
-  const DATA_SRC = (typeof window.DATA === "object" && window.DATA) ? window.DATA : DATA_FALLBACK;
+  // data.js が壊れてても死なないように
+  let DATA_SRC = DATA_FALLBACK;
+  try {
+    if (typeof window.DATA === "object" && window.DATA) DATA_SRC = window.DATA;
+  } catch (_) {}
 
   let menuOpen = false;
+
+  function isMenuOpen() {
+    return !!startMenu?.classList.contains("open");
+  }
 
   function setMenuOpen(open) {
     menuOpen = !!open;
@@ -77,20 +84,13 @@
   }
 
   function toggleMenu() {
-    setMenuOpen(!menuOpen);
+    setMenuOpen(!isMenuOpen());
   }
 
   function ensureWindowVisible(show) {
-    const showWin = !!show;
     if (!win) return;
-
-    win.classList.toggle("hidden", !showWin);
-    startMenu?.classList.toggle("has-window", showWin);
-  }
-
-  function clearWindow() {
-    ensureWindowVisible(false);
-    if (contentArea) contentArea.innerHTML = "";
+    win.classList.toggle("hidden", !show);
+    startMenu?.classList.toggle("has-window", !!show);
   }
 
   function renderList(ul, items) {
@@ -101,11 +101,24 @@
       const a = document.createElement("a");
       a.href = it.href || "#";
       a.dataset.view = it.view;
-      a.innerHTML = `<span aria-hidden="true">${it.icon || "•"}</span><span>${it.label}</span>` +
+
+      a.innerHTML =
+        `<span aria-hidden="true">${it.icon || "•"}</span>` +
+        `<span>${it.label}</span>` +
         (typeof it.count === "number" ? `<span class="badge">${it.count}</span>` : "");
+
       li.appendChild(a);
       ul.appendChild(li);
     });
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function renderCards(viewKey) {
@@ -115,7 +128,9 @@
     contentArea.innerHTML = "";
 
     if (!cards.length) {
-      contentArea.innerHTML = `<div class="card"><div class="meta">${viewKey}</div><div style="margin-top:6px;opacity:.85;">No items yet.</div></div>`;
+      contentArea.innerHTML =
+        `<div class="card"><div class="meta">${escapeHtml(viewKey)}</div>` +
+        `<div style="margin-top:6px;opacity:.85;">No items yet.</div></div>`;
       return;
     }
 
@@ -135,18 +150,8 @@
     const label = viewKey.split(":")[1] || viewKey;
     if (winTitle) winTitle.textContent = label;
     if (winSub) winSub.textContent = "Loaded.";
-
     ensureWindowVisible(true);
     renderCards(viewKey);
-  }
-
-  function escapeHtml(s) {
-    return String(s)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
   }
 
   function applyFilter(q) {
@@ -159,36 +164,42 @@
     });
   }
 
-  // Init lists
+  // ===== Init =====
   renderList(navList, DATA_SRC.nav || []);
   renderList(catList, DATA_SRC.categories || []);
   renderList(tagList, DATA_SRC.tags || []);
 
-  // PC start button (toggle)
-  startBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleMenu();
-  });
+  // ===== Start buttons (PC / Mobile) =====
+  function bindToggle(el) {
+    if (!el) return;
 
-  // ✅ Mobile start button: explicit toggle (more reliable on iOS)
-  mobileMenuBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleMenu();
-  });
+    // iOSでも確実に拾う：pointerdown + click
+    el.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMenu();
+    });
 
-  // Dock buttons: open specific view / fallback
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMenu();
+    });
+  }
+
+  bindToggle(startBtn);
+  bindToggle(mobileMenuBtn);
+
+  // ===== Dock buttons open views =====
   dockButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const view = btn.dataset.view;
       if (!view) return;
 
       if (view === "menu:open") {
-        // mobileMenuBtn handlerが拾うが、保険でここも
+        // menuボタンは bindToggle が担当（保険で何もしない）
         e.preventDefault();
         e.stopPropagation();
-        toggleMenu();
         return;
       }
 
@@ -199,11 +210,10 @@
     });
   });
 
-  // Menu item click
+  // ===== Menu item click =====
   startMenu?.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-view]");
     if (!a) return;
-
     const view = a.dataset.view;
     if (!view) return;
 
@@ -211,18 +221,18 @@
     openView(view);
   });
 
-  // Outside click closes menu (✅ mobile start buttonも内側扱いにする)
-  document.addEventListener("click", (e) => {
-    if (!menuOpen) return;
-    const t = e.target;
+  // ===== Outside close (堅牢化：pointerdown capture) =====
+  document.addEventListener("pointerdown", (e) => {
+    if (!isMenuOpen()) return;
 
+    const t = e.target;
     const inside =
       (startMenu && startMenu.contains(t)) ||
       (startBtn && startBtn.contains(t)) ||
-      (mobileMenuBtn && mobileMenuBtn.contains(t)); // ✅ 追加
+      (mobileMenuBtn && mobileMenuBtn.contains(t));
 
     if (!inside) setMenuOpen(false);
-  });
+  }, true);
 
   // Esc closes
   document.addEventListener("keydown", (e) => {
@@ -234,14 +244,14 @@
     applyFilter(e.target.value);
   });
 
-  // Optional: tap titlebar to close window on mobile
+  // Tap titlebar to close window on mobile (optional)
   $("#winTitlebar")?.addEventListener("click", () => {
     if (window.matchMedia("(max-width: 900px)").matches) {
-      clearWindow();
+      ensureWindowVisible(false);
     }
   });
 
-  // Clock
+  // ===== Clock =====
   function pad2(n){ return String(n).padStart(2, "0"); }
   function tickClock() {
     const d = new Date();
