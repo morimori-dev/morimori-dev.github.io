@@ -17,6 +17,7 @@ body.contact-v2{
   overflow-x: hidden; /* stop “right shift” */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  margin: 0;
 }
 
 /* wallpaper */
@@ -367,25 +368,28 @@ body.contact-v2 .wallpaper::after{
 }
 
 @media (max-width: 900px){
-  /* ✅ hide sidebars and the heavy header → only main card remains */
+  /* hide sidebars / heavy header / big title */
   .cv2-side,
   .cv2-right,
   .cv2-header,
   .cv2-title{ display:none; }
 
-  /* ✅ full-bleed single panel */
+  /* ✅ FULL WIDTH: no centered “island” */
   .cv2{
     grid-template-columns: 1fr;
-    padding: 10px;
+    padding: 0;     /* ← 余白ゼロで詰める */
     gap: 0;
   }
 
   .cv2-main{
-    padding: 0;
-    border-radius: 18px;
+    padding: 0;     /* ← 余白ゼロ */
+    border-radius: 0; /* ← 画面いっぱい感（必要なら16pxに戻してもOK） */
+    border: 0;      /* ← 端まで伸ばした時に枠が重く見えるので消す */
+    background: transparent; /* ← メインの枠はカード側で表現 */
+    box-shadow: none;
   }
 
-  /* ✅ show simple mobile bar */
+  /* show simple mobile bar */
   .cv2-mobilebar{
     display:flex;
     align-items:center;
@@ -394,6 +398,8 @@ body.contact-v2 .wallpaper::after{
 
     padding: 14px 14px 12px;
     border-bottom: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, rgba(15, 25, 45, 0.70), rgba(10, 18, 34, 0.70));
+    backdrop-filter: blur(18px);
   }
   .cv2-mobilebar__back{
     font-family: var(--mono);
@@ -413,27 +419,34 @@ body.contact-v2 .wallpaper::after{
     max-width: 60vw;
   }
 
-  /* ✅ make the card readable on mobile */
+  /* ✅ Mobile type (readable) */
   :root{
     --cv2-name: 24px;
     --cv2-body: 16px;
     --cv2-links: 15px;
   }
 
+  /* ✅ content padding = small, not centered */
   .cv2-post{
-    padding: 14px;
-    max-width: 720px;
-    margin: 0 auto;
+    padding: 14px;   /* ← ここだけ最小限の内側余白 */
+    max-width: none; /* ← これが“左右の空間”の主犯 */
+    margin: 0;       /* ← 中央寄せ解除 */
   }
 
+  /* ✅ card full width */
   .cv2-profile{
-    padding: 18px;
+    padding: 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(15, 25, 45, 0.72), rgba(10, 18, 34, 0.72));
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 60px rgba(0,0,0,.35);
   }
 
+  /* ✅ smaller logo for mobile */
   .cv2-profile__logo{
-    width: 210px;
-    max-width: 78vw;
-    margin-bottom: 16px;
+    width: 160px;     /* ← 小さめ */
+    max-width: 54vw;
+    margin-bottom: 14px;
   }
 
   .cv2-profile__desc{
