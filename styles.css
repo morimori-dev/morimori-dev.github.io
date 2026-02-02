@@ -352,17 +352,20 @@ body{
       linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.70));
     z-index:-2;
   }
+
+  /* ✅ ここが変更点：モバイルは skunk_mobile.png */
   .wallpaper::before{
     content:"";
     position:fixed;
     inset:0;
-    background: url("./assets/skunk.png");
+    background: url("./assets/skunk_mobile.png");
     background-size:contain;
     background-position:center;
     background-repeat:no-repeat;
     filter: saturate(1.08) contrast(1.06);
     z-index:-1;
   }
+
   body::before{
     content:"";
     position:fixed;
@@ -379,7 +382,6 @@ body{
     z-index:-1;
   }
 
-  /* Start menu: Dockの右側から開く */
   .start-menu{
     left: calc(var(--dock-w) + 14px);
     right: 10px;
@@ -403,7 +405,6 @@ body{
   }
   .start-menu.has-window .menu-col{ max-height: 40vh; }
 
-  /* ✅ Ubuntu-ish dock: long & left-bottom style */
   .mobile-dock{
     display:flex;
     flex-direction:column;
@@ -411,8 +412,8 @@ body{
 
     position:fixed;
     left: 10px;
-    top: calc(10px + env(safe-area-inset-top));          /* ← ここで縦に長く */
-    bottom: calc(10px + env(safe-area-inset-bottom));    /* ← ここで縦に長く */
+    top: calc(10px + env(safe-area-inset-top));
+    bottom: calc(10px + env(safe-area-inset-bottom));
 
     width: var(--dock-w);
     padding: 10px 8px;
@@ -448,11 +449,10 @@ body{
   }
   .dock-ico{ font-size:22px; line-height:1; }
 
-  /* ✅ スペーサー：ここから下（Start）を一番下へ押し込む */
   .dock-sep{
     height: 1px;
     background: rgba(255,255,255,.12);
-    margin: auto 4px 6px; /* ← margin-top:auto の効果 */
+    margin: auto 4px 6px;
     border-radius: 999px;
   }
 
