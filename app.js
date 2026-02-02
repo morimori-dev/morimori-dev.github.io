@@ -254,27 +254,32 @@
     }
   });
 
-  // Clock (PC + Mobile)
+  // ===== Clock formatting =====
   function pad2(n){ return String(n).padStart(2, "0"); }
 
   function tickClock() {
     const d = new Date();
+
     const hh = pad2(d.getHours());
     const mm = pad2(d.getMinutes());
     const ss = pad2(d.getSeconds());
-    const timeStr = `${hh}:${mm}:${ss}`;
 
+    // PC: seconds ON
+    const timePC = `${hh}:${mm}:${ss}`;
+    // Mobile: seconds OFF
+    const timeMobile = `${hh}:${mm}`;
+
+    // Date: YYYY/MM/DD (PC & Mobile)
     const y = d.getFullYear();
-    const mo = pad2(d.getMonth()+1);
+    const mo = pad2(d.getMonth() + 1);
     const da = pad2(d.getDate());
-    const wd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()];
-    const dateStr = `${y}-${mo}-${da} (${wd})`;
+    const dateCommon = `${y}/${mo}/${da}`;
 
-    if (clockTime) clockTime.textContent = timeStr;
-    if (clockDate) clockDate.textContent = dateStr;
+    if (clockTime) clockTime.textContent = timePC;
+    if (clockDate) clockDate.textContent = dateCommon;
 
-    if (mClockTime) mClockTime.textContent = timeStr;
-    if (mClockDate) mClockDate.textContent = dateStr;
+    if (mClockTime) mClockTime.textContent = timeMobile;
+    if (mClockDate) mClockDate.textContent = dateCommon;
   }
 
   tickClock();
