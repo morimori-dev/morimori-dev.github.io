@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Contact</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="contact-page">
+  <div class="wallpaper" aria-hidden="true"></div>
+
+  <!-- Topbar (PC) -->
+  <div class="topbar">
+    <div class="topbar__left">
+      <a class="top-ico" href="./index.html" title="Back" aria-label="Back">⬅️</a>
+      <div class="top-shortcuts" role="toolbar" aria-label="Quick apps">
+        <a class="top-ico" href="./index.html#home" title="Desktop" aria-label="Desktop">🖥️</a>
+        <a class="top-ico" href="./index.html#notes" title="Notes" aria-label="Notes">🧠</a>
+        <a class="top-ico" href="./index.html#writeups" title="Writeups" aria-label="Writeups">🌐</a>
+      </div>
+    </div>
+    <div class="topbar__right">
+      <div class="clock">
+        <div class="clock__time" id="ctTime">00:00:00</div>
+        <div class="clock__date" id="ctDate">1970-01-01 (Thu)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile dock (same feel) -->
+  <nav class="mobile-dock" aria-label="App dock">
+    <a class="dock-btn" href="./index.html#home" aria-label="Home" title="Home"><span class="dock-ico">🖥️</span></a>
+    <a class="dock-btn" href="./index.html#writeups" aria-label="Writeups" title="Writeups"><span class="dock-ico">🌐</span></a>
+    <a class="dock-btn" href="./index.html#notes" aria-label="Notes" title="Notes"><span class="dock-ico">🧠</span></a>
+    <div class="dock-sep" aria-hidden="true"></div>
+    <a class="dock-btn dock-btn--menu" href="./index.html" aria-label="Back" title="Back"><span class="dock-ico">⬅️</span></a>
+  </nav>
+
+  <div class="contact-shell">
+    <main class="contact-main">
+      <section class="contact-hero">
+        <div class="contact-title">Contact</div>
+        <div class="contact-sub">
+          Best way to reach me: Email for serious inquiries, GitHub for work, X for updates.
+        </div>
+
+        <div class="contact-actions">
+          <a class="contact-btn" href="./index.html">⬅️ Back to Desktop</a>
+        </div>
+
+        <div class="contact-grid">
+          <a class="contact-card" href="https://github.com/YOUR_GITHUB" target="_blank" rel="noopener noreferrer">
+            <div class="contact-meta">Writeups / Code</div>
+            <div class="contact-name">GitHub</div>
+            <div class="contact-desc">Repositories, tooling, and structured writeups (HTB / THM / PG).</div>
+          </a>
+
+          <a class="contact-card" href="https://x.com/YOUR_X_HANDLE" target="_blank" rel="noopener noreferrer">
+            <div class="contact-meta">Security notes</div>
+            <div class="contact-name">X (Twitter)</div>
+            <div class="contact-desc">Short updates, techniques, and learning logs.</div>
+          </a>
+
+          <a class="contact-card" href="mailto:YOUR_EMAIL_HERE">
+            <div class="contact-meta">Direct contact</div>
+            <div class="contact-name">Email</div>
+            <div class="contact-desc">For collaboration, interviews, or security work. Please include context + timeline.</div>
+          </a>
+
+          <a class="contact-card" href="https://www.linkedin.com/in/YOUR_LINKEDIN" target="_blank" rel="noopener noreferrer">
+            <div class="contact-meta">Professional profile (optional)</div>
+            <div class="contact-name">LinkedIn</div>
+            <div class="contact-desc">Experience and recruiter contact.</div>
+          </a>
+
+          <a class="contact-card" href="https://keys.openpgp.org/search?q=YOUR_PGP_EMAIL_OR_FPR" target="_blank" rel="noopener noreferrer">
+            <div class="contact-meta">Encrypted contact (optional)</div>
+            <div class="contact-name">PGP / OpenPGP</div>
+            <div class="contact-desc">For sensitive reports. Fingerprint + public key link.</div>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // tiny clock for contact page
+    const pad2 = (n)=>String(n).padStart(2,"0");
+    const tEl = document.getElementById("ctTime");
+    const dEl = document.getElementById("ctDate");
+    const tick = () => {
+      const d = new Date();
+      const hh = pad2(d.getHours());
+      const mm = pad2(d.getMinutes());
+      const ss = pad2(d.getSeconds());
+      if (tEl) tEl.textContent = `${hh}:${mm}:${ss}`;
+      const y = d.getFullYear();
+      const mo = pad2(d.getMonth()+1);
+      const da = pad2(d.getDate());
+      const wd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()];
+      if (dEl) dEl.textContent = `${y}-${mo}-${da} (${wd})`;
+    };
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>

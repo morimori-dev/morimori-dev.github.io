@@ -399,7 +399,6 @@ body{
     z-index:-1;
   }
 
-  /* scanline */
   body::before{
     content:"";
     position:fixed;
@@ -523,4 +522,104 @@ body{
     opacity:0;
     pointer-events:none;
   }
+}
+
+/* ===== Contact page ===== */
+body.contact-page{
+  overflow:auto;
+}
+.contact-shell{
+  position: relative;
+  min-height: 100vh;
+  padding-top: 42px; /* topbar */
+}
+.contact-main{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 18px 14px 40px;
+}
+.contact-hero{
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, var(--panel), var(--panel2));
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.contact-title{
+  font-weight: 950;
+  font-size: 22px;
+  letter-spacing: .02em;
+}
+.contact-sub{
+  margin-top: 6px;
+  color: var(--muted);
+  line-height: 1.4;
+  font-size: 13px;
+}
+.contact-grid{
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.contact-card{
+  display:block;
+  text-decoration:none;
+  color: var(--text);
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  padding: 12px;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.contact-card:hover{
+  transform: translateY(-1px);
+  border-color: rgba(106,169,255,.28);
+  background: rgba(106,169,255,.10);
+}
+.contact-meta{
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.contact-name{
+  margin-top: 6px;
+  font-weight: 900;
+}
+.contact-desc{
+  margin-top: 6px;
+  color: rgba(255,255,255,.78);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.contact-actions{
+  margin-top: 10px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.contact-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  text-decoration:none;
+  cursor:pointer;
+}
+.contact-btn:hover{
+  border-color: rgba(106,169,255,.28);
+  background: rgba(106,169,255,.10);
+}
+
+@media (max-width: 900px){
+  body.contact-page{
+    padding-left: calc(var(--dock-w) + 10px);
+  }
+  .contact-shell{ padding-top: 0; }
+  .contact-grid{ grid-template-columns: 1fr; }
 }

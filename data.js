@@ -10,7 +10,9 @@ window.DATA = {
     { label: "Blog", icon: "📝", view: "nav:Blog" },
     { label: "Projects", icon: "🛠️", view: "nav:Projects" },
     { label: "Resume", icon: "📄", view: "nav:Resume" },
-    { label: "Contact", icon: "✉️", view: "nav:Contact" }
+
+    // ✅ Contact は「ページ遷移」にする（data-view なし）
+    { label: "Contact", icon: "✉️", href: "./contact.html" }
   ],
 
   // "Writeup Collections"
@@ -106,40 +108,6 @@ window.DATA = {
         meta: "WIP",
         desc: "A short overview of my experience, strengths, and focus areas.",
         href: "#"
-      }
-    ],
-
-    // ✅ Contact page
-    "nav:Contact": [
-      {
-        title: "GitHub",
-        meta: "Writeups / Code",
-        desc: "Repositories, tooling, and structured writeups (HTB / THM / PG).",
-        href: "https://github.com/YOUR_GITHUB"
-      },
-      {
-        title: "X (Twitter)",
-        meta: "Security notes",
-        desc: "Short updates, techniques, and learning logs.",
-        href: "https://x.com/YOUR_X_HANDLE"
-      },
-      {
-        title: "Email",
-        meta: "Direct contact",
-        desc: "For collaboration, interviews, or security work. Please include context + timeline.",
-        href: "mailto:YOUR_EMAIL_HERE"
-      },
-      {
-        title: "LinkedIn (optional)",
-        meta: "Professional profile",
-        desc: "Experience and recruiter contact (optional but strong for hiring flows).",
-        href: "https://www.linkedin.com/in/YOUR_LINKEDIN"
-      },
-      {
-        title: "PGP (optional)",
-        meta: "Encrypted contact",
-        desc: "For sensitive reports. Publish your fingerprint + public key link.",
-        href: "https://keys.openpgp.org/search?q=YOUR_PGP_EMAIL_OR_FPR"
       }
     ],
 

@@ -30,28 +30,24 @@
       { label: "Blog", icon: "📝", view: "nav:Blog" },
       { label: "Projects", icon: "🛠️", view: "nav:Projects" },
       { label: "Resume", icon: "📄", view: "nav:Resume" },
-      { label: "About", icon: "👋", view: "nav:About" },
-      { label: "Contact", icon: "✉️", view: "nav:Contact" },
+      { label: "Contact", icon: "✉️", href: "./contact.html" }
     ],
     categories: [
-      { label: "HTB", icon: "🧱", count: 1, view: "cat:HTB" },
-      { label: "THM", icon: "🧩", count: 1, view: "cat:THM" },
-      { label: "Proving Grounds", icon: "🏟️", count: 1, view: "cat:PG" },
+      { label: "HTB", icon: "🧱", count: 0, view: "cat:HTB" },
+      { label: "THM", icon: "🧩", count: 0, view: "cat:THM" },
+      { label: "Proving Grounds", icon: "🏟️", count: 0, view: "cat:PG" }
     ],
     tags: [
-      { label: "AD", icon: "🧬", count: 1, view: "tag:AD" },
-      { label: "Privesc", icon: "🪜", count: 1, view: "tag:Privesc" },
-      { label: "Web", icon: "🕸️", count: 1, view: "tag:Web" },
+      { label: "AD", icon: "🧬", count: 0, view: "tag:AD" },
+      { label: "Privesc", icon: "🪜", count: 0, view: "tag:Privesc" },
+      { label: "Web", icon: "🕸️", count: 0, view: "tag:Web" }
     ],
     cards: {
       "nav:Home": [
         { title: "Welcome", meta: "Home", desc: "Desktop-style launcher for your writeups.", href: "#home" }
       ],
       "nav:Writeups": [
-        { title: "Hack The Box (HTB)", meta: "Writeups", desc: "Machines & challenges with clear attack chains.", href: "#writeups" },
-        { title: "TryHackMe (THM)", meta: "Writeups", desc: "Learning paths & rooms (structured notes + exploitation).", href: "#writeups" },
-        { title: "Proving Grounds (PG)", meta: "Writeups", desc: "OffSec-style practice with exam-aligned workflows.", href: "#writeups" },
-        { title: "Attack Chains", meta: "Writeups", desc: "Initial access → privesc → pivot (reusable patterns).", href: "#writeups" },
+        { title: "Hack The Box (HTB)", meta: "Writeups", desc: "Machines & challenges with clear attack chains.", href: "#writeups" }
       ],
       "nav:Notes": [
         { title: "Notes Index", meta: "Notes", desc: "Concept notes and reusable techniques.", href: "#notes" }
@@ -102,18 +98,25 @@
       .replaceAll("'", "&#039;");
   }
 
+  // ✅ view があるときだけ data-view を付ける（Contactはただのリンクにする）
   function renderList(ul, items) {
     if (!ul) return;
     ul.innerHTML = "";
     items.forEach((it) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
+
       a.href = it.href || "#";
-      a.dataset.view = it.view;
+
+      if (it.view) {
+        a.dataset.view = it.view;
+      }
+
       a.innerHTML =
         `<span aria-hidden="true">${it.icon || "•"}</span>` +
         `<span>${it.label}</span>` +
         (typeof it.count === "number" ? `<span class="badge">${it.count}</span>` : "");
+
       li.appendChild(a);
       ul.appendChild(li);
     });
@@ -153,7 +156,7 @@
 
   function applyFilter(q) {
     const query = (q || "").trim().toLowerCase();
-    const anchors = $$("a[data-view]", startMenu);
+    const anchors = $$("a[data-view]", startMenu); // viewのある項目だけ対象
     anchors.forEach((a) => {
       const t = a.textContent.toLowerCase();
       const ok = !query || t.includes(query);
@@ -192,7 +195,6 @@
       if (!view) return;
 
       if (view === "menu:open") {
-        // menu handled by pointerup
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -205,7 +207,7 @@
     });
   });
 
-  // Menu item click
+  // Menu item click (data-view のあるものだけ window に出す)
   startMenu?.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-view]");
     if (!a) return;
@@ -216,7 +218,7 @@
     openView(view);
   });
 
-  // Outside click closes (still works on PC; overlay handles most cases)
+  // Outside click closes
   document.addEventListener("click", (e) => {
     if (!isMenuOpen()) return;
 
@@ -225,7 +227,7 @@
       (startMenu && startMenu.contains(t)) ||
       (startBtn && startBtn.contains(t)) ||
       (mobileMenuBtn && mobileMenuBtn.contains(t)) ||
-      (overlay && overlay.contains(t)); // overlay is allowed; it closes itself
+      (overlay && overlay.contains(t));
 
     if (!inside) setMenuOpen(false);
   });
