@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Contact</title>
 
+  <!-- your existing theme -->
   <link rel="stylesheet" href="./styles.css" />
+  <!-- contact-only overrides (NEW) -->
   <link rel="stylesheet" href="./contact.css" />
 </head>
 
@@ -13,7 +15,7 @@
   <div class="wallpaper" aria-hidden="true"></div>
 
   <div class="cv2">
-    <!-- LEFT SIDEBAR (PC only) -->
+    <!-- LEFT SIDEBAR -->
     <aside class="cv2-side" aria-label="Sidebar">
       <div class="cv2-side__inner">
         <a class="cv2-brand" href="./index.html" aria-label="Back to Desktop">
@@ -45,13 +47,6 @@
 
     <!-- CENTER -->
     <main class="cv2-main" aria-label="Main">
-      <!-- Mobile-only bar -->
-      <div class="cv2-mobilebar" aria-label="Mobile navigation">
-        <a class="cv2-mobilebar__back" href="./index.html" aria-label="Back to Home">← Back</a>
-        <div class="cv2-mobilebar__title">PS C:\&gt;whoami</div>
-      </div>
-
-      <!-- PC header (hidden on mobile by CSS) -->
       <div class="cv2-header">
         <div class="cv2-breadcrumb">
           <a href="./index.html">Home</a>
@@ -72,7 +67,8 @@
           <div class="cv2-profile__logo" aria-hidden="true"></div>
 
           <div class="cv2-profile__body">
-            <h2 class="cv2-profile__name">Paul</h2>
+            <h2 class="cv2-profile__name">Nozomu Sasaki</h2>
+            <div class="cv2-profile__handle">morimori-dev</div>
 
             <p class="cv2-profile__desc">
               Security engineer on a continuous hacking journey, bridging hands-on practice with real-world impact.
@@ -83,42 +79,36 @@
               I'll consider it a win.
             </p>
 
-            <!-- Links as emoji icons -->
-            <div class="cv2-links" role="list" aria-label="Links">
-              <a class="cv2-link" role="listitem"
-                 href="https://genki-aioi.com" target="_blank" rel="noopener noreferrer"
-                 aria-label="Blog" title="Blog">
-                📝<span class="sr-only">Blog</span>
+            <!-- Icon links (vertical, no raw URLs) -->
+            <div class="cv2-linkicons" aria-label="Links">
+              <a class="cv2-linkicon" href="https://genki-aioi.com" target="_blank" rel="noopener noreferrer" aria-label="Blog">
+                <span class="i" aria-hidden="true">🌐</span>
+                <span class="t">Blog</span>
               </a>
 
-              <a class="cv2-link" role="listitem"
-                 href="https://morimori-dev.github.io" target="_blank" rel="noopener noreferrer"
-                 aria-label="Site" title="Site">
-                🌐<span class="sr-only">Site</span>
+              <a class="cv2-linkicon" href="https://morimori-dev.github.io" target="_blank" rel="noopener noreferrer" aria-label="Site">
+                <span class="i" aria-hidden="true">🖥️</span>
+                <span class="t">Site</span>
               </a>
 
-              <a class="cv2-link" role="listitem"
-                 href="https://github.com/morimori-dev" target="_blank" rel="noopener noreferrer"
-                 aria-label="GitHub" title="GitHub">
-                🐙<span class="sr-only">GitHub</span>
+              <a class="cv2-linkicon" href="https://github.com/morimori-dev" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <span class="i" aria-hidden="true">🐙</span>
+                <span class="t">GitHub</span>
               </a>
 
-              <a class="cv2-link" role="listitem"
-                 href="https://x.com/class_nzm" target="_blank" rel="noopener noreferrer"
-                 aria-label="X" title="X">
-                𝕏<span class="sr-only">X</span>
+              <a class="cv2-linkicon" href="https://x.com/class_nzm" target="_blank" rel="noopener noreferrer" aria-label="X">
+                <span class="i" aria-hidden="true">𝕏</span>
+                <span class="t">X</span>
               </a>
 
-              <a class="cv2-link" role="listitem"
-                 href="mailto:shukatuganbaruzo@gmail.com"
-                 aria-label="Email" title="Email">
-                ✉️<span class="sr-only">Email</span>
+              <a class="cv2-linkicon" href="mailto:shukatuganbaruzo@gmail.com" aria-label="Email">
+                <span class="i" aria-hidden="true">✉️</span>
+                <span class="t">Email</span>
               </a>
 
-              <a class="cv2-link" role="listitem"
-                 href="https://www.linkedin.com/in/nozomu-sasaki-446470241" target="_blank" rel="noopener noreferrer"
-                 aria-label="LinkedIn" title="LinkedIn">
-                💼<span class="sr-only">LinkedIn</span>
+              <a class="cv2-linkicon" href="https://www.linkedin.com/in/nozomu-sasaki-446470241" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <span class="i" aria-hidden="true">💼</span>
+                <span class="t">LinkedIn</span>
               </a>
             </div>
           </div>
@@ -126,7 +116,7 @@
       </section>
     </main>
 
-    <!-- RIGHT (PC only) -->
+    <!-- RIGHT -->
     <aside class="cv2-right" aria-label="Sidebar widgets">
       <section class="cv2-widget">
         <div class="cv2-widget__title">Recent Update</div>
