@@ -37,31 +37,45 @@ body{
   z-index:-2;
 }
 
-/* ===== 9-dot apps grid icon (CSS) ===== */
+/* ===== Apps grid icon (3x3 dots) ===== */
 .apps-grid{
-  width:18px;
-  height:18px;
-  display:inline-block;
-  border-radius:6px;
-  background: rgba(255,255,255,.85);
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+.apps-grid::before{
+  content:"";
+  position:absolute;
+  left: 2px;
+  top: 2px;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
   box-shadow:
-    0 0 0 0 rgba(255,255,255,.85),
-    6px 0 0 0 rgba(255,255,255,.85),
-    12px 0 0 0 rgba(255,255,255,.85),
+    0   0   0 rgba(255,255,255,.92),
+    6px 0   0 rgba(255,255,255,.92),
+    12px 0  0 rgba(255,255,255,.92),
 
-    0 6px 0 0 rgba(255,255,255,.85),
-    6px 6px 0 0 rgba(255,255,255,.85),
-    12px 6px 0 0 rgba(255,255,255,.85),
+    0   6px 0 rgba(255,255,255,.92),
+    6px 6px 0 rgba(255,255,255,.92),
+    12px 6px 0 rgba(255,255,255,.92),
 
-    0 12px 0 0 rgba(255,255,255,.85),
-    6px 12px 0 0 rgba(255,255,255,.85),
-    12px 12px 0 0 rgba(255,255,255,.85);
-  transform: scale(.22);
-  transform-origin: top left;
+    0   12px 0 rgba(255,255,255,.92),
+    6px 12px 0 rgba(255,255,255,.92),
+    12px 12px 0 rgba(255,255,255,.92);
   filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
   opacity:.9;
 }
-.apps-grid--dock{ transform: scale(.25); }
+.apps-grid--dock{
+  width: 20px;
+  height: 20px;
+}
+.apps-grid--dock::before{
+  left: 2px;
+  top: 2px;
+}
 
 /* ===== PC Topbar ===== */
 .topbar{
@@ -318,8 +332,6 @@ body{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
-
-    /* 左下Dockが被らないように余白確保（下寄せにしてもOK） */
     padding-left: calc(var(--dock-w) + 10px);
   }
 
@@ -367,13 +379,11 @@ body{
     z-index:-1;
   }
 
-  /* Start menu: Dockの右側から開く（左下寄せでもOK） */
+  /* Start menu: Dockの右側から開く */
   .start-menu{
     left: calc(var(--dock-w) + 14px);
     right: 10px;
     width:auto;
-
-    /* 上はセーフエリアだけ確保。高さは下Dockに合わせる */
     top: calc(12px + env(safe-area-inset-top));
     height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     border-radius: 18px;
@@ -393,7 +403,7 @@ body{
   }
   .start-menu.has-window .menu-col{ max-height: 40vh; }
 
-  /* ✅ Ubuntu-ish dock: left-bottom anchored */
+  /* ✅ Ubuntu-ish dock: long & left-bottom style */
   .mobile-dock{
     display:flex;
     flex-direction:column;
@@ -401,14 +411,12 @@ body{
 
     position:fixed;
     left: 10px;
-    top: auto; /* 上固定やめる */
-    bottom: calc(10px + env(safe-area-inset-bottom)); /* 左下に寄せる */
+    top: calc(10px + env(safe-area-inset-top));          /* ← ここで縦に長く */
+    bottom: calc(10px + env(safe-area-inset-bottom));    /* ← ここで縦に長く */
+
     width: var(--dock-w);
-
-    /* ここが肝：下に詰める */
-    justify-content:flex-end;
-
     padding: 10px 8px;
+
     border-radius: 18px;
     border:1px solid rgba(255,255,255,.10);
     background: rgba(0,0,0,.30);
@@ -440,17 +448,15 @@ body{
   }
   .dock-ico{ font-size:22px; line-height:1; }
 
+  /* ✅ スペーサー：ここから下（Start）を一番下へ押し込む */
   .dock-sep{
     height: 1px;
     background: rgba(255,255,255,.12);
-    margin: 6px 4px;
+    margin: auto 4px 6px; /* ← margin-top:auto の効果 */
     border-radius: 999px;
   }
 
-  /* ✅ 「一番下がスタート」になるように、区切り線とスタートを末尾側に自然に配置
-     HTMLの順番はそのままでOK（sep → start が最後にある想定） */
   .dock-btn--menu{
-    /* 目立たせたいなら少しだけ */
     background: rgba(255,255,255,.08);
   }
 
