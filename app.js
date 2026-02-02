@@ -194,6 +194,14 @@
       const view = btn.dataset.view;
       if (!view) return;
 
+      // ✅ Contact は別ページへ即移動
+      if (view === "nav:Contact") {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = "./contact.html";
+        return;
+      }
+
       if (view === "menu:open") {
         e.preventDefault();
         e.stopPropagation();
@@ -213,6 +221,13 @@
     if (!a) return;
     const view = a.dataset.view;
     if (!view) return;
+
+    // ✅ Contact は別ページへ即移動
+    if (view === "nav:Contact") {
+      e.preventDefault();
+      window.location.href = "./contact.html";
+      return;
+    }
 
     e.preventDefault();
     openView(view);
