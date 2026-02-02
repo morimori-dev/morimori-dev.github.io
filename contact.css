@@ -14,7 +14,7 @@
 *{ box-sizing: border-box; }
 
 body.contact-v2{
-  overflow-x: hidden; /* stop “right shift” */
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   margin: 0;
@@ -42,7 +42,7 @@ body.contact-v2 .wallpaper::after{
     linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.55));
 }
 
-/* ===== Desktop Layout (3 columns) ===== */
+/* ===== Desktop Layout ===== */
 .cv2{
   min-height: 100vh;
   width: 100%;
@@ -231,7 +231,6 @@ body.contact-v2 .wallpaper::after{
   letter-spacing: .02em;
 }
 
-/* “single card” style inside center */
 .cv2-profile{
   border-radius: 18px;
   border:1px solid rgba(255,255,255,.10);
@@ -309,64 +308,13 @@ body.contact-v2 .wallpaper::after{
   overflow:auto;
   padding: 18px;
 }
-.cv2-widget + .cv2-widget{ margin-top: 16px; }
 
-.cv2-widget__title{
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.62);
-  margin-bottom: 10px;
-}
-
-.cv2-widget__list{
-  list-style:none;
-  padding:0;
-  margin:0;
-  display:flex;
-  flex-direction:column;
-  gap: 8px;
-}
-.cv2-widget__list a{
-  color: rgba(255,255,255,.80);
-  text-decoration:none;
-  border:1px solid rgba(255,255,255,.06);
-  background: rgba(255,255,255,.04);
-  padding: 10px 10px;
-  border-radius: 12px;
-  display:block;
-}
-.cv2-widget__list a:hover{
-  border-color: rgba(106,169,255,.28);
-  background: rgba(106,169,255,.10);
-}
-
-.cv2-tags{
-  display:flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.cv2-tag{
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  text-decoration:none;
-  color: rgba(255,255,255,.78);
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.16);
-}
-.cv2-tag:hover{
-  border-color: rgba(106,169,255,.28);
-  background: rgba(106,169,255,.10);
-}
-
-/* ===== ✅ Mobile: “ONE PAGE” Contact ===== */
+/* ===== Mobile bar ===== */
 .cv2-mobilebar{
-  display:none; /* desktop hidden */
+  display:none;
 }
 
+/* ===== ✅ Mobile: logo left + text right ===== */
 @media (max-width: 900px){
   /* hide sidebars / heavy header / big title */
   .cv2-side,
@@ -374,22 +322,24 @@ body.contact-v2 .wallpaper::after{
   .cv2-header,
   .cv2-title{ display:none; }
 
-  /* ✅ FULL WIDTH: no centered “island” */
+  /* page uses full width */
   .cv2{
     grid-template-columns: 1fr;
-    padding: 0;     /* ← 余白ゼロで詰める */
+    padding: 0;
     gap: 0;
   }
 
+  /* main panel becomes transparent; the card is the surface */
   .cv2-main{
-    padding: 0;     /* ← 余白ゼロ */
-    border-radius: 0; /* ← 画面いっぱい感（必要なら16pxに戻してもOK） */
-    border: 0;      /* ← 端まで伸ばした時に枠が重く見えるので消す */
-    background: transparent; /* ← メインの枠はカード側で表現 */
+    padding: 0;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
     box-shadow: none;
+    width: 100vw; /* ✅ “余白が残る”系の保険 */
   }
 
-  /* show simple mobile bar */
+  /* mobile top bar */
   .cv2-mobilebar{
     display:flex;
     align-items:center;
@@ -419,37 +369,70 @@ body.contact-v2 .wallpaper::after{
     max-width: 60vw;
   }
 
-  /* ✅ Mobile type (readable) */
-  :root{
-    --cv2-name: 24px;
-    --cv2-body: 16px;
-    --cv2-links: 15px;
-  }
-
-  /* ✅ content padding = small, not centered */
+  /* content padding with safe-area */
   .cv2-post{
-    padding: 14px;   /* ← ここだけ最小限の内側余白 */
-    max-width: none; /* ← これが“左右の空間”の主犯 */
-    margin: 0;       /* ← 中央寄せ解除 */
+    padding:
+      14px
+      calc(14px + env(safe-area-inset-right))
+      14px
+      calc(14px + env(safe-area-inset-left));
+    max-width: none;
+    margin: 0;
   }
 
-  /* ✅ card full width */
+  /* card surface */
   .cv2-profile{
     padding: 16px;
     border-radius: 18px;
     background: linear-gradient(180deg, rgba(15, 25, 45, 0.72), rgba(10, 18, 34, 0.72));
     backdrop-filter: blur(18px);
     box-shadow: 0 18px 60px rgba(0,0,0,.35);
+
+    /* ✅ ここが本命：ロゴ左 / 本文右 */
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
   }
 
-  /* ✅ smaller logo for mobile */
+  /* ✅ ロゴは左上に固定（小さめ） */
   .cv2-profile__logo{
-    width: 160px;     /* ← 小さめ */
-    max-width: 54vw;
-    margin-bottom: 14px;
+    width: 120px;
+    max-width: 120px;
+    margin: 0;              /* ← 中央寄せを殺す */
+    border-radius: 14px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.35);
   }
 
-  .cv2-profile__desc{
-    max-width: 100%;
+  /* Typography a bit tighter for mobile */
+  :root{
+    --cv2-name: 22px;
+    --cv2-body: 15px;
+    --cv2-links: 14px;
+  }
+
+  /* ✅ 本文を“ロゴと同じ高さから”開始 */
+  .cv2-profile__body{
+    min-width: 0;
+  }
+  .cv2-profile__name{
+    margin-top: 2px; /* 微調整：ロゴ上端と揃いを良くする */
+  }
+
+  /* 長いURLで崩れない */
+  .cv2-links li,
+  .cv2-links a{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+/* 超狭い端末では縦積みに戻す（安全装置） */
+@media (max-width: 420px){
+  .cv2-profile{
+    grid-template-columns: 1fr;
+  }
+  .cv2-profile__logo{
+    margin: 0 auto 8px auto;
   }
 }
