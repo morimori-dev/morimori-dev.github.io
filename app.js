@@ -2,7 +2,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const startBtn = $("#startBtn");            // PC start
+  const startBtn = $("#startBtn");              // PC start
   const startMenu = $("#startMenu");
   const menuSearch = $("#menuSearch");
 
@@ -18,8 +18,8 @@
   const clockTime = $("#clockTime");
   const clockDate = $("#clockDate");
 
-  const mobileMenuBtn = $(".dock-btn--menu"); // Mobile start
-  const dockButtons = $$("[data-view]");      // All dock buttons (incl menu)
+  const mobileMenuBtn = $(".dock-btn--menu");   // Mobile start
+  const dockButtons = $$("[data-view]");        // All dock buttons
 
   const DATA_FALLBACK = {
     nav: [
@@ -58,27 +58,22 @@
     }
   };
 
-  // data.js が壊れてても死なないように
   let DATA_SRC = DATA_FALLBACK;
   try {
     if (typeof window.DATA === "object" && window.DATA) DATA_SRC = window.DATA;
   } catch (_) {}
-
-  let menuOpen = false;
 
   function isMenuOpen() {
     return !!startMenu?.classList.contains("open");
   }
 
   function setMenuOpen(open) {
-    menuOpen = !!open;
     if (!startMenu) return;
+    startMenu.classList.toggle("open", !!open);
+    startMenu.setAttribute("aria-hidden", open ? "false" : "true");
+    if (startBtn) startBtn.setAttribute("aria-expanded", open ? "true" : "false");
 
-    startMenu.classList.toggle("open", menuOpen);
-    startMenu.setAttribute("aria-hidden", menuOpen ? "false" : "true");
-    if (startBtn) startBtn.setAttribute("aria-expanded", menuOpen ? "true" : "false");
-
-    if (menuOpen) {
+    if (open) {
       setTimeout(() => menuSearch && menuSearch.focus({ preventScroll: true }), 0);
     }
   }
@@ -93,25 +88,6 @@
     startMenu?.classList.toggle("has-window", !!show);
   }
 
-  function renderList(ul, items) {
-    if (!ul) return;
-    ul.innerHTML = "";
-    items.forEach((it) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.href = it.href || "#";
-      a.dataset.view = it.view;
-
-      a.innerHTML =
-        `<span aria-hidden="true">${it.icon || "•"}</span>` +
-        `<span>${it.label}</span>` +
-        (typeof it.count === "number" ? `<span class="badge">${it.count}</span>` : "");
-
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-  }
-
   function escapeHtml(s) {
     return String(s)
       .replaceAll("&", "&amp;")
@@ -121,12 +97,28 @@
       .replaceAll("'", "&#039;");
   }
 
+  function renderList(ul, items) {
+    if (!ul) return;
+    ul.innerHTML = "";
+    items.forEach((it) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = it.href || "#";
+      a.dataset.view = it.view;
+      a.innerHTML =
+        `<span aria-hidden="true">${it.icon || "•"}</span>` +
+        `<span>${it.label}</span>` +
+        (typeof it.count === "number" ? `<span class="badge">${it.count}</span>` : "");
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+  }
+
   function renderCards(viewKey) {
     const cards = (DATA_SRC.cards && DATA_SRC.cards[viewKey]) ? DATA_SRC.cards[viewKey] : [];
     if (!contentArea) return;
 
     contentArea.innerHTML = "";
-
     if (!cards.length) {
       contentArea.innerHTML =
         `<div class="card"><div class="meta">${escapeHtml(viewKey)}</div>` +
@@ -169,26 +161,17 @@
   renderList(catList, DATA_SRC.categories || []);
   renderList(tagList, DATA_SRC.tags || []);
 
-  // ===== Start buttons (PC / Mobile) =====
-  function bindToggle(el) {
+  // ===== Start toggle: 1イベントに統一（pointerupのみ） =====
+  function bindStartToggle(el) {
     if (!el) return;
-
-    // iOSでも確実に拾う：pointerdown + click
-    el.addEventListener("pointerdown", (e) => {
+    el.addEventListener("pointerup", (e) => {
       e.preventDefault();
       e.stopPropagation();
       toggleMenu();
-    });
-
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleMenu();
-    });
+    }, { passive: false });
   }
-
-  bindToggle(startBtn);
-  bindToggle(mobileMenuBtn);
+  bindStartToggle(startBtn);
+  bindStartToggle(mobileMenuBtn);
 
   // ===== Dock buttons open views =====
   dockButtons.forEach((btn) => {
@@ -197,7 +180,7 @@
       if (!view) return;
 
       if (view === "menu:open") {
-        // menuボタンは bindToggle が担当（保険で何もしない）
+        // menuはpointerupで処理済み
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -221,8 +204,8 @@
     openView(view);
   });
 
-  // ===== Outside close (堅牢化：pointerdown capture) =====
-  document.addEventListener("pointerdown", (e) => {
+  // ===== Outside click closes (clickのみで判断) =====
+  document.addEventListener("click", (e) => {
     if (!isMenuOpen()) return;
 
     const t = e.target;
@@ -232,7 +215,7 @@
       (mobileMenuBtn && mobileMenuBtn.contains(t));
 
     if (!inside) setMenuOpen(false);
-  }, true);
+  });
 
   // Esc closes
   document.addEventListener("keydown", (e) => {
