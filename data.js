@@ -1,114 +1,173 @@
-window.SITE_DATA = {
+// data.js
+// Site data model consumed by app.js
+// Replace "YOUR_..." placeholders with your actual info.
+
+window.DATA = {
   nav: [
-    { title: "Home",     icon: "🏠", href: "#home" },
-    { title: "Writeups", icon: "🧪", href: "#writeups" },
-    { title: "Notes",    icon: "🧠", href: "#notes" },
-    { title: "Blog",     icon: "📝", href: "#nav/blog" },
-    { title: "Projects", icon: "🛠️", href: "#nav/projects" },
-    { title: "Resume",   icon: "📄", href: "#nav/resume" },
-    { title: "About",    icon: "👋", href: "#nav/about" },
-    { title: "Contact",  icon: "✉️", href: "#nav/contact" },
+    { label: "Home", icon: "🏠", view: "nav:Home" },
+    { label: "Writeups", icon: "🧪", view: "nav:Writeups" },
+    { label: "Notes", icon: "🧠", view: "nav:Notes" },
+    { label: "Blog", icon: "📝", view: "nav:Blog" },
+    { label: "Projects", icon: "🛠️", view: "nav:Projects" },
+    { label: "Resume", icon: "📄", view: "nav:Resume" },
+    { label: "Contact", icon: "✉️", view: "nav:Contact" }
   ],
 
-  // “Collections” = menuのカテゴリ枠（Writeup棚 + Notes棚 + Blog棚）
-  collections: [
-    { name: "HTB",            icon: "🧱", count: 0 },
-    { name: "THM",            icon: "🧩", count: 0 },
-    { name: "Proving Grounds",icon: "🏋️", count: 0 },
-    { name: "Attack Chains",  icon: "⛓️", count: 0 },
-    { name: "Active Directory",icon:"🧬", count: 0 },
-
-    { name: "Cheatsheets",    icon: "📌", count: 0 },
-    { name: "Methodology",    icon: "🧭", count: 0 },
-    { name: "Tooling",        icon: "🛠️", count: 0 },
-
-    { name: "Deep Dives",     icon: "🔬", count: 0 },
-    { name: "Postmortems",    icon: "🧾", count: 0 },
+  // "Writeup Collections"
+  categories: [
+    { label: "HTB", icon: "🧱", count: 0, view: "cat:HTB" },
+    { label: "THM", icon: "🧩", count: 0, view: "cat:THM" },
+    { label: "Proving Grounds", icon: "🏟️", count: 0, view: "cat:PG" }
   ],
 
+  // Tags (examples)
   tags: [
-    { name: "Enumeration", count: 0 },
-    { name: "Web", count: 0 },
-    { name: "Active Directory", count: 0 },
-    { name: "Kerberos", count: 0 },
-    { name: "PrivEsc", count: 0 },
-    { name: "Pivoting", count: 0 },
-    { name: "Windows", count: 0 },
-    { name: "Linux", count: 0 },
+    { label: "AD", icon: "🧬", count: 0, view: "tag:AD" },
+    { label: "Privesc", icon: "🪜", count: 0, view: "tag:Privesc" },
+    { label: "Web", icon: "🕸️", count: 0, view: "tag:Web" },
+    { label: "Linux", icon: "🐧", count: 0, view: "tag:Linux" },
+    { label: "Windows", icon: "🪟", count: 0, view: "tag:Windows" }
   ],
 
-  // サンプル（ここをObsidianから自動生成して差し替える想定）
-  posts: [
-    {
-      title: "Sample: HTB Machine — Web foothold → creds reuse → root",
-      href: "./writeups/htb/sample-htb.html",
-      date: "2026-02-01",
-      section: "Writeups",
-      collection: "HTB",
-      tags: ["Enumeration", "Web", "PrivEsc", "Linux"]
-    },
-    {
-      title: "Sample: THM Room — Initial access → privilege escalation",
-      href: "./writeups/thm/sample-thm.html",
-      date: "2026-02-01",
-      section: "Writeups",
-      collection: "THM",
-      tags: ["Enumeration", "Windows", "PrivEsc"]
-    },
-    {
-      title: "Sample: Attack Chain — Web → pivot → internal service",
-      href: "./writeups/chains/sample-chain.html",
-      date: "2026-02-01",
-      section: "Writeups",
-      collection: "Attack Chains",
-      tags: ["Web", "Pivoting", "Enumeration"]
-    },
-    {
-      title: "Sample: AD Notes — Kerberos quick reference",
-      href: "./notes/ad/kerberos.html",
-      date: "2026-02-01",
-      section: "Notes",
-      collection: "Cheatsheets",
-      tags: ["Active Directory", "Kerberos"]
-    },
-    {
-      title: "Sample: Tooling — ligolo-ng basic playbook",
-      href: "./notes/tooling/ligolo.html",
-      date: "2026-02-01",
-      section: "Notes",
-      collection: "Tooling",
-      tags: ["Pivoting"]
-    },
-    {
-      title: "Sample: Deep Dive — Why enumeration wins",
-      href: "./blog/deep-dives/enumeration.html",
-      date: "2026-02-01",
-      section: "Blog",
-      collection: "Deep Dives",
-      tags: ["Enumeration"]
-    },
-    {
-      title: "Sample: Project — This desktop-themed portfolio",
-      href: "./projects/site.html",
-      date: "2026-02-01",
-      section: "Projects",
-      collection: "Tooling",
-      tags: ["Tooling"]
-    }
-  ]
-};
+  // Cards displayed in the right window
+  cards: {
+    "nav:Home": [
+      {
+        title: "Welcome",
+        meta: "Home",
+        desc: "Desktop-style launcher for my security writeups and notes.",
+        href: "#home"
+      },
+      {
+        title: "Quick Start",
+        meta: "How to use",
+        desc: "Open the Start menu, pick a collection (HTB/THM/PG), then filter by tags.",
+        href: "#"
+      }
+    ],
 
-// counts を自動計算（posts差し替えたら勝手に反映）
-(() => {
-  const d = window.SITE_DATA;
-  const collCount = new Map();
-  const tagCount = new Map();
+    "nav:Writeups": [
+      {
+        title: "Hack The Box (HTB)",
+        meta: "Writeups",
+        desc: "Machines & challenges with clear attack chains and reproducible steps.",
+        href: "#writeups"
+      },
+      {
+        title: "TryHackMe (THM)",
+        meta: "Writeups",
+        desc: "Learning paths & rooms (structured notes + exploitation).",
+        href: "#writeups"
+      },
+      {
+        title: "Proving Grounds (PG)",
+        meta: "Writeups",
+        desc: "OffSec-style practice aligned with real pentest workflows.",
+        href: "#writeups"
+      },
+      {
+        title: "Methodology",
+        meta: "Writeups",
+        desc: "Enumeration → foothold → privesc → lateral movement (repeatable patterns).",
+        href: "#writeups"
+      }
+    ],
 
-  for(const p of d.posts){
-    collCount.set(p.collection, (collCount.get(p.collection) || 0) + 1);
-    for(const t of p.tags) tagCount.set(t, (tagCount.get(t) || 0) + 1);
+    "nav:Notes": [
+      {
+        title: "Notes Index",
+        meta: "Notes",
+        desc: "Concept notes and reusable techniques (checklists, commands, pitfalls).",
+        href: "#notes"
+      }
+    ],
+
+    "nav:Blog": [
+      {
+        title: "Blog",
+        meta: "WIP",
+        desc: "Short posts about lessons learned, tooling, and security thinking.",
+        href: "#"
+      }
+    ],
+
+    "nav:Projects": [
+      {
+        title: "Projects",
+        meta: "WIP",
+        desc: "Tools, scripts, and small automation projects related to security workflows.",
+        href: "#"
+      }
+    ],
+
+    "nav:Resume": [
+      {
+        title: "Resume",
+        meta: "WIP",
+        desc: "A short overview of my experience, strengths, and focus areas.",
+        href: "#"
+      }
+    ],
+
+    // ✅ Contact page
+    "nav:Contact": [
+      {
+        title: "GitHub",
+        meta: "Writeups / Code",
+        desc: "Repositories, tooling, and structured writeups (HTB / THM / PG).",
+        href: "https://github.com/YOUR_GITHUB"
+      },
+      {
+        title: "X (Twitter)",
+        meta: "Security notes",
+        desc: "Short updates, techniques, and learning logs.",
+        href: "https://x.com/YOUR_X_HANDLE"
+      },
+      {
+        title: "Email",
+        meta: "Direct contact",
+        desc: "For collaboration, interviews, or security work. Please include context + timeline.",
+        href: "mailto:YOUR_EMAIL_HERE"
+      },
+      {
+        title: "LinkedIn (optional)",
+        meta: "Professional profile",
+        desc: "Experience and recruiter contact (optional but strong for hiring flows).",
+        href: "https://www.linkedin.com/in/YOUR_LINKEDIN"
+      },
+      {
+        title: "PGP (optional)",
+        meta: "Encrypted contact",
+        desc: "For sensitive reports. Publish your fingerprint + public key link.",
+        href: "https://keys.openpgp.org/search?q=YOUR_PGP_EMAIL_OR_FPR"
+      }
+    ],
+
+    // Optional: category/tag views (placeholders)
+    "cat:HTB": [
+      { title: "HTB Collection", meta: "Category", desc: "Add your HTB machine writeups here.", href: "#writeups" }
+    ],
+    "cat:THM": [
+      { title: "THM Collection", meta: "Category", desc: "Add your THM room writeups here.", href: "#writeups" }
+    ],
+    "cat:PG": [
+      { title: "Proving Grounds Collection", meta: "Category", desc: "Add your PG practice writeups here.", href: "#writeups" }
+    ],
+
+    "tag:AD": [
+      { title: "Active Directory", meta: "Tag", desc: "Kerberos, LDAP, AD CS, GPO, lateral movement, etc.", href: "#writeups" }
+    ],
+    "tag:Privesc": [
+      { title: "Privilege Escalation", meta: "Tag", desc: "Linux/Windows privesc paths, misconfigs, creds, and exploitation.", href: "#writeups" }
+    ],
+    "tag:Web": [
+      { title: "Web", meta: "Tag", desc: "Auth issues, injections, SSRF, deserialization, and more.", href: "#writeups" }
+    ],
+    "tag:Linux": [
+      { title: "Linux", meta: "Tag", desc: "Enumeration, privesc, services, and misconfig patterns.", href: "#writeups" }
+    ],
+    "tag:Windows": [
+      { title: "Windows", meta: "Tag", desc: "AD, services, token abuse, local privesc, and ops tips.", href: "#writeups" }
+    ]
   }
-
-  d.collections = d.collections.map(c => ({...c, count: collCount.get(c.name) || 0}));
-  d.tags = d.tags.map(t => ({...t, count: tagCount.get(t.name) || 0}));
-})();
+};
