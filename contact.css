@@ -23,6 +23,19 @@ body.contact-v2{
   margin: 0;
 }
 
+/* visually hidden (accessibility) */
+.sr-only{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0, 0, 0, 0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
 /* wallpaper */
 body.contact-v2 .wallpaper{
   position: fixed;
@@ -264,12 +277,7 @@ body.contact-v2 .wallpaper::after{
   font-size: var(--cv2-name);
   letter-spacing: .01em;
 }
-.cv2-profile__handle{
-  margin-top: 6px;
-  font-family: var(--mono);
-  color: rgba(255,255,255,.62);
-  font-size: var(--cv2-meta);
-}
+
 .cv2-profile__desc{
   margin-top: 12px;
   color: rgba(255,255,255,.86);
@@ -278,30 +286,47 @@ body.contact-v2 .wallpaper::after{
   max-width: 72ch;
 }
 
+/* ✅ Emoji icon links */
 .cv2-links{
-  margin: 14px 0 0 0;
-  padding-left: 18px;
-  color: rgba(255,255,255,.86);
-  font-size: var(--cv2-links);
-  line-height: 1.85;
-  min-width: 0;
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-.cv2-links li{
-  overflow-wrap: anywhere;
-  word-break: break-word;
+
+.cv2-link{
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.16);
+  text-decoration: none;
+  color: rgba(255,255,255,.92);
+
+  box-shadow: 0 10px 28px rgba(0,0,0,.25);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  font-size: 20px;
+  line-height: 1;
 }
-.cv2-links .k{
-  font-family: var(--mono);
-  color: rgba(255,255,255,.72);
-  font-size: 12px;
+
+.cv2-link:hover{
+  border-color: rgba(106,169,255,.32);
+  background: rgba(106,169,255,.12);
 }
-.cv2-links a{
-  color: rgba(170, 210, 255, .92);
-  text-decoration:none;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+
+.cv2-link:active{
+  transform: translateY(1px);
 }
-.cv2-links a:hover{ text-decoration:underline; }
+
+.cv2-link:focus-visible{
+  outline: 2px solid rgba(170,210,255,.75);
+  outline-offset: 3px;
+}
 
 /* RIGHT */
 .cv2-right{
@@ -316,13 +341,11 @@ body.contact-v2 .wallpaper::after{
 .cv2-mobilebar{ display:none; }
 
 @media (max-width: 900px){
-  /* ✅ ここでも念押し（styles.css の body padding-left を完全に殺す） */
   body.contact-v2{
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
 
-  /* hide PC stuff */
   .cv2-side,
   .cv2-right,
   .cv2-header,
@@ -374,7 +397,6 @@ body.contact-v2 .wallpaper::after{
   :root{
     --cv2-name: 22px;
     --cv2-body: 15px;
-    --cv2-links: 14px;
   }
 
   .cv2-post{
@@ -416,13 +438,13 @@ body.contact-v2 .wallpaper::after{
     margin-top: 0;
     line-height: 1.15;
   }
-  .cv2-profile__desc{
-    margin-top: 10px;
-    max-width: 100%;
-  }
 
-  .cv2-links{
-    margin-top: 12px;
+  /* make icon buttons easier to tap on mobile */
+  .cv2-link{
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    font-size: 22px;
   }
 }
 
