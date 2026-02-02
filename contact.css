@@ -3,17 +3,18 @@
 :root{
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  /* ✅ Type scale (bigger than before) */
-  --cv2-body:  clamp(16px, 0.55vw + 14px, 20px);
-  --cv2-links: clamp(15px, 0.45vw + 13px, 18px);
-  --cv2-meta:  clamp(13px, 0.25vw + 12px, 14px);
-  --cv2-k:     12px;
+  /* ✅ Bigger, cleaner type scale */
+  --cv2-title: 30px;
+  --cv2-name:  26px;
+  --cv2-meta:  13px;
+  --cv2-body:  16px;  /* main paragraph */
+  --cv2-links: 15px;  /* link list */
 }
 
 *{ box-sizing: border-box; }
 
 body.contact-v2{
-  overflow-x: hidden; /* ✅ kills “right shift” caused by any overflow */
+  overflow-x: hidden; /* ✅ kills “right shift / horizontal scroll” */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -45,14 +46,13 @@ body.contact-v2 .wallpaper::after{
   width: 100%;
   display: grid;
 
-  /* ✅ important: remove “min 560px center column” that can cause overflow */
+  /* ✅ remove min 560px that can overflow on narrower screens */
   grid-template-columns: 320px minmax(0, 1fr) 320px;
 
   gap: 18px;
   padding: 22px;
 }
 
-/* panels */
 .cv2-side, .cv2-main, .cv2-right{
   border-radius: 18px;
   border:1px solid rgba(255,255,255,.10);
@@ -91,15 +91,15 @@ body.contact-v2 .wallpaper::after{
   background: rgba(106,169,255,.10);
 }
 
-/* ✅ Left-top icon: size + “zoom/crop” fixed */
+/* ✅ Left-top icon: size sane + no weird crop */
 .cv2-avatar{
-  width: 72px;              /* was 86px */
+  width: 72px;
   height: 72px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.18);
   background-color: rgba(255,255,255,.05);
   background-image: url("./assets/cv2-avatar.png");
-  background-size: contain; /* ✅ prevent weird cropping */
+  background-size: contain; /* ✅ */
   background-position: center;
   background-repeat: no-repeat;
   box-shadow:
@@ -170,7 +170,7 @@ body.contact-v2 .wallpaper::after{
 /* CENTER */
 .cv2-main{
   padding: 18px 18px 22px;
-  min-width: 0; /* ✅ allow shrink, prevents overflow */
+  min-width: 0; /* ✅ allow shrink in grid */
 }
 
 .cv2-header{
@@ -222,52 +222,58 @@ body.contact-v2 .wallpaper::after{
 
 .cv2-post{
   padding: 18px 6px 0;
-  max-width: 1100px;
-  margin: 0 auto; /* ✅ always centered */
+  max-width: 980px;   /* ✅ closer to reference density */
+  margin: 0 auto;     /* ✅ centered */
 }
 
+/* title */
 .cv2-title{
-  margin: 0 0 14px 0;
+  margin: 0 0 16px 0;
   font-family: var(--mono);
-  font-size: 30px;
+  font-size: var(--cv2-title);
   letter-spacing: .02em;
 }
 
-/* Profile card */
+/* Profile: like reference (logo centered, text below) */
 .cv2-profile{
-  display:grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 18px;
   border-radius: 18px;
   border:1px solid rgba(255,255,255,.10);
   background: rgba(0,0,0,.18);
-  padding: 18px;
+  padding: 22px;
   min-width: 0;
 }
 
-/* Logo image */
+/* ✅ big centered logo */
 .cv2-profile__logo{
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.10);
+  width: 240px;
+  max-width: 60vw;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 18px auto;
+
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.10);
+
   background-image: url("./assets/cv2-profile__logo.png");
-  background-size: cover;
+  background-size: contain;   /* ✅ show whole image like reference */
   background-position: center;
   background-repeat: no-repeat;
-  aspect-ratio: 1 / 1;
+
   box-shadow: 0 18px 50px rgba(0,0,0,.35);
 }
 
-.cv2-profile__body{ min-width: 0; } /* ✅ allows wrapping */
+.cv2-profile__body{
+  min-width: 0;
+}
 
-/* ✅ Typography bigger */
+/* ✅ Bigger readable text */
 .cv2-profile__name{
   margin: 0;
   font-weight: 950;
-  font-size: 28px;
+  font-size: var(--cv2-name);
   letter-spacing: .01em;
 }
 .cv2-profile__handle{
-  margin-top: 4px;
+  margin-top: 6px;
   font-family: var(--mono);
   color: rgba(255,255,255,.62);
   font-size: var(--cv2-meta);
@@ -277,21 +283,26 @@ body.contact-v2 .wallpaper::after{
   color: rgba(255,255,255,.86);
   line-height: 1.75;
   font-size: var(--cv2-body);
+  max-width: 72ch; /* ✅ nice reading width */
 }
 
+/* links like reference: bullet list, comfortable size */
 .cv2-links{
   margin: 14px 0 0 0;
   padding-left: 18px;
   color: rgba(255,255,255,.86);
   font-size: var(--cv2-links);
-  line-height: 1.8;
+  line-height: 1.85;
   min-width: 0;
 }
-
-/* ✅ long URL wrap: prevents “right shift” on mobile */
 .cv2-links li{
-  overflow-wrap: anywhere;
+  overflow-wrap: anywhere; /* ✅ prevent horizontal overflow on mobile */
   word-break: break-word;
+}
+.cv2-links .k{
+  font-family: var(--mono);
+  color: rgba(255,255,255,.72);
+  font-size: 12px;
 }
 .cv2-links a{
   color: rgba(170, 210, 255, .92);
@@ -300,40 +311,6 @@ body.contact-v2 .wallpaper::after{
   word-break: break-word;
 }
 .cv2-links a:hover{ text-decoration:underline; }
-
-.cv2-links .k{
-  font-family: var(--mono);
-  color: rgba(255,255,255,.62);
-  font-size: var(--cv2-k);
-}
-
-.cv2-cta{
-  margin-top: 16px;
-  display:flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.cv2-btn{
-  display:inline-flex;
-  align-items:center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(106,169,255,.14);
-  color: rgba(255,255,255,.92);
-  text-decoration:none;
-}
-.cv2-btn:hover{
-  border-color: rgba(106,169,255,.34);
-  background: rgba(106,169,255,.18);
-}
-.cv2-btn--ghost{
-  background: rgba(0,0,0,.16);
-}
-.cv2-btn--ghost:hover{
-  background: rgba(0,0,0,.22);
-}
 
 /* RIGHT */
 .cv2-right{
@@ -398,7 +375,9 @@ body.contact-v2 .wallpaper::after{
 
 /* Responsive */
 @media (max-width: 1100px){
-  .cv2{ grid-template-columns: 300px minmax(0, 1fr); }
+  .cv2{
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
   .cv2-right{ display:none; }
 }
 
@@ -414,11 +393,19 @@ body.contact-v2 .wallpaper::after{
   }
   .cv2-right{ display:none; }
 
-  .cv2-profile{ grid-template-columns: 1fr; }
   .cv2-search{ width: 100%; }
 
-  /* mobile type tuning: still bigger than before */
-  .cv2-title{ font-size: 26px; }
-  .cv2-profile__name{ font-size: 24px; }
   .cv2-avatar{ width: 64px; height: 64px; }
+
+  .cv2-title{ font-size: 26px; }
+  .cv2-profile__name{ font-size: 22px; }
+
+  /* logo not too huge on mobile */
+  .cv2-profile__logo{
+    width: 200px;
+    max-width: 74vw;
+  }
+
+  .cv2-profile__desc{ font-size: 15px; }
+  .cv2-links{ font-size: 14px; }
 }
