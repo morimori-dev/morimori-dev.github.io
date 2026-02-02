@@ -397,3 +397,29 @@ body.contact-v2 .wallpaper::after{
   .cv2-profile__desc{ font-size: 14px; }
   .cv2-links{ font-size: 13px; }
 }
+/* contact.html copy button + toast */
+.cv2-copy{
+  font: inherit;
+  color: rgba(170,210,255,.92);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cv2-copy:hover{ color: rgba(200,230,255,.95); }
+
+.cv2-toast{
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: rgba(255,255,255,.86);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.cv2-toast.show{
+  opacity: 1;
+  transform: translateY(0);
+}
