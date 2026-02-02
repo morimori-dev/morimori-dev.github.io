@@ -1,9 +1,8 @@
-/* contact.css - Contact page only (safe overrides) */
+/* contact.css - Contact page only overrides */
 
 :root{
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  /* Desktop base */
   --cv2-title: 30px;
   --cv2-name:  26px;
   --cv2-meta:  13px;
@@ -14,6 +13,10 @@
 *{ box-sizing: border-box; }
 
 body.contact-v2{
+  /* ✅ styles.css の mobile body padding-left(=dock分) を確実に無効化 */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -42,7 +45,7 @@ body.contact-v2 .wallpaper::after{
     linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.55));
 }
 
-/* ===== Desktop Layout ===== */
+/* ===== Desktop Layout (3 columns) ===== */
 .cv2{
   min-height: 100vh;
   width: 100%;
@@ -309,13 +312,17 @@ body.contact-v2 .wallpaper::after{
   padding: 18px;
 }
 
-/* ===== Mobile bar ===== */
-.cv2-mobilebar{
-  display:none;
-}
+/* ===== Mobile: one-page + logo left / text right ===== */
+.cv2-mobilebar{ display:none; }
 
-/* ===== ✅ Mobile: logo left + text right (NO accidental stacking) ===== */
 @media (max-width: 900px){
+  /* ✅ ここでも念押し（styles.css の body padding-left を完全に殺す） */
+  body.contact-v2{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* hide PC stuff */
   .cv2-side,
   .cv2-right,
   .cv2-header,
@@ -333,7 +340,7 @@ body.contact-v2 .wallpaper::after{
     border: 0;
     background: transparent;
     box-shadow: none;
-    width: 100vw;
+    width: 100%;
   }
 
   .cv2-mobilebar{
@@ -354,7 +361,6 @@ body.contact-v2 .wallpaper::after{
     text-decoration:none;
   }
   .cv2-mobilebar__back:hover{ text-decoration: underline; }
-
   .cv2-mobilebar__title{
     font-family: var(--mono);
     font-size: 13px;
@@ -365,7 +371,12 @@ body.contact-v2 .wallpaper::after{
     max-width: 60vw;
   }
 
-  /* content padding with safe-area */
+  :root{
+    --cv2-name: 22px;
+    --cv2-body: 15px;
+    --cv2-links: 14px;
+  }
+
   .cv2-post{
     padding:
       14px
@@ -376,13 +387,6 @@ body.contact-v2 .wallpaper::after{
     margin: 0;
   }
 
-  :root{
-    --cv2-name: 22px;
-    --cv2-body: 15px;
-    --cv2-links: 14px;
-  }
-
-  /* ✅ Force two-column layout */
   .cv2-profile{
     padding: 16px;
     border-radius: 18px;
@@ -397,7 +401,6 @@ body.contact-v2 .wallpaper::after{
     align-items: start;
   }
 
-  /* ✅ Pin logo to top-left (no centering, no auto margin) */
   .cv2-profile__logo{
     width: 104px;
     max-width: 104px;
@@ -409,16 +412,9 @@ body.contact-v2 .wallpaper::after{
     box-shadow: 0 14px 40px rgba(0,0,0,.35);
   }
 
-  /* ✅ Make sure text starts from the same top line */
-  .cv2-profile__body{
-    min-width: 0;
-  }
   .cv2-profile__name{
     margin-top: 0;
     line-height: 1.15;
-  }
-  .cv2-profile__handle{
-    margin-top: 6px;
   }
   .cv2-profile__desc{
     margin-top: 10px;
@@ -430,7 +426,7 @@ body.contact-v2 .wallpaper::after{
   }
 }
 
-/* ✅ Only stack on VERY tiny screens */
+/* only stack on extremely tiny screens */
 @media (max-width: 330px){
   .cv2-profile{
     grid-template-columns: 1fr;
