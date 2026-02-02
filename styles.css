@@ -43,7 +43,6 @@ body{
   height:18px;
   display:inline-block;
   border-radius:6px;
-  /* 9個の点を box-shadow で作る */
   background: rgba(255,255,255,.85);
   box-shadow:
     0 0 0 0 rgba(255,255,255,.85),
@@ -57,15 +56,12 @@ body{
     0 12px 0 0 rgba(255,255,255,.85),
     6px 12px 0 0 rgba(255,255,255,.85),
     12px 12px 0 0 rgba(255,255,255,.85);
-  /* 点を小さく見せる */
   transform: scale(.22);
   transform-origin: top left;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
   opacity:.9;
 }
-.apps-grid--dock{
-  transform: scale(.25);
-}
+.apps-grid--dock{ transform: scale(.25); }
 
 /* ===== PC Topbar ===== */
 .topbar{
@@ -178,9 +174,7 @@ body{
   padding:12px;
   border-bottom:1px solid rgba(255,255,255,.08);
 }
-.start-menu__search--top{
-  padding:14px 12px;
-}
+.start-menu__search--top{ padding:14px 12px; }
 .start-menu__search input{
   width:100%;
   font-size:14px;
@@ -324,6 +318,8 @@ body{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+
+    /* 左下Dockが被らないように余白確保（下寄せにしてもOK） */
     padding-left: calc(var(--dock-w) + 10px);
   }
 
@@ -371,11 +367,13 @@ body{
     z-index:-1;
   }
 
-  /* Start menu: Dockの右側から開く */
+  /* Start menu: Dockの右側から開く（左下寄せでもOK） */
   .start-menu{
     left: calc(var(--dock-w) + 14px);
     right: 10px;
     width:auto;
+
+    /* 上はセーフエリアだけ確保。高さは下Dockに合わせる */
     top: calc(12px + env(safe-area-inset-top));
     height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     border-radius: 18px;
@@ -395,7 +393,7 @@ body{
   }
   .start-menu.has-window .menu-col{ max-height: 40vh; }
 
-  /* Ubuntu-ish vertical dock */
+  /* ✅ Ubuntu-ish dock: left-bottom anchored */
   .mobile-dock{
     display:flex;
     flex-direction:column;
@@ -403,12 +401,14 @@ body{
 
     position:fixed;
     left: 10px;
-    top: calc(10px + env(safe-area-inset-top));
-    bottom: calc(10px + env(safe-area-inset-bottom));
-
+    top: auto; /* 上固定やめる */
+    bottom: calc(10px + env(safe-area-inset-bottom)); /* 左下に寄せる */
     width: var(--dock-w);
-    padding: 10px 8px;
 
+    /* ここが肝：下に詰める */
+    justify-content:flex-end;
+
+    padding: 10px 8px;
     border-radius: 18px;
     border:1px solid rgba(255,255,255,.10);
     background: rgba(0,0,0,.30);
@@ -445,6 +445,13 @@ body{
     background: rgba(255,255,255,.12);
     margin: 6px 4px;
     border-radius: 999px;
+  }
+
+  /* ✅ 「一番下がスタート」になるように、区切り線とスタートを末尾側に自然に配置
+     HTMLの順番はそのままでOK（sep → start が最後にある想定） */
+  .dock-btn--menu{
+    /* 目立たせたいなら少しだけ */
+    background: rgba(255,255,255,.08);
   }
 
   .mobile-scroll-spacer{
