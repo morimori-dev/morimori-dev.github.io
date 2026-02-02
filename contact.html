@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Contact</title>
 
-  <!-- your existing theme -->
   <link rel="stylesheet" href="./styles.css" />
-  <!-- contact-only overrides -->
   <link rel="stylesheet" href="./contact.css" />
 </head>
 
@@ -15,7 +13,7 @@
   <div class="wallpaper" aria-hidden="true"></div>
 
   <div class="cv2">
-    <!-- LEFT SIDEBAR -->
+    <!-- LEFT SIDEBAR (hidden on mobile by CSS) -->
     <aside class="cv2-side" aria-label="Sidebar">
       <div class="cv2-side__inner">
         <a class="cv2-brand" href="./index.html" aria-label="Back to Desktop">
@@ -47,6 +45,13 @@
 
     <!-- CENTER -->
     <main class="cv2-main" aria-label="Main">
+      <!-- ✅ Mobile-only simple bar -->
+      <div class="cv2-mobilebar" aria-label="Mobile navigation">
+        <a class="cv2-mobilebar__back" href="./index.html" aria-label="Back to Home">← Back</a>
+        <div class="cv2-mobilebar__title">PS C:\&gt;whoami</div>
+      </div>
+
+      <!-- PC header (hidden on mobile by CSS) -->
       <div class="cv2-header">
         <div class="cv2-breadcrumb">
           <a href="./index.html">Home</a>
@@ -64,7 +69,7 @@
         <h1 class="cv2-title">PS C:\&gt;whoami</h1>
 
         <div class="cv2-profile">
-          <!-- centered logo like reference -->
+          <!-- centered logo -->
           <div class="cv2-profile__logo" aria-hidden="true"></div>
 
           <div class="cv2-profile__body">
@@ -89,7 +94,7 @@
       </section>
     </main>
 
-    <!-- RIGHT -->
+    <!-- RIGHT (hidden on mobile by CSS) -->
     <aside class="cv2-right" aria-label="Sidebar widgets">
       <section class="cv2-widget">
         <div class="cv2-widget__title">Recent Update</div>
