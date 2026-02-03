@@ -140,7 +140,15 @@
       const meta = c.meta ? `<div class="meta">${escapeHtml(c.meta)}</div>` : "";
       const title = `<div style="font-weight:900;margin-top:4px;">${escapeHtml(c.title || "Untitled")}</div>`;
       const desc = c.desc ? `<div style="margin-top:6px;opacity:.85;">${escapeHtml(c.desc)}</div>` : "";
-      const link = c.href ? `<div style="margin-top:10px;"><a href="${c.href}" target="_blank" rel="noopener noreferrer">Open</a></div>` : "";
+      
+      // view属性があればdata-view、なければ通常のリンク
+      let link = "";
+      if (c.view) {
+        link = `<div style="margin-top:10px;"><a href="#" data-view="${c.view}">Open</a></div>`;
+      } else if (c.href) {
+        link = `<div style="margin-top:10px;"><a href="${c.href}">Open</a></div>`;
+      }
+      
       div.innerHTML = `${meta}${title}${desc}${link}`;
       contentArea.appendChild(div);
     });

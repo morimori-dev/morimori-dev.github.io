@@ -11,7 +11,7 @@ window.DATA = {
     { label: "Projects", icon: "🛠️", view: "nav:Projects" },
     { label: "Resume", icon: "📄", view: "nav:Resume" },
 
-    // ✅ Contact は「ページ遷移」にする(data-view なし)
+    // ✅ Contact は「ページ遷移」にする（data-view なし）
     { label: "Contact", icon: "✉️", href: "./contact.html" }
   ],
 
@@ -51,27 +51,27 @@ window.DATA = {
     "nav:Writeups": [
       {
         title: "Hack The Box (HTB)",
-        meta: "Writeups",
+        meta: "3 writeups",
         desc: "Machines & challenges with clear attack chains and reproducible steps.",
-        href: "#writeups"
+        view: "cat:HTB"
       },
       {
         title: "TryHackMe (THM)",
-        meta: "Writeups",
+        meta: "3 writeups",
         desc: "Learning paths & rooms (structured notes + exploitation).",
-        href: "#writeups"
+        view: "cat:THM"
       },
       {
         title: "Proving Grounds (PG)",
-        meta: "Writeups",
+        meta: "3 writeups",
         desc: "OffSec-style practice aligned with real pentest workflows.",
-        href: "#writeups"
+        view: "cat:PG"
       },
       {
-        title: "Methodology",
-        meta: "Writeups",
-        desc: "Enumeration → foothold → privesc → lateral movement (repeatable patterns).",
-        href: "#writeups"
+        title: "All Writeups",
+        meta: "Browse",
+        desc: "Browse by tags: AD, Privesc, Web, Linux, Windows — or search above.",
+        href: "#"
       }
     ],
 
