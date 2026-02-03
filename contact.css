@@ -210,13 +210,10 @@ body.contact-v2 .wallpaper::after{
   letter-spacing: .02em;
 }
 
-/* ✅ Profile card: responsive big logo + top aligned */
+/* Profile card */
 .cv2-profile{
-  /* ロゴが「常に大きめ」になる。PCでも縮まず、広いとさらにデカくなる */
-  --logo: clamp(320px, 40vw, 560px);
-
   display:grid;
-  grid-template-columns: var(--logo) 1fr;
+  grid-template-columns: 220px 1fr;
   gap: 22px;
   align-items: start;
 
@@ -226,25 +223,34 @@ body.contact-v2 .wallpaper::after{
   padding: 18px;
 }
 
-/* ✅ ロゴを丸抜き（完全円形） */
+/* ✅ ロゴを元に戻す：四角＋以前のサイズ感 */
 .cv2-profile__logo{
   align-self: start;
   justify-self: start;
 
-  width: var(--logo);
-  height: var(--logo);
+  width: 220px;
+  height: 220px;
 
-  border-radius: 999px;         /* ←完全な円 */
-  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px; /* ←四角（角丸）に戻す */
+  border: 1px solid rgba(255,255,255,.10);
 
   background-image: url("./assets/cv2-profile__logo.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  box-shadow:
-    0 18px 50px rgba(0,0,0,.35),
-    0 0 0 10px rgba(255,255,255,.03); /* ほんのり縁取り */
+  box-shadow: 0 18px 50px rgba(0,0,0,.35);
+}
+
+@media (min-width: 1101px){
+  .cv2-profile{
+    grid-template-columns: 440px 1fr;
+  }
+  .cv2-profile__logo{
+    width: 420px;
+    height: 420px;
+    border-radius: 18px;
+  }
 }
 
 .cv2-profile__body{
@@ -276,20 +282,23 @@ body.contact-v2 .wallpaper::after{
   margin-top: 14px;
   display:flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* ✅ ボタン自体はスッキリ、アイコンは丸く＆少し大きく */
+/* ✅ アイコン（リンク側）を大きく！ */
 .cv2-linkicon{
   display:flex;
   align-items:center;
-  gap: 10px;
+  gap: 12px;
+
   text-decoration:none;
   color: rgba(255,255,255,.90);
+
   border: 1px solid rgba(255,255,255,.10);
   background: rgba(255,255,255,.04);
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: 16px;
+
+  padding: 12px 14px; /* 少し厚く */
   width: fit-content;
   max-width: 100%;
 }
@@ -298,19 +307,25 @@ body.contact-v2 .wallpaper::after{
   background: rgba(106,169,255,.10);
 }
 
+/* ✅ ここがメイン：アイコンの箱を拡大 */
 .cv2-linkicon .i{
-  width: 34px;
-  height: 34px;
+  width: 52px;
+  height: 52px;
   display:grid;
   place-items:center;
-  border-radius: 999px; /* ←丸抜き */
-  border: 1px solid rgba(255,255,255,.12);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.14);
   background: rgba(0,0,0,.18);
-  font-size: 16px;
+
+  font-size: 22px; /* 絵文字/文字もデカく */
+  line-height: 1;
 }
+
+/* ラベルも少し大きく */
 .cv2-linkicon .t{
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(255,255,255,.86);
 }
 
@@ -381,9 +396,6 @@ body.contact-v2 .wallpaper::after{
     grid-template-columns: 300px 1fr;
   }
   .cv2-right{ display:none; }
-
-  /* ロゴがデカすぎて窮屈になる帯域は少し絞る */
-  .cv2-profile{ --logo: clamp(260px, 42vw, 420px); }
 }
 
 @media (max-width: 900px){
@@ -400,12 +412,18 @@ body.contact-v2 .wallpaper::after{
 
   .cv2-profile{
     grid-template-columns: 1fr;
-    --logo: 140px;
   }
   .cv2-profile__logo{
-    width: var(--logo);
-    height: var(--logo);
+    width: 140px;
+    height: 140px;
     justify-self: center;
+  }
+
+  /* スマホでもリンクアイコンはデカく（ただし少しだけ抑える） */
+  .cv2-linkicon .i{
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
   }
 
   .cv2-search{ width: 100%; }
@@ -417,6 +435,5 @@ body.contact-v2 .wallpaper::after{
   .cv2-title{ font-size: 26px; }
   .cv2-profile__name{ font-size: 22px; }
   .cv2-profile__desc{ font-size: 14px; }
-
-  .cv2-linkicon .t{ font-size: 12px; }
+  .cv2-linkicon .t{ font-size: 13px; }
 }
