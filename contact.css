@@ -78,7 +78,7 @@ body.contact-v2 .wallpaper::after{
   background: rgba(106,169,255,.10);
 }
 
-/* ✅ Avatar: bigger + perfectly round */
+/* Avatar */
 .cv2-avatar{
   width: 86px;
   height: 86px;
@@ -204,7 +204,6 @@ body.contact-v2 .wallpaper::after{
 
 .cv2-post{ padding: 18px 6px 0; }
 
-/* ✅ Title bigger */
 .cv2-title{
   margin: 0 0 14px 0;
   font-family: var(--mono);
@@ -224,7 +223,7 @@ body.contact-v2 .wallpaper::after{
   padding: 18px;
 }
 
-/* ✅ Logo: real image */
+/* Logo (default: 210px) */
 .cv2-profile__logo{
   align-self: start;
   justify-self: start;
@@ -240,12 +239,24 @@ body.contact-v2 .wallpaper::after{
   box-shadow: 0 18px 50px rgba(0,0,0,.35);
 }
 
+/* ✅ PC wide: 2x (210 -> 420) */
+@media (min-width: 1101px){
+  .cv2-profile{
+    grid-template-columns: 440px 1fr; /* logo 420 + padding余白 */
+    gap: 22px;
+  }
+  .cv2-profile__logo{
+    width: 420px;
+    height: 420px;
+    border-radius: 18px;
+  }
+}
+
 .cv2-profile__body{
   align-self: start;
   min-width: 0;
 }
 
-/* ✅ Typography larger */
 .cv2-profile__name{
   margin: 0;
   font-weight: 950;
@@ -303,34 +314,6 @@ body.contact-v2 .wallpaper::after{
   font-family: var(--mono);
   font-size: 13px;
   color: rgba(255,255,255,.86);
-}
-
-.cv2-cta{
-  margin-top: 14px;
-  display:flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.cv2-btn{
-  display:inline-flex;
-  align-items:center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(106,169,255,.14);
-  color: rgba(255,255,255,.92);
-  text-decoration:none;
-}
-.cv2-btn:hover{
-  border-color: rgba(106,169,255,.34);
-  background: rgba(106,169,255,.18);
-}
-.cv2-btn--ghost{
-  background: rgba(0,0,0,.16);
-}
-.cv2-btn--ghost:hover{
-  background: rgba(0,0,0,.22);
 }
 
 /* RIGHT */
@@ -413,15 +396,16 @@ body.contact-v2 .wallpaper::after{
     height: auto;
   }
   .cv2-right{ display:none; }
+
   .cv2-profile{
     grid-template-columns: 1fr;
   }
-
   .cv2-profile__logo{
     width: 128px;
     height: 128px;
     justify-self: center;
   }
+
   .cv2-search{
     width: 100%;
   }
@@ -435,7 +419,8 @@ body.contact-v2 .wallpaper::after{
   .cv2-profile__desc{ font-size: 14px; }
   .cv2-linkicon .t{ font-size: 12px; }
 }
-/* contact.html copy button + toast */
+
+/* contact.html copy button + toast (kept) */
 .cv2-copy{
   font: inherit;
   color: rgba(170,210,255,.92);
