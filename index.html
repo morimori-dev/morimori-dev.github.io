@@ -22,16 +22,15 @@
 
       <div class="top-shortcuts" role="toolbar" aria-label="Quick apps">
         <a class="top-ico" href="#home" data-view="nav:Home" title="Desktop" aria-label="Desktop">🖥️</a>
-        <a class="top-ico" href="#notes" data-view="nav:Notes" title="Notes" aria-label="Notes">🧠</a>
         <a class="top-ico" href="#writeups" data-view="nav:Writeups" title="Writeups" aria-label="Writeups">🌐</a>
+        <a class="top-ico" href="#notes" data-view="nav:Notes" title="Notes" aria-label="Notes">🧠</a>
 
-        <!-- Contact (whoami) -->
+        <!-- ✅ Contact tab (page navigation) -->
         <a class="top-ico" href="./contact.html" title="Contact" aria-label="Contact">👤</a>
       </div>
     </div>
 
     <div class="topbar__right">
-      <!-- PC clock -->
       <div class="clock">
         <div id="clockTime" class="clock__time">00:00:00</div>
         <div id="clockDate" class="clock__date">1970/01/01</div>
@@ -81,13 +80,7 @@
 
   <!-- Mobile left dock -->
   <nav class="mobile-dock" aria-label="App dock">
-    <!-- Mobile clock (top of dock) -->
-    <div class="dock-clock" aria-label="Clock">
-      <div id="mClockTime" class="dock-clock__time">00:00</div>
-      <div id="mClockDate" class="dock-clock__date">1970/01/01</div>
-    </div>
-
-    <button class="dock-btn" data-view="nav:Home" aria-label="Home" title="Home">
+    <button class="dock-btn" data-view="nav:Home" aria-label="Desktop" title="Desktop">
       <span class="dock-ico">🖥️</span>
     </button>
     <button class="dock-btn" data-view="nav:Writeups" aria-label="Writeups" title="Writeups">
@@ -97,9 +90,10 @@
       <span class="dock-ico">🧠</span>
     </button>
 
-    <button class="dock-btn" data-view="nav:Contact" aria-label="Contact" title="Contact">
+    <!-- ✅ Contact tab (page navigation) -->
+    <a class="dock-btn" href="./contact.html" aria-label="Contact" title="Contact">
       <span class="dock-ico">👤</span>
-    </button>
+    </a>
 
     <div class="dock-sep" aria-hidden="true"></div>
 
