@@ -117,19 +117,19 @@ window.DATA = {
         title: "Gaara", 
         meta: "HTB • Medium • Linux", 
         desc: "Web exploitation via Gogs vulnerability (CVE-2020-14144) leading to RCE. Privilege escalation through tar wildcard injection in cron job.", 
-        href: "#writeups/htb-gaara" 
+        href: "./writeups/htb/gaara.html" 
       },
       { 
         title: "Acute", 
         meta: "HTB • Hard • Windows", 
         desc: "Active Directory environment exploitation. LAPS password retrieval, credential dumping, and Hyper-V VM escape for Domain Admin access.", 
-        href: "#writeups/htb-acute" 
+        href: "./writeups/htb/acute.html" 
       },
       { 
         title: "APT", 
         meta: "HTB • Insane • Windows", 
         desc: "Advanced persistent threat scenario. Registry hive analysis, IPv6 exploitation, and complex AD enumeration with Kerberos delegation abuse.", 
-        href: "#writeups/htb-apt" 
+        href: "./writeups/htb/apt.html" 
       }
     ],
     "cat:THM": [
@@ -137,19 +137,19 @@ window.DATA = {
         title: "Year of the Rabbit", 
         meta: "THM • Easy • Linux", 
         desc: "CTF-style room featuring web enumeration, FTP exploitation, and sudo privilege escalation via CVE-2019-14287.", 
-        href: "#writeups/thm-year-rabbit" 
+        href: "./writeups/thm/year-of-the-rabbit.html" 
       },
       { 
         title: "Wreath Network", 
         meta: "THM • Medium • Mixed", 
         desc: "Multi-machine network pivoting exercise. GitStack exploitation, AV evasion techniques, and persistence mechanisms across Windows and Linux targets.", 
-        href: "#writeups/thm-wreath" 
+        href: "./writeups/thm/wreath-network.html" 
       },
       { 
         title: "AD Certificate Templates", 
         meta: "THM • Hard • Windows", 
         desc: "Active Directory Certificate Services exploitation. ESC1 and ESC8 attack paths, certificate enrollment abuse, and domain privilege escalation.", 
-        href: "#writeups/thm-adcs" 
+        href: "./writeups/thm/ad-certificate-templates.html" 
       }
     ],
     "cat:PG": [
@@ -157,19 +157,19 @@ window.DATA = {
         title: "FunBoxEasyEnum", 
         meta: "PG • Easy • Linux", 
         desc: "Enumeration-focused box. WordPress exploitation, password cracking, and SUID binary abuse (pkexec) for root access.", 
-        href: "#writeups/pg-funboxeasy" 
+        href: "./writeups/pg/funboxeasyenum.html" 
       },
       { 
         title: "Fantastic", 
         meta: "PG • Medium • Linux", 
         desc: "Web application security testing. SQL injection leading to credential disclosure, followed by Docker container escape for privilege escalation.", 
-        href: "#writeups/pg-fantastic" 
+        href: "./writeups/pg/fantastic.html" 
       },
       { 
         title: "Exfiltrated", 
         meta: "PG • Hard • Windows", 
         desc: "Forensics and exploitation combined. PCAP analysis revealing Subrion CMS credentials, followed by DLL hijacking and SeImpersonate exploitation.", 
-        href: "#writeups/pg-exfiltrated" 
+        href: "./writeups/pg/exfiltrated.html" 
       }
     ],
 
@@ -178,19 +178,19 @@ window.DATA = {
         title: "Acute - Hyper-V Escape", 
         meta: "HTB • Hard", 
         desc: "Active Directory exploitation focusing on LAPS password retrieval, Hyper-V VM escape, and domain controller compromise.", 
-        href: "#writeups/htb-acute" 
+        href: "./writeups/htb/acute.html" 
       },
       { 
         title: "APT - Kerberos Delegation", 
         meta: "HTB • Insane", 
         desc: "Advanced AD attack chain utilizing registry hive analysis, IPv6 exploitation, and unconstrained Kerberos delegation abuse.", 
-        href: "#writeups/htb-apt" 
+        href: "./writeups/htb/apt.html" 
       },
       { 
         title: "AD Certificate Services", 
         meta: "THM • Hard", 
         desc: "ADCS exploitation demonstrating ESC1 and ESC8 attack paths for certificate-based privilege escalation to Domain Admin.", 
-        href: "#writeups/thm-adcs" 
+        href: "./writeups/thm/ad-certificate-templates.html" 
       }
     ],
     "tag:Privesc": [
@@ -198,19 +198,19 @@ window.DATA = {
         title: "Gaara - Tar Wildcard Injection", 
         meta: "HTB • Medium", 
         desc: "Linux privilege escalation via cron job exploitation using tar wildcard injection technique.", 
-        href: "#writeups/htb-gaara" 
+        href: "./writeups/htb/gaara.html" 
       },
       { 
         title: "FunBoxEasyEnum - SUID Binary", 
         meta: "PG • Easy", 
         desc: "Classic SUID binary abuse scenario exploiting pkexec misconfiguration for root access.", 
-        href: "#writeups/pg-funboxeasy" 
+        href: "./writeups/pg/funboxeasyenum.html" 
       },
       { 
         title: "Fantastic - Container Escape", 
         meta: "PG • Medium", 
         desc: "Docker container breakout techniques for privilege escalation from containerized web application.", 
-        href: "#writeups/pg-fantastic" 
+        href: "./writeups/pg/fantastic.html" 
       }
     ],
     "tag:Web": [
@@ -218,19 +218,19 @@ window.DATA = {
         title: "Gaara - Gogs RCE", 
         meta: "HTB • Medium", 
         desc: "Exploiting Gogs Git service vulnerability (CVE-2020-14144) to achieve remote code execution.", 
-        href: "#writeups/htb-gaara" 
+        href: "./writeups/htb/gaara.html" 
       },
       { 
         title: "Fantastic - SQL Injection", 
         meta: "PG • Medium", 
         desc: "Authentication bypass and credential disclosure through SQL injection in custom web application.", 
-        href: "#writeups/pg-fantastic" 
+        href: "./writeups/pg/fantastic.html" 
       },
       { 
         title: "Wreath - GitStack Exploit", 
         meta: "THM • Medium", 
         desc: "Leveraging GitStack vulnerability for initial foothold in multi-machine network environment.", 
-        href: "#writeups/thm-wreath" 
+        href: "./writeups/thm/wreath-network.html" 
       }
     ],
     "tag:Linux": [
@@ -238,19 +238,19 @@ window.DATA = {
         title: "Gaara", 
         meta: "HTB • Medium", 
         desc: "Complete Linux attack chain: web exploitation, reverse shell establishment, and tar wildcard privesc.", 
-        href: "#writeups/htb-gaara" 
+        href: "./writeups/htb/gaara.html" 
       },
       { 
         title: "Year of the Rabbit", 
         meta: "THM • Easy", 
         desc: "CTF-style Linux enumeration focusing on FTP, web directories, and sudo privilege escalation.", 
-        href: "#writeups/thm-year-rabbit" 
+        href: "./writeups/thm/year-of-the-rabbit.html" 
       },
       { 
         title: "FunBoxEasyEnum", 
         meta: "PG • Easy", 
         desc: "Enumeration-heavy Linux box demonstrating WordPress exploitation and SUID binary abuse.", 
-        href: "#writeups/pg-funboxeasy" 
+        href: "./writeups/pg/funboxeasyenum.html" 
       }
     ],
     "tag:Windows": [
@@ -258,19 +258,19 @@ window.DATA = {
         title: "Acute", 
         meta: "HTB • Hard", 
         desc: "Windows Active Directory environment with LAPS, credential dumping, and Hyper-V exploitation.", 
-        href: "#writeups/htb-acute" 
+        href: "./writeups/htb/acute.html" 
       },
       { 
         title: "APT", 
         meta: "HTB • Insane", 
         desc: "Advanced Windows persistence scenario involving registry forensics and Kerberos attacks.", 
-        href: "#writeups/htb-apt" 
+        href: "./writeups/htb/apt.html" 
       },
       { 
         title: "Exfiltrated", 
         meta: "PG • Hard", 
         desc: "Windows exploitation chain from PCAP analysis through DLL hijacking to SeImpersonate abuse.", 
-        href: "#writeups/pg-exfiltrated" 
+        href: "./writeups/pg/exfiltrated.html" 
       }
     ]
   }
