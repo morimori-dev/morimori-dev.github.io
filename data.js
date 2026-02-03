@@ -11,7 +11,7 @@ window.DATA = {
     { label: "Projects", icon: "🛠️", view: "nav:Projects" },
     { label: "Resume", icon: "📄", view: "nav:Resume" },
 
-    // ✅ Contact は「ページ遷移」にする（data-view なし）
+    // ✅ Contact は「ページ遷移」にする(data-view なし)
     { label: "Contact", icon: "✉️", href: "./contact.html" }
   ],
 
