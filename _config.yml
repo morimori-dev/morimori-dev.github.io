@@ -51,6 +51,9 @@ toc: true
 #   google:
 #     id: G-XXXXXXXXXX
 
+# ----- Permalink -----
+permalink: /posts/:title/
+
 # ----- Pagination -----
 paginate: 15
 
