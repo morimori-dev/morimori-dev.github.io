@@ -6,10 +6,6 @@ tags: [pg, oscp, postgresql, suid, privilege-escalation, nibbles]
 mermaid: true
 ---
 
-## Room Link
-
-N/A
-
 ## Credentials
 
 ```text
