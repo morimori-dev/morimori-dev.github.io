@@ -73,7 +73,6 @@ Python for security tooling, Active Directory attacks, Buffer Overflow exploitat
 
 ## Contact
 
-- **Email:** [your.email@example.com](mailto:your.email@example.com)
 - **GitHub:** [github.com/morimori-dev](https://github.com/morimori-dev)
 - **LinkedIn:** [linkedin.com/in/nozomu-sasaki](https://www.linkedin.com/in/nozomu-sasaki/)
 - **Credly:** [credly.com/users/class_nzm](https://www.credly.com/users/class_nzm)
@@ -81,4 +80,4 @@ Python for security tooling, Active Directory attacks, Buffer Overflow exploitat
 ---
 
 > Interested in discussing a writeup, collaborating, or exploring opportunities?
-> Feel free to reach out via email or LinkedIn.
+> Feel free to reach out via LinkedIn.
