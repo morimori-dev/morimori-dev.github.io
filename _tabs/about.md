@@ -36,22 +36,27 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ---
 
+## Professional Background
+
+Before transitioning into cybersecurity, I worked in **IT infrastructure and network engineering**. This background gives me a solid foundation in networking protocols, system administration, and troubleshooting — skills that directly support my penetration testing practice.
+
 ## Skills
 
-**Penetration Testing:**
-Web Application Testing, Network Penetration Testing,
-Active Directory Attacks, Privilege Escalation (Linux/Windows),
-Buffer Overflow, Post-Exploitation, Pivoting
+**Infrastructure & Networking** *(Professional Experience)*
 
-**Tools:**
-Burp Suite, Nmap, Metasploit, BloodHound, Impacket,
-Chisel, Ligolo, John the Ripper, Hashcat, Ghidra
+Network Design and Troubleshooting, TCP/IP, DNS, DHCP, Firewall Configuration, VLAN, VPN, Linux Administration, Windows Server Administration
 
-**Programming / Scripting:**
-Python, Bash, PowerShell, SQL, JavaScript
+**Security Testing** *(Currently Developing)*
 
-**Infrastructure:**
-Linux Administration, Windows Server, Docker, Git, CI/CD
+Reconnaissance and Enumeration (Nmap, Gobuster, feroxbuster, nikto), Web Application Testing (Burp Suite), Privilege Escalation Enumeration (LinPEAS / WinPEAS), Vulnerability Analysis, Report Writing
+
+**Scripting**
+
+Bash (command chaining, automation of enumeration tasks)
+
+**Currently Learning**
+
+Python for security tooling, Active Directory attacks, Buffer Overflow exploitation, Post-Exploitation techniques
 
 ---
 
