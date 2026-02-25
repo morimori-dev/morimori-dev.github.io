@@ -27,17 +27,11 @@
   overflow-y: hidden;
 }
 
-/* Wrap long shell commands to avoid horizontal overflow */
-.language-shell pre,
-.language-bash pre,
-.language-console pre {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-/* Center code text in the block */
+/* Keep code formatting readable */
 .highlighter-rouge .rouge-code pre,
 .highlighter-rouge > .highlight > pre {
-  text-align: center;
+  text-align: left;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
 }
