@@ -7,13 +7,10 @@ title: About
 
 ## About Me
 
-I am a penetration tester and cybersecurity enthusiast with a passion for
-offensive security. I hold the **OSCP** certification and have completed
-**XX+** machines across OSCP Proving Grounds, Hack The Box, and TryHackMe.
-
-This site serves as a portfolio of my writeups and technical blog posts.
-Each writeup documents my methodology, enumeration process, exploitation
-techniques, and privilege escalation paths.
+I am a cybersecurity enthusiast who began this journey in August 2025. With a positive attitude and strong motivation, I am committed to continuous growth in this field.
+I am currently preparing for the OSCP certification, dedicating myself to hands-on practice across platforms such as Hack The Box, TryHackMe, and OSCP Proving Grounds. Each machine I work through deepens my understanding of real-world attack techniques and defensive strategies.
+As a non-native English speaker, I am also actively improving my English skills alongside my technical development. I believe that consistent effort and a willingness to step outside one's comfort zone are the foundations of meaningful progress — in both cybersecurity and language.
+This site documents my ongoing journey in offensive security. I hope that my writeups prove useful to others who are on a similar path.
 
 ---
 
