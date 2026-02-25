@@ -19,20 +19,20 @@ techniques, and privilege escalation paths.
 
 ## Certifications
 
-| Certification                                     | Issuer | Year |
-| :------------------------------------------------ | :----- | :--- |
-| Registered Information Security Specialist (RISS) | IPA    | 2024 |
-| TOEIC Listening & Reading (305)                   | ETS    | 2024 |
-| AWS Certified Security – Specialty                | AWS    | 2023 |
-| AWS Certified Solutions Architect – Professional  | AWS    | 2022 |
-| AWS Certified Solutions Architect – Associate     | AWS    | 2021 |
-| IT Passport (IP)                                  | IPA    | 2017 |
-| ITIL Foundation                                   | AXELOS | 2016 |
-| Applied Information Technology Engineer (AP)      | IPA    | 2016 |
-| Oracle Java Silver                                | Oracle | 2015 |
-| Fundamental Information Technology Engineer (FE)  | IPA    | 2014 |
-| Oracle Java Bronze                                | Oracle | 2014 |
-| NTT .Com Master ADVANCED ★★                       | NTT    | 2013 |
+| Certification                                     | Issuer                                        | Year |
+| :------------------------------------------------ | :-------------------------------------------- | :--- |
+| Registered Information Security Specialist (RISS) | Information-technology Promotion Agency (IPA) | 2024 |
+| TOEIC Listening & Reading (305)                   | Educational Testing Service (ETS)             | 2024 |
+| AWS Certified Security – Specialty                | Amazon Web Services (AWS)                     | 2023 |
+| AWS Certified Solutions Architect – Professional  | Amazon Web Services (AWS)                     | 2022 |
+| AWS Certified Solutions Architect – Associate     | Amazon Web Services (AWS)                     | 2021 |
+| IT Passport (IP)                                  | Information-technology Promotion Agency (IPA) | 2017 |
+| ITIL Foundation                                   | AXELOS Limited                                | 2016 |
+| Applied Information Technology Engineer (AP)      | Information-technology Promotion Agency (IPA) | 2016 |
+| Oracle Java Silver                                | Oracle Corporation                            | 2015 |
+| Fundamental Information Technology Engineer (FE)  | Information-technology Promotion Agency (IPA) | 2014 |
+| Oracle Java Bronze                                | Oracle Corporation                            | 2014 |
+| NTT .Com Master ADVANCED ★★                       | NTT Communications Corporation                | 2013 |
 
 ---
 
