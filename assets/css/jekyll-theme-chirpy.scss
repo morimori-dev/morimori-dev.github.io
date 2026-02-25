@@ -35,3 +35,9 @@
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+/* Center code text in the block */
+.highlighter-rouge .rouge-code pre,
+.highlighter-rouge > .highlight > pre {
+  text-align: center;
+}
