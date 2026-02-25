@@ -1,0 +1,18 @@
+---
+---
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* Hide the macOS-style three dots in code block headers */
+.code-header::before,
+.highlight .code-header::before,
+.highlighter-rouge .code-header::before {
+  content: none !important;
+  display: none !important;
+}
+
