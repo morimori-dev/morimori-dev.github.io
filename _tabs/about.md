@@ -19,30 +19,30 @@ This site serves as a portfolio of my writeups and technical knowledge.
 | Certification                                    | Issuer | Year |
 | :----------------------------------------------- | :----- | :--- |
 | OSCP (Offensive Security Certified Professional) | OffSec | 20XX |
-| <!-- 他の資格があれば追加 -->                    |        |      |
+<!-- 他の資格があれば行を追加 -->
 
 ---
 
 ## Skills
 
-**Penetration Testing**
+**Penetration Testing:**
 Web Application Testing, Network Penetration Testing,
 Active Directory Attacks, Privilege Escalation (Linux/Windows),
 Buffer Overflow, Post-Exploitation & Pivoting
 
-**Tools**
+**Tools:**
 Burp Suite, Nmap, Metasploit, BloodHound, Impacket,
 Chisel, Ligolo, John the Ripper, Hashcat, Ghidra
 
-**Programming / Scripting**
+**Programming / Scripting:**
 Python, Bash, PowerShell, SQL, JavaScript
 
-**Infrastructure**
+**Infrastructure:**
 Linux Administration, Windows Server, Docker, Git, CI/CD
 
 ---
 
-## Stats
+## Writeup Stats
 
 | Platform             | Machines Completed |
 | :------------------- | :----------------- |
@@ -55,12 +55,12 @@ Linux Administration, Windows Server, Docker, Git, CI/CD
 
 ## Contact
 
-- **Email:** [morimori-dev@example.com](mailto:morimori-dev@example.com)
+- **Email:** [your.email@example.com](mailto:your.email@example.com)
 - **GitHub:** [github.com/morimori-dev](https://github.com/morimori-dev)
-- **LinkedIn:** [linkedin.com/in/morimori-dev](https://linkedin.com/in/morimori-dev)
+- **LinkedIn:** [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
 - **Hack The Box:** [Profile](https://app.hackthebox.com/profile/XXXXXX)
 
 ---
 
-> Want to discuss a writeup, collaborate, or talk about opportunities?
+> Interested in discussing a writeup or exploring opportunities?
 > Feel free to reach out via email or LinkedIn.
