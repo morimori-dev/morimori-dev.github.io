@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh run list --limit 5)"
+      "Bash(gh run list --limit 5)",
+      "Bash(gem list jekyll-theme-chirpy)",
+      "Read(//usr/local/**)",
+      "Bash(ruby -e \"puts Gem.paths.gem_dirs\")",
+      "Read(//home/**)",
+      "Bash(bundle show jekyll-theme-chirpy)"
     ]
   }
 }
