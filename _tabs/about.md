@@ -61,12 +61,41 @@ Python for security tooling, Active Directory attacks, Buffer Overflow exploitat
 
 ## Writeup Stats
 
+{% assign pg_count = 0 %}
+{% assign htb_count = 0 %}
+{% assign thm_count = 0 %}
+{% assign linux_count = 0 %}
+{% assign windows_count = 0 %}
+
+{% for post in site.posts %}
+  {% if post.categories contains 'Proving Grounds' %}
+    {% assign pg_count = pg_count | plus: 1 %}
+  {% elsif post.categories contains 'HackTheBox' %}
+    {% assign htb_count = htb_count | plus: 1 %}
+  {% elsif post.categories contains 'TryHackMe' %}
+    {% assign thm_count = thm_count | plus: 1 %}
+  {% endif %}
+
+  {% if post.categories contains 'Linux' %}
+    {% assign linux_count = linux_count | plus: 1 %}
+  {% elsif post.categories contains 'Windows' %}
+    {% assign windows_count = windows_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% assign total_count = pg_count | plus: htb_count | plus: thm_count %}
+
 | Platform             | Machines Completed |
 | :------------------- | :----------------- |
-| OSCP Proving Grounds | XX                 |
-| Hack The Box         | XX                 |
-| TryHackMe            | XX                 |
-| **Total**            | **XXX**            |
+| OSCP Proving Grounds | {{ pg_count }}     |
+| Hack The Box         | {{ htb_count }}    |
+| TryHackMe            | {{ thm_count }}    |
+| **Total**            | **{{ total_count }}** |
+
+| OS      | Count |
+| :------ | :---- |
+| Linux   | {{ linux_count }} |
+| Windows | {{ windows_count }} |
 
 ---
 
