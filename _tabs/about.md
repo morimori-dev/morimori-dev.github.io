@@ -6,11 +6,13 @@ title: About
 
 ## About Me
 
-I am a penetration tester and cybersecurity enthusiast with a focus on
+I am a penetration tester and cybersecurity enthusiast with a passion for
 offensive security. I hold the **OSCP** certification and have completed
 **XX+** machines across OSCP Proving Grounds, Hack The Box, and TryHackMe.
 
-This site serves as a portfolio of my writeups and technical knowledge.
+This site serves as a portfolio of my writeups and technical blog posts.
+Each writeup documents my methodology, enumeration process, exploitation
+techniques, and privilege escalation paths.
 
 ---
 
@@ -19,7 +21,6 @@ This site serves as a portfolio of my writeups and technical knowledge.
 | Certification                                    | Issuer | Year |
 | :----------------------------------------------- | :----- | :--- |
 | OSCP (Offensive Security Certified Professional) | OffSec | 20XX |
-<!-- 他の資格があれば行を追加 -->
 
 ---
 
@@ -28,7 +29,7 @@ This site serves as a portfolio of my writeups and technical knowledge.
 **Penetration Testing:**
 Web Application Testing, Network Penetration Testing,
 Active Directory Attacks, Privilege Escalation (Linux/Windows),
-Buffer Overflow, Post-Exploitation & Pivoting
+Buffer Overflow, Post-Exploitation, Pivoting
 
 **Tools:**
 Burp Suite, Nmap, Metasploit, BloodHound, Impacket,
@@ -58,9 +59,8 @@ Linux Administration, Windows Server, Docker, Git, CI/CD
 - **Email:** [your.email@example.com](mailto:your.email@example.com)
 - **GitHub:** [github.com/morimori-dev](https://github.com/morimori-dev)
 - **LinkedIn:** [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- **Hack The Box:** [Profile](https://app.hackthebox.com/profile/XXXXXX)
 
 ---
 
-> Interested in discussing a writeup or exploring opportunities?
+> Interested in discussing a writeup, collaborating, or exploring opportunities?
 > Feel free to reach out via email or LinkedIn.

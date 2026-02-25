@@ -1,9 +1,6 @@
-# ==============================================================
-# Chirpy Jekyll Theme - Full Configuration
-# Site: morimori-dev.github.io
-# ==============================================================
-
-# ----- Site Settings -----
+# ============================================================
+# Site Settings
+# ============================================================
 theme: jekyll-theme-chirpy
 lang: en
 timezone: Asia/Tokyo
@@ -22,28 +19,38 @@ github:
 
 social:
   name: morimori-dev
-  email: your.email@example.com        # ← 自分のメールに変更
+  email: your.email@example.com    # ← 自分のメールに変更
   links:
     - https://github.com/morimori-dev
-    # - https://linkedin.com/in/yourprofile
-    # - https://twitter.com/yourhandle
+    - https://linkedin.com/in/yourprofile    # ← 自分のLinkedInに変更
     # - https://app.hackthebox.com/profile/XXXXXX
 
-# ----- URL Structure (日付なし) -----
-permalink: /:title/
-# これで記事URLが https://morimori-dev.github.io/htb-sau/ のようになる
-# ファイル名の日付部分(2025-01-10-)はURL に含まれない
-
-# ----- Theme Mode -----
+# ============================================================
+# Theme Mode
+# ============================================================
 theme_mode: dark
 
-# ----- Avatar / Profile -----
+# ============================================================
+# Avatar
+# ============================================================
 avatar: /assets/img/avatar.jpg
 
-# ----- Table of Contents -----
+# ============================================================
+# Table of Contents
+# ============================================================
 toc: true
 
-# ----- Comments (Optional - 必要になったら有効化) -----
+# ============================================================
+# Permalink（★ URL から日付を除外する設定）
+# ============================================================
+# これにより記事URLが以下のようになる:
+#   /posts/htb-sau/      （日付なし）
+#   /posts/pg-craft/     （日付なし）
+permalink: /posts/:title/
+
+# ============================================================
+# Comments (Optional - 必要になったら有効化)
+# ============================================================
 # comments:
 #   provider: giscus
 #   giscus:
@@ -52,15 +59,21 @@ toc: true
 #     category: Comments
 #     category_id:
 
-# ----- Analytics (Optional - 必要になったら有効化) -----
+# ============================================================
+# Analytics (Optional - 必要になったら有効化)
+# ============================================================
 # analytics:
 #   google:
 #     id: G-XXXXXXXXXX
 
-# ----- Pagination -----
+# ============================================================
+# Pagination
+# ============================================================
 paginate: 15
 
-# ----- Default Front Matter -----
+# ============================================================
+# Default Front Matter
+# ============================================================
 defaults:
   - scope:
       path: "_posts"
@@ -72,14 +85,16 @@ defaults:
       pin: false
       math: false
       mermaid: false
-      image:
-        lqip: ""
 
-# ----- Sass / CSS -----
+# ============================================================
+# Sass / CSS
+# ============================================================
 sass:
   style: compressed
 
-# ----- Build Settings -----
+# ============================================================
+# Markdown / Syntax Highlighting
+# ============================================================
 markdown: kramdown
 highlighter: rouge
 
@@ -90,7 +105,9 @@ kramdown:
     block:
       line_numbers: true
 
-# ----- Exclude -----
+# ============================================================
+# Exclude
+# ============================================================
 exclude:
   - "*.gem"
   - "*.gemspec"
@@ -100,3 +117,5 @@ exclude:
   - LICENSE
   - rollup.config.js
   - package*.json
+  - node_modules
+  - "*.log"
