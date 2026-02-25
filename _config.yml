@@ -97,6 +97,7 @@ defaults:
       comments: false
       toc: true
       pin: false
+      license: false
       math: false
       mermaid: false
 
