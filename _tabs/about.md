@@ -22,7 +22,6 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 | Certification                                     | Issuer                                        | Year |
 | :------------------------------------------------ | :-------------------------------------------- | :--- |
 | Registered Information Security Specialist (RISS) | Information-technology Promotion Agency (IPA) | 2024 |
-| TOEIC Listening & Reading (305)                   | Educational Testing Service (ETS)             | 2024 |
 | AWS Certified Security – Specialty                | Amazon Web Services (AWS)                     | 2023 |
 | AWS Certified Solutions Architect – Professional  | Amazon Web Services (AWS)                     | 2022 |
 | AWS Certified Solutions Architect – Associate     | Amazon Web Services (AWS)                     | 2021 |
