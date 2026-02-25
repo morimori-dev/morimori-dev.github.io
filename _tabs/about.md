@@ -19,20 +19,19 @@ techniques, and privilege escalation paths.
 
 ## Certifications
 
-| Certification                                          | Issuer        | Year |
-| :----------------------------------------------------- | :------------ | :--- |
-| Registered Information Security Specialist (RISS)     | IPA           | 2024 |
-| AWS Certified Security – Specialty                     | AWS           | 2023 |
-| AWS Certified Solutions Architect – Professional       | AWS           | 2022 |
-| AWS Certified Solutions Architect – Associate          | AWS           | 2021 |
-| IT Passport (IP)                                       | IPA           | 2017 |
-| ITIL Foundation                                        | AXELOS        | 2016 |
-| Applied Information Technology Engineer (AP)           | IPA           | 2016 |
-| Oracle Java Silver                                     | Oracle        | 2015 |
-| Fundamental Information Technology Engineer (FE)       | IPA           | 2014 |
-| Oracle Java Bronze                                     | Oracle        | 2014 |
-| NTT .Com Master ADVANCED ★★                           | NTT           | 2013 |
-| P Certification (Python 3 Engineer)                    | PRIME STRATEGY | —   |
+| Certification                                     | Issuer | Year |
+| :------------------------------------------------ | :----- | :--- |
+| Registered Information Security Specialist (RISS) | IPA    | 2024 |
+| AWS Certified Security – Specialty                | AWS    | 2023 |
+| AWS Certified Solutions Architect – Professional  | AWS    | 2022 |
+| AWS Certified Solutions Architect – Associate     | AWS    | 2021 |
+| IT Passport (IP)                                  | IPA    | 2017 |
+| ITIL Foundation                                   | AXELOS | 2016 |
+| Applied Information Technology Engineer (AP)      | IPA    | 2016 |
+| Oracle Java Silver                                | Oracle | 2015 |
+| Fundamental Information Technology Engineer (FE)  | IPA    | 2014 |
+| Oracle Java Bronze                                | Oracle | 2014 |
+| NTT .Com Master ADVANCED ★★                       | NTT    | 2013 |
 
 ---
 
