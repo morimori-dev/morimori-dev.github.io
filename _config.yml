@@ -1,14 +1,15 @@
-# ==============================================================================
-# _config.yml - Chirpy Theme Configuration for morimori-dev
-# ==============================================================================
+# ==============================================================
+# Chirpy Jekyll Theme - Full Configuration
+# Site: morimori-dev.github.io
+# ==============================================================
 
 # ----- Site Settings -----
 theme: jekyll-theme-chirpy
 lang: en
 timezone: Asia/Tokyo
 
-title: "morimori-dev | Security Portfolio"
-tagline: "OSCP | Penetration Tester | CTF Writeups"
+title: "morimori-dev"
+tagline: "OSCP | Penetration Tester | Security Writeups"
 description: >-
   Cybersecurity portfolio featuring writeups for OSCP Proving Grounds,
   Hack The Box, and TryHackMe machines, along with technical blog posts.
@@ -21,12 +22,17 @@ github:
 
 social:
   name: morimori-dev
-  email: morimori-dev@example.com          # ← 実際のメールに変更
+  email: your.email@example.com        # ← 自分のメールに変更
   links:
     - https://github.com/morimori-dev
-    - https://linkedin.com/in/morimori-dev # ← 実際のURLに変更
-    # - https://twitter.com/morimori_dev
+    # - https://linkedin.com/in/yourprofile
+    # - https://twitter.com/yourhandle
     # - https://app.hackthebox.com/profile/XXXXXX
+
+# ----- URL Structure (日付なし) -----
+permalink: /:title/
+# これで記事URLが https://morimori-dev.github.io/htb-sau/ のようになる
+# ファイル名の日付部分(2025-01-10-)はURL に含まれない
 
 # ----- Theme Mode -----
 theme_mode: dark
@@ -37,22 +43,19 @@ avatar: /assets/img/avatar.jpg
 # ----- Table of Contents -----
 toc: true
 
-# ----- Comments (Optional - 後から有効化可能) -----
+# ----- Comments (Optional - 必要になったら有効化) -----
 # comments:
 #   provider: giscus
 #   giscus:
 #     repo: morimori-dev/morimori-dev.github.io
-#     repo_id:           # ← giscus.app で取得
+#     repo_id:
 #     category: Comments
-#     category_id:       # ← giscus.app で取得
+#     category_id:
 
-# ----- Analytics (Optional - 後から有効化可能) -----
+# ----- Analytics (Optional - 必要になったら有効化) -----
 # analytics:
 #   google:
 #     id: G-XXXXXXXXXX
-
-# ----- Permalink -----
-permalink: /posts/:title/
 
 # ----- Pagination -----
 paginate: 15
@@ -97,4 +100,3 @@ exclude:
   - LICENSE
   - rollup.config.js
   - package*.json
-  - node_modules
