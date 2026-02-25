@@ -60,11 +60,11 @@ permalink: /posts/:title/
 #     category_id:
 
 # ============================================================
-# Analytics (Optional - 必要になったら有効化)
+# Analytics
 # ============================================================
-# analytics:
-#   google:
-#     id: G-XXXXXXXXXX
+analytics:
+  google:
+    id: G-TTQZGYE15D
 
 # ============================================================
 # Pagination
