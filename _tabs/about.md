@@ -22,6 +22,7 @@ techniques, and privilege escalation paths.
 | Certification                                     | Issuer | Year |
 | :------------------------------------------------ | :----- | :--- |
 | Registered Information Security Specialist (RISS) | IPA    | 2024 |
+| TOEIC Listening & Reading (305)                   | ETS    | 2024 |
 | AWS Certified Security – Specialty                | AWS    | 2023 |
 | AWS Certified Solutions Architect – Professional  | AWS    | 2022 |
 | AWS Certified Solutions Architect – Associate     | AWS    | 2021 |
