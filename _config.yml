@@ -5,7 +5,7 @@ theme: jekyll-theme-chirpy
 lang: en
 timezone: Asia/Tokyo
 
-title: "morimori-dev"
+title: "morimori Security Blog"
 tagline: "Penetration Tester | Security Writeups"
 description: >-
   Cybersecurity portfolio featuring writeups for OSCP Proving Grounds,
@@ -18,7 +18,7 @@ github:
   username: morimori-dev
 
 social:
-  name: morimori-dev
+  name: Paul
   email: your.email@example.com    # ← 自分のメールに変更
   links:
     - https://github.com/morimori-dev
