@@ -20,4 +20,11 @@
     justify-content: flex-start !important;
     padding-left: 1.5rem;
   }
+
+  /* Remove auto-centering margin from Bootstrap container inside main-wrapper */
+  #main-wrapper > .container-xl,
+  #main-wrapper > main {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
 }
