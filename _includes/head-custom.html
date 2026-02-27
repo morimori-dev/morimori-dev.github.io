@@ -23,3 +23,49 @@
     object-position: 50% 42%;
   }
 </style>
+
+<script>
+  // Keep writeup categories on top and move TechBlog to the bottom on /categories/.
+  (function () {
+    function reorderCategories() {
+      var path = window.location.pathname.replace(/\/+$/, "");
+      if (!path.endsWith("/categories")) return;
+
+      var root = document.getElementById("categories");
+      if (!root) return;
+
+      var list = root.querySelector("ul");
+      if (!list) return;
+
+      var items = Array.from(list.children).filter(function (el) {
+        return el.tagName === "LI";
+      });
+
+      if (!items.length) return;
+
+      var writeupItems = [];
+      var techBlogItems = [];
+
+      items.forEach(function (item) {
+        var isTechBlog = item.querySelector('a[href*="/categories/techblog/"]');
+        if (isTechBlog) {
+          techBlogItems.push(item);
+        } else {
+          writeupItems.push(item);
+        }
+      });
+
+      if (!techBlogItems.length) return;
+
+      writeupItems.concat(techBlogItems).forEach(function (item) {
+        list.appendChild(item);
+      });
+    }
+
+    ["DOMContentLoaded", "turbo:load", "pjax:complete"].forEach(function (eventName) {
+      document.addEventListener(eventName, reorderCategories);
+    });
+
+    window.addEventListener("load", reorderCategories);
+  })();
+</script>
