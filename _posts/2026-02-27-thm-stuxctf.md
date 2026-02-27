@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 ip
-```
-
-```
 nmap -p- -sC -sV -T4 $ip
 feroxbuster -u http://$ip -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 nikto -h $ip
@@ -59,7 +55,7 @@ nikto -h $ip
 
 ## 1. 初期探索
 
-```
+```bash
 nmap -p- -sC -sV -T4 $ip
 feroxbuster -u http://$ip -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 nikto -h $ip
@@ -104,7 +100,7 @@ print(str(gabc)[:128])
 算出したディレクトリ配下のログイン画面で認証バイパス（例: `' or 1=1-- -`）を試し、管理画面に到達します。  
 その後、アップロード機能で PHP WebShell を配置し、`www-data` シェルを取得します。
 
-```
+```bash
 curl "http://$ip/47315028937264895539131328176684350732577039984023005189203993885687328953804202704977050807800832928198526567069446044422855055/"
 ```
 
@@ -112,7 +108,7 @@ curl "http://$ip/473150289372648955391313281766843507325770399840230051892039938
 
 ローカル列挙で `ayush` の資格情報が残ったメモを確認し、ユーザー昇格します。
 
-```
+```bash
 cat /home/ayush/.reminders
 su ayush
 sudo -l
@@ -126,7 +122,6 @@ cat /root/root.txt
 
 このルームは、Web脆弱性単体より「コメント解析→数値計算→隠しURL発見→アップロードRCE→設定不備sudo」という連鎖で突破します。  
 OSCP視点では、手掛かりが薄い時にソースと補助情報を疑う姿勢が特に重要です。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

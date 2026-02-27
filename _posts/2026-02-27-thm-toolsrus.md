@@ -30,14 +30,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ### 2. Local Shell
 
@@ -56,7 +54,7 @@ time hydra -l bob -P /usr/share/wordlists/rockyou.txt $ip http-get /protected
 *Caption: Screenshot captured during toolsrus attack workflow (step 1).*
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 ｃ
 August 14, 2024 0:01
 
@@ -154,7 +152,6 @@ OneNote
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

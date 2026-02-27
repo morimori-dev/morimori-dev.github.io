@@ -33,8 +33,6 @@ rustscan -a $ip --ulimit 5000 -- -A -sV
 We run the following command to enumerate reachable services and reduce the unknown attack surface. At this stage, the objective is to identify exposed ports, service versions, and any obvious misconfigurations. The output guides which endpoint should be prioritized for deeper exploitation.
 ```bash
 rustscan -a $ip --ulimit 5000 -- -A -sV
-```
-```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/tools]
 └─$ rustscan -a $ip --ulimit 5000 -- -A -sV
 .----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
@@ -280,8 +278,6 @@ RustScan: allowing you to send UDP packets into the void 1200x faster than NMAP
 We run the following command to enumerate reachable services and reduce the unknown attack surface. At this stage, the objective is to identify exposed ports, service versions, and any obvious misconfigurations. The output guides which endpoint should be prioritized for deeper exploitation.
 ```bash
 rustscan -a $ip --ulimit 5000 -- -A -sV
-```
-```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/tools]
 └─$ rustscan -a $ip --ulimit 5000 -- -A -sV
 .----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
@@ -543,8 +539,6 @@ https://hailstormsec.com/steel-mountain/
 At this point, we execute the command to turn enumeration findings into a practical foothold. The goal is to obtain either code execution, reusable credentials, or a stable interactive shell. Relevant options are preserved so the step can be repeated exactly during verification.
 ```bash
 rustscan -a $ip --ulimit 5000 -- -A -sV
-```
-```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~/tools]
 └─$ rustscan -a $ip --ulimit 5000 -- -A -sV
 .----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
@@ -785,8 +779,6 @@ Nmap done: 1 IP address (1 host up) scanned in 85.44 seconds
 At this point, we execute the command to turn enumeration findings into a practical foothold. The goal is to obtain either code execution, reusable credentials, or a stable interactive shell. Relevant options are preserved so the step can be repeated exactly during verification.
 ```bash
 nmap -p- -sC -sV -T4 $ip
-```
-```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~]
 └─$ nmap -p- -sC -sV -T4 $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-21 16:13 JST
@@ -1038,8 +1030,6 @@ Please wait on nc
 At this point, we execute the command to turn enumeration findings into a practical foothold. The goal is to obtain either code execution, reusable credentials, or a stable interactive shell. Relevant options are preserved so the step can be repeated exactly during verification.
 ```bash
 nc -lnvp 5555
-```
-```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~]
 └─$ nc -lnvp 5555
 listening on [any] 5555 ...

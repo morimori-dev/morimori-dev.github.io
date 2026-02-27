@@ -30,10 +30,9 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
 ```
 
@@ -44,7 +43,7 @@ nmap -sV -sT -sC $ip
 PDFメモから抽出した主要コマンドと要点を整理しています。必要に応じて後続で詳細追記してください。
 
 ### 実行コマンド（抽出）
-```
+```bash
 ftp $ip
 ftp> ls
 ftp> cd ftp
@@ -62,7 +61,7 @@ nc -lvnp When waiting at 6666,
 *Caption: Screenshot captured during startup attack workflow (step 1).*
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 Startup🌶
 June 15, 2023 23:34
 
@@ -187,7 +186,6 @@ reverse shell
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 ip
-```
-
-```
 nmap -sV -sT -sC $ip
 ```
 
@@ -57,11 +53,8 @@ nmap -sV -sT -sC $ip
 
 ## 1. PortScan
 
-```
+```bash
 nmap -sV -sT -sC $ip
-```
-
-```
 ┌──(n0z0㉿LAPTOP-P490FVC2)-[~]
 └─$ nmap -sV -sT -sC $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-27 19:10 JST
@@ -79,7 +72,7 @@ PORT   STATE SERVICE VERSION
 
 まず `cybert` ユーザーの履歴とログを確認し、怪しい操作履歴を時系列で整理します。
 
-```
+```bash
 cat /home/cybert/.bash_history
 cat /var/log/auth.log | grep -i -E 'sudo|it-admin|cybert'
 ls -la /bin/os-update.sh
@@ -112,7 +105,6 @@ ls -la /bin/os-update.sh
 
 このルームの本質は exploit 開発ではなく、断片的な証拠（bash history, auth log, cron, file timestamp）を統合してインシデントのストーリーを確定する点です。  
 OSCP/実務でも、侵入後の調査フェーズで同じ観点が求められるため、`履歴 + ログ + タイムスタンプ` の三点セットは常に押さえるべきです。
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

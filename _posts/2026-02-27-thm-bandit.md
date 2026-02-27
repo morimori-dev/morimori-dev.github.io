@@ -33,14 +33,10 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
-```
-
-```
 ✅[0:14][CPU:2][MEM:28][IP:10.50.37.61][/home/n0z0]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-12-14 00:15 JST
@@ -89,7 +85,7 @@ Nmap done: 1 IP address (1 host up) scanned in 647.57 seconds
 
 ポートスキャン
 
-```
+```bash
 ✅[0:14][CPU:2][MEM:28][IP:10.50.37.61][/home/n0z0]
 🐉 > nmap -p- -sC -sV -T4 -A -Pn $ip
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-12-14 00:15 JST
@@ -130,7 +126,7 @@ Nmap done: 1 IP address (1 host up) scanned in 647.57 seconds
 
 8002ポートでもwebサービス提供してた
 
-```
+```bash
 ✅[23:30][CPU:1][MEM:19][IP:10.50.37.61][/home/n0z0]
 🐉 > feroxbuster -u http://bandit.escape -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 50 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
 
@@ -183,7 +179,7 @@ by Ben "epi" Risher 🤓                 ver: 2.11.0
 
 8002でちょうさ
 
-```
+```bash
 ❌[1:02][CPU:3][MEM:28][IP:10.50.37.61][/home/n0z0]
 🐉 > feroxbuster -u http://bandit.escape:8002 -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list
 -2.3-big.txt -t 50 -x php,html,txt -r --timeout 3 --no-state -s 200,301 -e -E
@@ -247,7 +243,6 @@ XSS内でリバースシェルをぶち込むと刺さる
 
 だけどlsなどコマンドが返ってこない
 
-```
 ✅[0:31][CPU:0][MEM:37][IP:10.50.37.61][/home/n0z0]
 🐉 > nc -nvlp 4444
 listening on [any] 4444 ...

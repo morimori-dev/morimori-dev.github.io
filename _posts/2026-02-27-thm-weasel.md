@@ -30,10 +30,9 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 ## Nmap
-```
+```bash
 nmap -sV -sT -sC $ip
 ```
 
@@ -44,7 +43,7 @@ nmap -sV -sT -sC $ip
 PDFメモから抽出した主要コマンドと要点を整理しています。必要に応じて後続で詳細追記してください。
 
 ### 実行コマンド（抽出）
-```
+```bash
 Weiteup
 What is the user.txt flag?
 enum4linux -A $ip
@@ -72,7 +71,7 @@ nc -lvnp 443
 *Caption: Screenshot captured during weasel attack workflow (step 3).*
 
 ### 抽出メモ（先頭120行）
-```
+```bash
 Weasel
 August 15, 2024 21:39
 
@@ -200,7 +199,6 @@ weasel.ipynb                        A     4308  Fri Aug 26 00:26:46 2022
 
 ### Not implemented (not recorded in PDF)
 
-```
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
