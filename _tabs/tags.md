@@ -1,7 +1,7 @@
 ---
 layout: page
 icon: fas fa-tags
-order: 2
+order: 4
 title: Tags
 mermaid: true
 ---
