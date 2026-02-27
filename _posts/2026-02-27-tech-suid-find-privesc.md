@@ -1,7 +1,7 @@
 ---
 title: "Linux Privilege Escalation: SUID Abuse with find"
 date: 2026-02-27
-categories: [TechBlog, Linux]
+categories: [TechBlog]
 tags: [suid, privilege-escalation, linux, gtfobins, beginner]
 mermaid: true
 ---
