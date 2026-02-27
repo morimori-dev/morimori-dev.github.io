@@ -14,7 +14,10 @@
 /* Remove the gap between sidebar and content on desktop.
    #main-wrapper uses justify-content-center and Bootstrap .container uses
    margin: 0 auto, which together center the container and create a large
-   left gap on wide screens. Override both. */
+   left gap on wide screens. Override both.
+   Also remove the Chirpy/Bootstrap max-width cap on the container so the
+   article fills the full available width. The right panel (col-xl-3) stays
+   on the right via Bootstrap's grid system. */
 @media (min-width: 850px) {
   #main-wrapper {
     justify-content: flex-start !important;
@@ -22,5 +25,6 @@
 
   #main-wrapper > .container {
     margin-left: 0 !important;
+    max-width: none !important;
   }
 }
