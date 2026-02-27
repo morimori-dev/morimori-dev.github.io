@@ -53,9 +53,9 @@ flowchart TD
 
     A --> B --> C --> D --> E --> F
 
-    style A fill:#ffcccc
-    style F fill:#ccffcc
-    style E fill:#fff9c4
+    style A fill:#c0392b,color:#fff
+    style F fill:#27ae60,color:#fff
+    style E fill:#e67e22,color:#fff
 ```
 
 The key insight: `find` runs as **root** (because of SUID), and it spawns `/bin/sh` as a **child process** — inheriting root's privileges.
@@ -194,8 +194,8 @@ flowchart LR
         U2 --> F2 --> S2
     end
 
-    style S2 fill:#ccffcc
-    style F2 fill:#fff9c4
+    style S2 fill:#27ae60,color:#fff
+    style F2 fill:#e67e22,color:#fff
 ```
 
 When a SUID binary executes another program via `exec`, the **effective UID is inherited** by the child process. This is the core mechanism that makes SUID abuse dangerous when the binary can run arbitrary commands.
