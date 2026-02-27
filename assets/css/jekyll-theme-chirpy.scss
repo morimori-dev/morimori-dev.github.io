@@ -1,0 +1,23 @@
+---
+---
+
+{% if jekyll.environment == "production" %}
+@use "main.bundle";
+{% else %}
+@use "main";
+{% endif %}
+
+/* =========================================================
+   Custom overrides
+   ========================================================= */
+
+/* Reduce gap between sidebar and content on desktop.
+   Chirpy centers the container inside #main-wrapper by default,
+   which creates a large blank area between the sidebar and the
+   article on wide screens. Switching to flex-start closes it. */
+@media (min-width: 992px) {
+  #main-wrapper {
+    justify-content: flex-start !important;
+    padding-left: 1.5rem;
+  }
+}
