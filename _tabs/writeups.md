@@ -28,7 +28,7 @@ order: 1
     {% endif %}
   {% endunless %}
 {% endfor %}
-{% assign writeup_posts = writeup_posts | sort: "title" %}
+{% assign writeup_posts = writeup_posts | sort_natural: "title" %}
 
 <table>
   <thead>
