@@ -86,14 +86,14 @@ Python for security tooling, Active Directory attacks, Buffer Overflow exploitat
 {% assign total_count = pg_count | plus: htb_count | plus: thm_count %}
 
 | Platform             | Machines Completed |
-| :------------------- | :----------------- |
+| :------------------- | -----------------: |
 | OSCP Proving Grounds | {{ pg_count }}     |
 | Hack The Box         | {{ htb_count }}    |
 | TryHackMe            | {{ thm_count }}    |
 | **Total**            | **{{ total_count }}** |
 
 | OS      | Count |
-| :------ | :---- |
+| :------ | ----: |
 | Linux   | {{ linux_count }} |
 | Windows | {{ windows_count }} |
 
