@@ -11,20 +11,16 @@
    Custom overrides
    ========================================================= */
 
-/* Reduce gap between sidebar and content on desktop.
-   Chirpy centers the container inside #main-wrapper by default,
-   which creates a large blank area between the sidebar and the
-   article on wide screens. Switching to flex-start closes it. */
-@media (min-width: 992px) {
+/* Remove the gap between sidebar and content on desktop.
+   #main-wrapper uses justify-content-center and Bootstrap .container uses
+   margin: 0 auto, which together center the container and create a large
+   left gap on wide screens. Override both. */
+@media (min-width: 850px) {
   #main-wrapper {
     justify-content: flex-start !important;
-    padding-left: 1.5rem;
   }
 
-  /* Remove auto-centering margin from Bootstrap container inside main-wrapper */
-  #main-wrapper > .container-xl,
-  #main-wrapper > main {
+  #main-wrapper > .container {
     margin-left: 0 !important;
-    margin-right: auto !important;
   }
 }
