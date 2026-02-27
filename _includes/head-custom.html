@@ -55,6 +55,12 @@
         }
       });
 
+      writeupItems.sort(function (a, b) {
+        var aName = (a.querySelector("a") || {}).textContent || "";
+        var bName = (b.querySelector("a") || {}).textContent || "";
+        return aName.trim().localeCompare(bName.trim(), "en", { sensitivity: "base" });
+      });
+
       if (!techBlogItems.length) return;
 
       writeupItems.concat(techBlogItems).forEach(function (item) {
