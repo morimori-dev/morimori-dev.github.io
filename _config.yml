@@ -121,6 +121,18 @@ kramdown:
       line_numbers: true
 
 # ============================================================
+# Jekyll Archives (required for Categories / Tags pages)
+# ============================================================
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/
+
+# ============================================================
 # Exclude
 # ============================================================
 exclude:
