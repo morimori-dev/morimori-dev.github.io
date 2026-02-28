@@ -30,10 +30,8 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
-
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
 ```
 
@@ -705,7 +703,7 @@ d4e5b9839e8317c7bd3182e3d1a04846
 
 ### Not implemented (or log not saved)
 
-```
+No additional logs saved.
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.
