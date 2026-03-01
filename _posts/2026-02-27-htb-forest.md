@@ -30,10 +30,8 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
-
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
 ```
 
@@ -46,11 +44,7 @@ nmap -p- -sC -sV -T4 -A -Pn $ip
 後段は DCSync 相当の権限到達を目標に ACL 連鎖を追跡します。
 
 ### 実施コマンド（抜粋）
-```
-
-### Not implemented (or log not saved)
-
-```
+No additional commands saved.
 
 ### 実施ログ（統合）
 
@@ -466,7 +460,7 @@ enum4linux complete on Sat Dec 28 03:40:43 2024
 
 ### Not implemented (or log not saved)
 
-```
+No additional logs saved.
 
 💡 Why this works  
 Initial access succeeds when enumeration findings are turned into a practical exploit chain. Capturing credentials, file disclosure, or direct RCE creates reliable pivot points for privilege escalation.

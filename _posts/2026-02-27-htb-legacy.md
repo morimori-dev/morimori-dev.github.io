@@ -30,10 +30,8 @@ High-quality reconnaissance narrows a large attack surface into a few validated 
 
 ### Not implemented (or log not saved)
 
-```
-
 ## Nmap
-```
+```bash
 nmap -p- -sC -sV -T4 -A -Pn $ip
 ```
 
@@ -46,11 +44,7 @@ SMBv1 脆弱ホストであることが明確なので、MS08-067 / MS17-010 を
 このボックスは初期侵入と同時に高権限到達しやすいため、フラグ回収前に証跡コマンドを残すと再現性が上がります。
 
 ### 実施コマンド（抜粋）
-```
-
-### Not implemented (or log not saved)
-
-```
+No additional commands saved.
 
 ### 実施ログ（統合）
 
@@ -284,6 +278,7 @@ Microsoft Windows XP [Version 5.1.2600]
 C:\WINDOWS\system32>cd c:\
 ```
 
+```
 meterpreter > shell
 Process 1160 created.
 Channel 1 created.
