@@ -24,6 +24,9 @@ social:
     - https://www.credly.com/users/class_nzm
     # - https://app.hackthebox.com/profile/XXXXXX
 
+webmaster_verifications:
+  google: "Dys23kPxGt_QQhMIpTSyVaoMtxA-alywk6FYfC8NRhU"
+
 # ============================================================
 # Theme Mode
 # ============================================================
