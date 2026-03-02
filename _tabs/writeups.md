@@ -8,9 +8,11 @@ order: 1
 {% assign platforms = "" | split: "" %}
 {% for post in site.posts %}
   {% unless post.categories contains "TechBlog" %}
-    {% assign plat = post.categories | first %}
-    {% unless platforms contains plat %}
-      {% assign platforms = platforms | push: plat %}
+    {% unless post.categories contains "Life" %}
+      {% assign plat = post.categories | first %}
+      {% unless platforms contains plat %}
+        {% assign platforms = platforms | push: plat %}
+      {% endunless %}
     {% endunless %}
   {% endunless %}
 {% endfor %}
@@ -22,10 +24,12 @@ order: 1
 {% assign writeup_posts = "" | split: "" %}
 {% for post in site.posts %}
   {% unless post.categories contains "TechBlog" %}
-    {% assign post_plat = post.categories | first %}
-    {% if post_plat == plat %}
-      {% assign writeup_posts = writeup_posts | push: post %}
-    {% endif %}
+    {% unless post.categories contains "Life" %}
+      {% assign post_plat = post.categories | first %}
+      {% if post_plat == plat %}
+        {% assign writeup_posts = writeup_posts | push: post %}
+      {% endif %}
+    {% endunless %}
   {% endunless %}
 {% endfor %}
 {% assign writeup_posts = writeup_posts | sort_natural: "title" %}
