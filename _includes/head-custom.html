@@ -25,13 +25,19 @@
 
   /* Show a medium-sized author line between blog title and tagline in the sidebar. */
   #sidebar .site-title::after {
-    content: "Paul (Christian name)";
+    content: "Author: Paul (Christian name)";
     display: block;
-    margin: 0.2rem 0 0.2rem;
-    font-size: 1.32rem;
-    font-weight: 600;
-    line-height: 1.25;
+    margin: 0.55rem 0 0;
+    padding: 0 0 0.55rem;
+    font-size: 1.08rem;
+    font-weight: 650;
+    line-height: 1.35;
     color: var(--heading-color);
+    border-bottom: 1px solid rgba(127, 127, 127, 0.35);
+  }
+
+  #sidebar .site-subtitle {
+    margin-top: 0.58rem !important;
   }
 </style>
 
