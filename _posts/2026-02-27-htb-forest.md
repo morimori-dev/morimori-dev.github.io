@@ -1,6 +1,7 @@
 ---
 title: "HackTheBox - Forest (Windows)"
 date: 2026-02-27
+description: "Hack The Box Forest Windows writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true

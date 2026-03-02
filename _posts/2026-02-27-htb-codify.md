@@ -1,6 +1,7 @@
 ---
 title: "HackTheBox - Codify (Linux)"
 date: 2026-02-27
+description: "Hack The Box Codify Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [privilege-escalation, rce]
 mermaid: true

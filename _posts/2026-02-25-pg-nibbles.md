@@ -1,6 +1,7 @@
 ---
 title: "Proving Grounds - Nibbles (Linux)"
 date: 2026-02-25
+description: "Proving Grounds Nibbles Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [postgresql, default-credentials, rce, suid, find, privilege-escalation]
 mermaid: true

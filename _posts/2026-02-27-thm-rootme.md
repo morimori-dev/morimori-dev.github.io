@@ -1,6 +1,7 @@
 ---
 title: "TryHackMe - RootMe (Linux)"
 date: 2026-02-27
+description: "TryHackMe RootMe Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true

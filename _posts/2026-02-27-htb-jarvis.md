@@ -1,6 +1,7 @@
 ---
 title: "HackTheBox - Jarvis (Linux)"
 date: 2026-02-27
+description: "Hack The Box Jarvis Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [php, privilege-escalation, rce, suid]
 mermaid: true

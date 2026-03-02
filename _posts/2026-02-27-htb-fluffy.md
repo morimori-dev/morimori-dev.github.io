@@ -1,6 +1,7 @@
 ---
 title: "HackTheBox - Fluffy (Windows)"
 date: 2026-02-27
+description: "Hack The Box Fluffy Windows writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Windows]
 tags: [active-directory, privilege-escalation, rce]
 mermaid: true

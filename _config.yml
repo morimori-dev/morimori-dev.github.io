@@ -33,6 +33,7 @@ theme_mode: dark
 # Avatar
 # ============================================================
 avatar: /assets/img/avatar.png
+social_preview_image: /assets/img/avatar.png
 
 # ============================================================
 # Table of Contents

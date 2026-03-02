@@ -1,6 +1,7 @@
 ---
 title: "TryHackMe - PS Eclipse (Windows)"
 date: 2026-02-27
+description: "TryHackMe PS Eclipse Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true

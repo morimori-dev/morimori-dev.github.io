@@ -1,6 +1,7 @@
 ---
 title: "Proving Grounds - Marketing (Linux)"
 date: 2026-02-25
+description: "Proving Grounds Marketing Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [pg, oscp, web, limesurvey, cve-2021-44967, sudo, credential-reuse, marketing]
 mermaid: true

@@ -1,6 +1,7 @@
 ---
 title: "Proving Grounds - Bratarina (Windows)"
 date: 2026-02-25
+description: "Proving Grounds Bratarina Windows walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true

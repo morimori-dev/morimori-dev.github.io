@@ -1,6 +1,7 @@
 ---
 title: "Proving Grounds - GlasgowSmile (Linux)"
 date: 2026-02-25
+description: "Proving Grounds GlasgowSmile Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true

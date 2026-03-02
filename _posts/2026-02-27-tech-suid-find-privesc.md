@@ -1,6 +1,7 @@
 ---
 title: "Linux Privilege Escalation: SUID Abuse with find"
 date: 2026-02-27
+description: "Technical deep dive on linux privilege escalation: suid abuse with find, including attack mechanics, reproducible commands, and hardening guidance."
 categories: [TechBlog]
 tags: [suid, privilege-escalation, linux, gtfobins, beginner]
 mermaid: true
