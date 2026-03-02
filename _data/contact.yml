@@ -10,10 +10,6 @@
   icon: "fas fa-rss"
   noblank: true
 
-- type: linkedin
-  icon: "fab fa-linkedin"
-  url: "https://www.linkedin.com/in/nozomu-sasaki/"
-
 - type: credly
   icon: "fas fa-certificate"
   url: "https://www.credly.com/users/class_nzm"
