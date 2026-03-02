@@ -205,7 +205,7 @@ flowchart LR
         K3A[DB抽出<br/>grafana.db]
         K3B[Secret Key発見<br/>SW2YcwTIb...]
         K3C[AES復号化<br/>AESDecrypt.go]
-        K3D[パスワード判明<br/>SuperSecureP@ssw0rd]
+        K3D["パスワード判明<br/>SuperSecureP@ssw0rd"]
         
         K3A --> K3B --> K3C --> K3D
     end

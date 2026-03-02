@@ -130,7 +130,7 @@ sequenceDiagram
     participant F as find (running as root via SUID)
     participant S as /bin/sh
 
-    U->>F: find . -exec /bin/sh -p \; -quit
+    U->>F: run find with -exec /bin/sh -p
     Note over F: find is SUID root<br/>→ effective UID = 0
 
     F->>S: exec /bin/sh -p

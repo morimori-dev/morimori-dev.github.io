@@ -267,9 +267,30 @@ Privilege escalation relies on local misconfigurations, unsafe permissions, and 
 At this stage, the following command(s) are executed to progress the attack chain and validate the next hypothesis. We are specifically looking for actionable indicators such as open services, exploitability, credential exposure, or privilege boundaries. Key flags and parameters are preserved to keep the workflow reproducible for follow-along testing.
 
 ```mermaid
-以下のwriteupをもとに、攻撃フローをmermaid形式でまとめてください。
+flowchart LR
+    subgraph SCAN["🔍 Scan"]
+        direction TB
+        S1["feroxbuster identified web surface"]
+        S2["ffuf discovered virtual host: monitoring.marshalled.pg"]
+        S1 --> S2
+    end
 
+    subgraph INITIAL["💥 Initial Foothold"]
+        direction TB
+        I1["Built Ruby YAML deserialization payload"]
+        I2["Triggered callback and obtained rails shell"]
+        I3["Read local.txt from /home/dev-acc/local.txt"]
+        I1 --> I2 --> I3
+    end
 
+    subgraph PRIVESC["⬆️ Privilege Escalation"]
+        direction TB
+        P1["Local enumeration exposed sensitive Rails master.key"]
+        P2["Assessed users, listening services, and PATH for escalation paths"]
+        P1 --> P2
+    end
+
+    SCAN --> INITIAL --> PRIVESC
 ```
 
 ## References
