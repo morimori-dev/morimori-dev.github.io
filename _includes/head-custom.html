@@ -22,9 +22,44 @@
     object-fit: cover;
     object-position: 50% 42%;
   }
+
+  /* Add a medium-sized author line between blog title and tagline in the sidebar. */
+  #sidebar .site-author-name {
+    margin: 0.2rem 0 0.2rem;
+    font-size: 1.32rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--heading-color);
+  }
 </style>
 
 <script>
+  // Insert "Paul (Christian name)" between the site title and tagline in the sidebar.
+  (function () {
+    function injectSidebarAuthorName() {
+      var sidebar = document.getElementById("sidebar");
+      if (!sidebar) return;
+
+      var title = sidebar.querySelector(".site-title");
+      var subtitle = sidebar.querySelector(".site-subtitle");
+      if (!title || !subtitle) return;
+
+      if (sidebar.querySelector(".site-author-name")) return;
+
+      var authorLine = document.createElement("p");
+      authorLine.className = "site-author-name";
+      authorLine.textContent = "Paul (Christian name)";
+
+      subtitle.parentNode.insertBefore(authorLine, subtitle);
+    }
+
+    ["DOMContentLoaded", "turbo:load", "pjax:complete"].forEach(function (eventName) {
+      document.addEventListener(eventName, injectSidebarAuthorName);
+    });
+
+    window.addEventListener("load", injectSidebarAuthorName);
+  })();
+
   // Keep writeup categories on top and move TechBlog to the bottom on /categories/.
   (function () {
     function reorderCategories() {

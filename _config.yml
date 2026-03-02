@@ -6,7 +6,7 @@ lang: en
 timezone: Asia/Tokyo
 
 title: "morimori Security Blog"
-tagline: "Penetration Tester | Security Writeups | Author: Paul (Christian name)"
+tagline: "Penetration Tester | Security Writeups"
 description: >-
   Cybersecurity portfolio featuring writeups for OSCP Proving Grounds,
   Hack The Box, and TryHackMe machines, along with technical blog posts.
