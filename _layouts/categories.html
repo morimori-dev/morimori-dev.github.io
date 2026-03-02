@@ -12,6 +12,7 @@ layout: page
 {% assign sort_categories = site.categories | sort %}
 {% assign regular_cards = '' %}
 {% assign tech_cards = '' %}
+{% assign life_cards = '' %}
 
 {% for category in sort_categories %}
   {% assign category_name = category | first %}
@@ -139,6 +140,8 @@ layout: page
     {% assign category_name_lower = category_name | downcase %}
     {% if category_name_lower == 'techblog' %}
       {% assign tech_cards = tech_cards | append: card_html %}
+    {% elsif category_name_lower == 'life' %}
+      {% assign life_cards = life_cards | append: card_html %}
     {% else %}
       {% assign regular_cards = regular_cards | append: card_html %}
     {% endif %}
@@ -149,3 +152,4 @@ layout: page
 
 {{ regular_cards }}
 {{ tech_cards }}
+{{ life_cards }}
