@@ -5,16 +5,15 @@ icon: fas fa-flag
 order: 1
 ---
 
+{% assign writeup_platforms = "HackTheBox|Proving Grounds|TryHackMe" | split: "|" %}
 {% assign platforms = "" | split: "" %}
 {% for post in site.posts %}
-  {% unless post.categories contains "TechBlog" %}
-    {% unless post.categories contains "Life" %}
-      {% assign plat = post.categories | first %}
-      {% unless platforms contains plat %}
-        {% assign platforms = platforms | push: plat %}
-      {% endunless %}
+  {% assign plat = post.categories | first %}
+  {% if writeup_platforms contains plat %}
+    {% unless platforms contains plat %}
+      {% assign platforms = platforms | push: plat %}
     {% endunless %}
-  {% endunless %}
+  {% endif %}
 {% endfor %}
 {% assign platforms = platforms | sort %}
 
@@ -23,14 +22,10 @@ order: 1
 
 {% assign writeup_posts = "" | split: "" %}
 {% for post in site.posts %}
-  {% unless post.categories contains "TechBlog" %}
-    {% unless post.categories contains "Life" %}
-      {% assign post_plat = post.categories | first %}
-      {% if post_plat == plat %}
-        {% assign writeup_posts = writeup_posts | push: post %}
-      {% endif %}
-    {% endunless %}
-  {% endunless %}
+  {% assign post_plat = post.categories | first %}
+  {% if writeup_platforms contains post_plat and post_plat == plat %}
+    {% assign writeup_posts = writeup_posts | push: post %}
+  {% endif %}
 {% endfor %}
 {% assign writeup_posts = writeup_posts | sort_natural: "title" %}
 
