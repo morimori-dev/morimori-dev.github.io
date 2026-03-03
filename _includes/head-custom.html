@@ -50,7 +50,45 @@
     margin-top: 0.58rem !important;
   }
 
-  /* ── Language switcher bar ── */
+  /* ── Global language toggle (sidebar) ── */
+  .global-lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0.75rem 0 0;
+    padding: 0.25rem 0.6rem;
+    background: rgba(127, 127, 127, 0.08);
+    border: 1px solid rgba(127, 127, 127, 0.25);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    user-select: none;
+  }
+  .lang-toggle-btn {
+    text-decoration: none;
+    color: var(--sidebar-muted-color, rgba(255,255,255,0.55));
+    font-weight: 500;
+    padding: 0.05rem 0.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s;
+    background: none;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+  }
+  .lang-toggle-btn:hover {
+    color: var(--sidebar-active-color, #fff);
+  }
+  .lang-toggle-btn.active {
+    color: var(--sidebar-active-color, #fff);
+    font-weight: 700;
+  }
+  .lang-toggle-sep {
+    color: rgba(127, 127, 127, 0.45);
+    font-weight: 300;
+  }
+
+  /* ── Per-post language switcher bar ── */
   .lang-switch-bar {
     display: inline-flex;
     align-items: center;
@@ -86,7 +124,7 @@
 </style>
 
 <script>
-  // ── Language switcher ──
+  // ── Global language system ──
   (function () {
     var PREF_KEY = "techblogLang";
 
@@ -95,10 +133,64 @@
       return el ? el.content : null;
     }
 
-    function injectSwitcher(currentLang, altJa, altEn) {
-      if (document.querySelector(".lang-switch-bar")) return;
+    function isJaPostUrl(href) {
+      return /\/posts\/[^\/]+-ja\/?(\?.*)?$/.test(href || "");
+    }
 
-      // Chirpy v7 uses <div class="content"> inside <article>
+    // ── Sidebar global toggle ──
+    function injectSidebarToggle(pref) {
+      if (document.querySelector(".global-lang-toggle")) return;
+      var subtitle = document.querySelector("#sidebar .site-subtitle");
+      if (!subtitle) return;
+
+      var wrap = document.createElement("div");
+      wrap.className = "global-lang-toggle";
+
+      var enBtn = document.createElement("button");
+      enBtn.textContent = "EN";
+      enBtn.className = "lang-toggle-btn" + (pref !== "ja" ? " active" : "");
+      enBtn.addEventListener("click", function () { switchLang("en"); });
+
+      var sep = document.createElement("span");
+      sep.textContent = " | ";
+      sep.className = "lang-toggle-sep";
+
+      var jaBtn = document.createElement("button");
+      jaBtn.textContent = "日本語";
+      jaBtn.className = "lang-toggle-btn" + (pref === "ja" ? " active" : "");
+      jaBtn.addEventListener("click", function () { switchLang("ja"); });
+
+      wrap.appendChild(enBtn);
+      wrap.appendChild(sep);
+      wrap.appendChild(jaBtn);
+      subtitle.insertAdjacentElement("afterend", wrap);
+    }
+
+    function updateToggleUI(lang) {
+      var btns = document.querySelectorAll(".global-lang-toggle .lang-toggle-btn");
+      if (!btns.length) return;
+      btns[0].className = "lang-toggle-btn" + (lang !== "ja" ? " active" : ""); // EN
+      btns[1].className = "lang-toggle-btn" + (lang === "ja" ? " active" : ""); // JA
+    }
+
+    // ── Post list filter ──
+    function filterPostList(lang) {
+      var items = document.querySelectorAll(
+        "#post-list article, #post-list .card-wrapper, #post-list li"
+      );
+      if (!items.length) return;
+      items.forEach(function (item) {
+        var link = item.querySelector("a[href*='/posts/']") || item.querySelector("a");
+        if (!link) return;
+        var href = link.getAttribute("href") || "";
+        var isJa = isJaPostUrl(href);
+        item.style.display = (lang === "ja") === isJa ? "" : "none";
+      });
+    }
+
+    // ── Per-post switcher bar ──
+    function injectPostSwitcher(currentLang, altJa, altEn) {
+      if (document.querySelector(".lang-switch-bar")) return;
       var content = document.querySelector("article .content") ||
                     document.querySelector("article") ||
                     document.querySelector(".content") ||
@@ -134,35 +226,60 @@
       content.insertBefore(bar, content.firstChild);
     }
 
-    function init() {
-      if (document.querySelector(".lang-switch-bar")) return;
+    // ── Switch language globally ──
+    function switchLang(lang) {
+      localStorage.setItem(PREF_KEY, lang);
+      updateToggleUI(lang);
+      filterPostList(lang);
+
+      // If on a post page, redirect to alternate language version
       var currentLang = getMeta("page-lang");
-      if (!currentLang) return;
-
-      var altJa = getMeta("lang-alt-ja");
-      var altEn = getMeta("lang-alt-en");
-      var pref = localStorage.getItem(PREF_KEY) || "en";
-
-      // Auto-redirect to preferred language version
-      if (pref === "ja" && currentLang === "en" && altJa) {
-        window.location.replace(altJa);
-        return;
+      if (currentLang) {
+        var altJa = getMeta("lang-alt-ja");
+        var altEn = getMeta("lang-alt-en");
+        if (lang === "ja" && currentLang === "en" && altJa) {
+          window.location.replace(altJa);
+        } else if (lang === "en" && currentLang === "ja" && altEn) {
+          window.location.replace(altEn);
+        }
       }
-      if (pref === "en" && currentLang === "ja" && altEn) {
-        window.location.replace(altEn);
-        return;
-      }
-
-      injectSwitcher(currentLang, altJa, altEn);
     }
 
-    // Run immediately if DOM is already ready, otherwise wait
+    // ── Main init ──
+    function init() {
+      var pref = localStorage.getItem(PREF_KEY) || "en";
+
+      // Sidebar toggle (all pages)
+      injectSidebarToggle(pref);
+
+      // Post list filter (home / archive / category pages)
+      filterPostList(pref);
+
+      // Per-post logic
+      var currentLang = getMeta("page-lang");
+      if (currentLang) {
+        var altJa = getMeta("lang-alt-ja");
+        var altEn = getMeta("lang-alt-en");
+
+        // Auto-redirect to preferred language version
+        if (pref === "ja" && currentLang === "en" && altJa) {
+          window.location.replace(altJa);
+          return;
+        }
+        if (pref === "en" && currentLang === "ja" && altEn) {
+          window.location.replace(altEn);
+          return;
+        }
+
+        injectPostSwitcher(currentLang, altJa, altEn);
+      }
+    }
+
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", init);
     } else {
       init();
     }
-    // Turbo Drive navigation and fallback
     document.addEventListener("turbo:load", init);
     window.addEventListener("load", init);
   })();
