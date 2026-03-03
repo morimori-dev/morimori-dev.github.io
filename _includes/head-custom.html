@@ -113,7 +113,7 @@
 </style>
 
 <script>
-  // ── Global language system ──
+  /* ── Global language system ── */
   (function () {
     var PREF_KEY = "siteContentLang";
     var POST_LANG_MAP = {};
@@ -139,7 +139,7 @@
       try {
         localStorage.setItem(PREF_KEY, lang);
       } catch (err) {
-        // Ignore storage failures (private mode / storage-restricted browsers).
+        /* Ignore storage failures (private mode / storage-restricted browsers). */
       }
     }
 
@@ -174,7 +174,7 @@
       return POST_LANG_MAP[path] || (/-ja\/?$/.test(path) ? "ja" : "en");
     }
 
-    // ── Topbar language selector ──
+    /* ── Topbar language selector ── */
     function injectTopbarSelector(pref) {
       if (document.getElementById("lang-selector-wrap")) return;
       var searchBox = document.getElementById("search");
@@ -263,13 +263,13 @@
       );
     }
 
-    // ── Post list filter ──
+    /* ── Post list filter ── */
     function filterPostList(lang) {
       var postLinks = document.querySelectorAll("a[href*='/posts/']");
       var processed = new Set();
 
       postLinks.forEach(function (link) {
-        // Skip sidebar, nav, breadcrumb, and per-post switcher bar
+        /* Skip sidebar, nav, breadcrumb, and per-post switcher bar */
         if (link.closest("#sidebar") ||
             link.closest(".lang-switch-bar") ||
             link.closest("#breadcrumb")) return;
@@ -289,7 +289,7 @@
       cleanupEmptySections();
     }
 
-    // ── Per-post switcher bar ──
+    /* ── Per-post switcher bar ── */
     function injectPostSwitcher(currentLang, altJa, altEn) {
       if (document.querySelector(".lang-switch-bar")) return;
       var content = document.querySelector("article .content") ||
@@ -327,13 +327,13 @@
       content.insertBefore(bar, content.firstChild);
     }
 
-    // ── Switch language globally ──
+    /* ── Switch language globally ── */
     function switchLang(lang) {
       setPrefLang(lang);
       updateSelectorUI(lang);
       filterPostList(lang);
 
-      // If on a post page, redirect to alternate language version
+      /* If on a post page, redirect to alternate language version */
       var currentLang = (getMeta("page-lang") || "").toLowerCase();
       if (currentLang) {
         var altJa = getMeta("lang-alt-ja");
@@ -346,23 +346,23 @@
       }
     }
 
-    // ── Main init ──
+    /* ── Main init ── */
     function init() {
       var pref = getPrefLang();
 
-      // Topbar language selector (all pages)
+      /* Topbar language selector (all pages) */
       injectTopbarSelector(pref);
 
-      // Post list filter (home / techblog / category / tag pages)
+      /* Post list filter (home / techblog / category / tag pages) */
       filterPostList(pref);
 
-      // Per-post logic
+      /* Per-post logic */
       var currentLang = (getMeta("page-lang") || "").toLowerCase();
       if (currentLang) {
         var altJa = getMeta("lang-alt-ja");
         var altEn = getMeta("lang-alt-en");
 
-        // Auto-redirect to preferred language version
+        /* Auto-redirect to preferred language version */
         if (isJapaneseLang(pref) && currentLang === "en" && altJa) {
           window.location.replace(altJa);
           return;
@@ -397,7 +397,7 @@
         runInitSafe();
         attempts += 1;
 
-        // Some theme flows rebuild topbar asynchronously; keep retrying briefly.
+        /* Some theme flows rebuild topbar asynchronously; keep retrying briefly. */
         if (!document.getElementById("lang-selector-wrap") && attempts < maxAttempts) {
           window.setTimeout(tick, intervalMs);
         }
@@ -406,7 +406,7 @@
       tick();
     }
 
-    // Run immediately, then run again on key lifecycle events.
+    /* Run immediately, then run again on key lifecycle events. */
     runInitWithRetry();
     document.addEventListener("DOMContentLoaded", runInitWithRetry);
     document.addEventListener("turbo:load", runInitWithRetry);
@@ -418,7 +418,7 @@
     window.addEventListener("load", runInitWithRetry);
   })();
 
-  // Keep writeup categories on top and move TechBlog to the bottom on /categories/.
+  /* Keep writeup categories on top and move TechBlog to the bottom on /categories/. */
   (function () {
     function reorderCategories() {
       var path = window.location.pathname.replace(/\/+$/, "");
