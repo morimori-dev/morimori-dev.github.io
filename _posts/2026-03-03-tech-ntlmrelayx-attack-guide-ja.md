@@ -1,5 +1,5 @@
 ---
-title: "ntlmrelayx.py — できることとできないこと"
+title: "ntlmrelayx.py — 仕組みと限界"
 date: 2026-03-03
 description: "Impacket の ntlmrelayx.py 実践リファレンス。SMB リレー・LDAP リレー (RBCD)・ADCS ESC8 の3つの攻撃シナリオをMermaid シーケンス図で解説。"
 categories: [TechBlog]

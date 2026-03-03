@@ -1,5 +1,5 @@
 ---
-title: "Certipy — What It Can and Cannot Do"
+title: "Certipy — Internals and Limitations"
 date: 2026-03-04
 description: "A practical reference for Certipy (ADCS attack tool). Covers enumeration, ESC1/ESC8 exploitation, Shadow Credentials, certificate authentication, and attack flows with Mermaid sequence diagrams."
 categories: [TechBlog]

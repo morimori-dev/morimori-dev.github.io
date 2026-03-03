@@ -1,5 +1,5 @@
 ---
-title: "psexec.py — できることとできないこと"
+title: "psexec.py — 仕組みと限界"
 date: 2026-03-03
 description: "Impacket の psexec.py 実践リファレンス。内部動作・認証方式（パスワード / PTH / PTK）・ラテラルムーブメントのフロー図・smbexec / wmiexec との比較。"
 categories: [TechBlog]

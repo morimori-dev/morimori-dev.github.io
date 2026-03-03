@@ -1,5 +1,5 @@
 ---
-title: "Certipy — できることとできないこと"
+title: "Certipy — 仕組みと限界"
 date: 2026-03-04
 description: "Certipy（ADCS攻撃ツール）の実践リファレンス。列挙・ESC1/ESC8の悪用・シャドウクレデンシャル・証明書認証・攻撃フローをMermaidシーケンス図で解説。"
 categories: [TechBlog]
