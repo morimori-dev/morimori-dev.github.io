@@ -96,11 +96,14 @@
     }
 
     function injectSwitcher(currentLang, altJa, altEn) {
-      var content = document.querySelector(".post-content") ||
+      if (document.querySelector(".lang-switch-bar")) return;
+
+      // Chirpy v7 uses <div class="content"> inside <article>
+      var content = document.querySelector("article .content") ||
+                    document.querySelector("article") ||
                     document.querySelector(".content") ||
-                    document.querySelector("article");
+                    document.querySelector("main");
       if (!content) return;
-      if (content.querySelector(".lang-switch-bar")) return;
 
       var bar = document.createElement("div");
       bar.className = "lang-switch-bar";
@@ -132,6 +135,7 @@
     }
 
     function init() {
+      if (document.querySelector(".lang-switch-bar")) return;
       var currentLang = getMeta("page-lang");
       if (!currentLang) return;
 
@@ -152,9 +156,15 @@
       injectSwitcher(currentLang, altJa, altEn);
     }
 
-    ["DOMContentLoaded", "turbo:load", "pjax:complete"].forEach(function (ev) {
-      document.addEventListener(ev, init);
-    });
+    // Run immediately if DOM is already ready, otherwise wait
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+    // Turbo Drive navigation and fallback
+    document.addEventListener("turbo:load", init);
+    window.addEventListener("load", init);
   })();
 
   // Keep writeup categories on top and move TechBlog to the bottom on /categories/.
