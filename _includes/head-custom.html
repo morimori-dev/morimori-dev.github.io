@@ -120,7 +120,6 @@
 {% for post in site.posts %}
     POST_LANG_MAP[{{ post.url | relative_url | jsonify }}] = {{ post.content_lang | default: post.lang | default: "en" | downcase | jsonify }};
 {% endfor %}
-    document.documentElement.setAttribute("data-lang-script", "loaded");
 
     function getMeta(name) {
       var el = document.querySelector('meta[name="' + name + '"]');
@@ -378,12 +377,8 @@
 
     function runInitSafe() {
       try {
-        document.documentElement.setAttribute("data-lang-init", "running");
         init();
-        document.documentElement.setAttribute("data-lang-init", "ok");
       } catch (err) {
-        document.documentElement.setAttribute("data-lang-init", "error");
-        document.documentElement.setAttribute("data-lang-init-error", String((err && err.message) || err));
         console.error("[lang-selector] init failed:", err);
       }
     }
