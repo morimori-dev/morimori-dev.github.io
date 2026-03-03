@@ -160,8 +160,10 @@
     // ── Topbar language selector ──
     function injectTopbarSelector(pref) {
       if (document.getElementById("lang-selector-wrap")) return;
+      var searchBox = document.getElementById("search");
       var trigger = document.getElementById("search-trigger");
-      if (!trigger) return;
+      var anchor = searchBox || trigger;
+      if (!anchor) return;
 
       var wrap = document.createElement("div");
       wrap.id = "lang-selector-wrap";
@@ -186,7 +188,7 @@
       });
 
       wrap.appendChild(sel);
-      trigger.insertAdjacentElement("beforebegin", wrap);
+      anchor.insertAdjacentElement("beforebegin", wrap);
     }
 
     function updateSelectorUI(lang) {
