@@ -1,5 +1,5 @@
 ---
-title: "GetUserSPNs.py — What It Can and Cannot Do"
+title: "GetUserSPNs.py — Internals and Limitations"
 date: 2026-03-03
 description: "A practical reference for GetUserSPNs.py (Impacket Kerberoasting). Covers what the tool does, its limitations, when to use it, and attack flow with Mermaid sequence diagrams."
 categories: [TechBlog]

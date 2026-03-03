@@ -1,5 +1,5 @@
 ---
-title: "psexec.py — What It Can and Cannot Do"
+title: "psexec.py — Internals and Limitations"
 date: 2026-03-03
 description: "A practical reference for psexec.py (Impacket). Covers what the tool does, its limitations, authentication options, and attack flow with Mermaid sequence diagrams."
 categories: [TechBlog]

@@ -1,5 +1,5 @@
 ---
-title: "GetNPUsers.py — What It Can and Cannot Do"
+title: "GetNPUsers.py — Internals and Limitations"
 date: 2026-03-03
 description: "A practical reference for GetNPUsers.py (Impacket AS-REP Roasting). Covers what the tool does, its limitations, when to use it, and attack flow with Mermaid sequence diagrams."
 categories: [TechBlog]

@@ -1,5 +1,5 @@
 ---
-title: "GetNPUsers.py — できることとできないこと"
+title: "GetNPUsers.py — 仕組みと限界"
 date: 2026-03-03
 description: "Impacket の GetNPUsers.py (AS-REP Roasting) 実践リファレンス。できること・制限・使いどころ・Mermaid シーケンス図付きで解説。"
 categories: [TechBlog]

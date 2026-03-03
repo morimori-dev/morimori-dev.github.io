@@ -1,5 +1,5 @@
 ---
-title: "ntlmrelayx.py — What It Can and Cannot Do"
+title: "ntlmrelayx.py — Internals and Limitations"
 date: 2026-03-03
 description: "A practical reference for ntlmrelayx.py (Impacket). Covers relay targets, attack chains, limitations, and flow diagrams for SMB relay, LDAP relay (RBCD), and ADCS ESC8."
 categories: [TechBlog]
