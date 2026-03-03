@@ -126,6 +126,22 @@
       return el ? el.content : null;
     }
 
+    function getPrefLang() {
+      try {
+        return localStorage.getItem(PREF_KEY) || "en";
+      } catch (err) {
+        return "en";
+      }
+    }
+
+    function setPrefLang(lang) {
+      try {
+        localStorage.setItem(PREF_KEY, lang);
+      } catch (err) {
+        // Ignore storage failures (private mode / storage-restricted browsers).
+      }
+    }
+
     function normalizePath(raw) {
       try {
         var url = new URL(raw, window.location.origin);
@@ -162,8 +178,8 @@
       if (document.getElementById("lang-selector-wrap")) return;
       var searchBox = document.getElementById("search");
       var trigger = document.getElementById("search-trigger");
-      var anchor = searchBox || trigger;
-      if (!anchor) return;
+      var topbar = document.getElementById("topbar");
+      if (!searchBox && !trigger && !topbar) return;
 
       var wrap = document.createElement("div");
       wrap.id = "lang-selector-wrap";
@@ -188,7 +204,14 @@
       });
 
       wrap.appendChild(sel);
-      anchor.insertAdjacentElement("beforebegin", wrap);
+
+      if (searchBox) {
+        searchBox.insertAdjacentElement("beforebegin", wrap);
+      } else if (trigger) {
+        trigger.insertAdjacentElement("beforebegin", wrap);
+      } else if (topbar) {
+        topbar.appendChild(wrap);
+      }
     }
 
     function updateSelectorUI(lang) {
@@ -282,7 +305,7 @@
       enBtn.className = "lang-btn" + (currentLang === "en" ? " active" : "");
       enBtn.href = altEn || "#";
       enBtn.addEventListener("click", function () {
-        localStorage.setItem(PREF_KEY, "en");
+        setPrefLang("en");
       });
 
       var sep = document.createElement("span");
@@ -294,7 +317,7 @@
       jaBtn.className = "lang-btn" + (currentLang === "ja" ? " active" : "");
       jaBtn.href = altJa || "#";
       jaBtn.addEventListener("click", function () {
-        localStorage.setItem(PREF_KEY, "ja");
+        setPrefLang("ja");
       });
 
       bar.appendChild(enBtn);
@@ -305,7 +328,7 @@
 
     // ── Switch language globally ──
     function switchLang(lang) {
-      localStorage.setItem(PREF_KEY, lang);
+      setPrefLang(lang);
       updateSelectorUI(lang);
       filterPostList(lang);
 
@@ -324,7 +347,7 @@
 
     // ── Main init ──
     function init() {
-      var pref = localStorage.getItem(PREF_KEY) || "en";
+      var pref = getPrefLang();
 
       // Topbar language selector (all pages)
       injectTopbarSelector(pref);
@@ -352,13 +375,42 @@
       }
     }
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init);
-    } else {
-      init();
+    function runInitSafe() {
+      try {
+        init();
+      } catch (err) {
+        console.error("[lang-selector] init failed:", err);
+      }
     }
-    document.addEventListener("turbo:load", init);
-    window.addEventListener("load", init);
+
+    function runInitWithRetry() {
+      var attempts = 0;
+      var maxAttempts = 20;
+      var intervalMs = 250;
+
+      function tick() {
+        runInitSafe();
+        attempts += 1;
+
+        // Some theme flows rebuild topbar asynchronously; keep retrying briefly.
+        if (!document.getElementById("lang-selector-wrap") && attempts < maxAttempts) {
+          window.setTimeout(tick, intervalMs);
+        }
+      }
+
+      tick();
+    }
+
+    // Run immediately, then run again on key lifecycle events.
+    runInitWithRetry();
+    document.addEventListener("DOMContentLoaded", runInitWithRetry);
+    document.addEventListener("turbo:load", runInitWithRetry);
+    document.addEventListener("readystatechange", function () {
+      if (document.readyState === "interactive" || document.readyState === "complete") {
+        runInitWithRetry();
+      }
+    });
+    window.addEventListener("load", runInitWithRetry);
   })();
 
   // Keep writeup categories on top and move TechBlog to the bottom on /categories/.
