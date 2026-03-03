@@ -50,42 +50,31 @@
     margin-top: 0.58rem !important;
   }
 
-  /* ── Global language toggle (sidebar) ── */
-  .global-lang-toggle {
-    display: inline-flex;
+  /* ── Language selector in topbar ── */
+  #lang-selector-wrap {
+    display: flex;
     align-items: center;
-    gap: 0.25rem;
-    margin: 0.75rem 0 0;
-    padding: 0.25rem 0.6rem;
-    background: rgba(127, 127, 127, 0.08);
-    border: 1px solid rgba(127, 127, 127, 0.25);
-    border-radius: 6px;
-    font-size: 0.8rem;
-    user-select: none;
+    margin-right: 0.5rem;
   }
-  .lang-toggle-btn {
-    text-decoration: none;
-    color: var(--sidebar-muted-color, rgba(255,255,255,0.55));
-    font-weight: 500;
-    padding: 0.05rem 0.2rem;
-    border-radius: 4px;
+  #lang-selector {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 1px solid rgba(127, 127, 127, 0.4);
+    border-radius: 5px;
+    color: inherit;
+    font-size: 0.78rem;
+    padding: 0.2rem 0.55rem;
     cursor: pointer;
-    transition: color 0.15s;
-    background: none;
-    border: none;
-    font-size: inherit;
-    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
   }
-  .lang-toggle-btn:hover {
-    color: var(--sidebar-active-color, #fff);
+  #lang-selector:hover {
+    border-color: rgba(127, 127, 127, 0.7);
   }
-  .lang-toggle-btn.active {
-    color: var(--sidebar-active-color, #fff);
-    font-weight: 700;
-  }
-  .lang-toggle-sep {
-    color: rgba(127, 127, 127, 0.45);
-    font-weight: 300;
+  #lang-selector option {
+    background: var(--main-bg, #1e1e1e);
+    color: inherit;
   }
 
   /* ── Per-post language switcher bar ── */
@@ -137,40 +126,41 @@
       return /\/posts\/[^\/]+-ja\/?(\?.*)?$/.test(href || "");
     }
 
-    // ── Sidebar global toggle ──
-    function injectSidebarToggle(pref) {
-      if (document.querySelector(".global-lang-toggle")) return;
-      var subtitle = document.querySelector("#sidebar .site-subtitle");
-      if (!subtitle) return;
+    // ── Topbar language selector ──
+    function injectTopbarSelector(pref) {
+      if (document.getElementById("lang-selector-wrap")) return;
+      var trigger = document.getElementById("search-trigger");
+      if (!trigger) return;
 
       var wrap = document.createElement("div");
-      wrap.className = "global-lang-toggle";
+      wrap.id = "lang-selector-wrap";
 
-      var enBtn = document.createElement("button");
-      enBtn.textContent = "EN";
-      enBtn.className = "lang-toggle-btn" + (pref !== "ja" ? " active" : "");
-      enBtn.addEventListener("click", function () { switchLang("en"); });
+      var sel = document.createElement("select");
+      sel.id = "lang-selector";
 
-      var sep = document.createElement("span");
-      sep.textContent = " | ";
-      sep.className = "lang-toggle-sep";
+      var optEn = document.createElement("option");
+      optEn.value = "en";
+      optEn.textContent = "EN";
+      optEn.selected = (pref !== "ja");
 
-      var jaBtn = document.createElement("button");
-      jaBtn.textContent = "日本語";
-      jaBtn.className = "lang-toggle-btn" + (pref === "ja" ? " active" : "");
-      jaBtn.addEventListener("click", function () { switchLang("ja"); });
+      var optJa = document.createElement("option");
+      optJa.value = "ja";
+      optJa.textContent = "日本語";
+      optJa.selected = (pref === "ja");
 
-      wrap.appendChild(enBtn);
-      wrap.appendChild(sep);
-      wrap.appendChild(jaBtn);
-      subtitle.insertAdjacentElement("afterend", wrap);
+      sel.appendChild(optEn);
+      sel.appendChild(optJa);
+      sel.addEventListener("change", function () {
+        switchLang(this.value);
+      });
+
+      wrap.appendChild(sel);
+      trigger.insertAdjacentElement("beforebegin", wrap);
     }
 
-    function updateToggleUI(lang) {
-      var btns = document.querySelectorAll(".global-lang-toggle .lang-toggle-btn");
-      if (!btns.length) return;
-      btns[0].className = "lang-toggle-btn" + (lang !== "ja" ? " active" : ""); // EN
-      btns[1].className = "lang-toggle-btn" + (lang === "ja" ? " active" : ""); // JA
+    function updateSelectorUI(lang) {
+      var sel = document.getElementById("lang-selector");
+      if (sel) sel.value = lang;
     }
 
     // ── Post list filter ──
@@ -186,8 +176,10 @@
         if (link.closest("#sidebar") || link.closest("nav") ||
             link.closest(".breadcrumb") || link.closest(".lang-switch-bar")) return;
 
-        // Walk up to the nearest list item or article card
-        var container = link.closest("li") || link.closest("article");
+        // Walk up: li (category/tag pages), article (home cards), tr (techblog table)
+        var container = link.closest("li") ||
+                        link.closest("article") ||
+                        link.closest("tr");
         if (!container || processed.indexOf(container) !== -1) return;
         processed.push(container);
 
@@ -238,7 +230,7 @@
     // ── Switch language globally ──
     function switchLang(lang) {
       localStorage.setItem(PREF_KEY, lang);
-      updateToggleUI(lang);
+      updateSelectorUI(lang);
       filterPostList(lang);
 
       // If on a post page, redirect to alternate language version
@@ -258,10 +250,10 @@
     function init() {
       var pref = localStorage.getItem(PREF_KEY) || "en";
 
-      // Sidebar toggle (all pages)
-      injectSidebarToggle(pref);
+      // Topbar language selector (all pages)
+      injectTopbarSelector(pref);
 
-      // Post list filter (home / archive / category pages)
+      // Post list filter (home / techblog / category / tag pages)
       filterPostList(pref);
 
       // Per-post logic
