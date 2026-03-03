@@ -5,6 +5,8 @@ description: "A practical reference for psexec.py (Impacket). Covers what the to
 categories: [TechBlog]
 tags: [windows, lateral-movement, impacket, smb, pentest, oscp]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-psexec-lateral-movement-ja/
 ---
 
 ## TL;DR

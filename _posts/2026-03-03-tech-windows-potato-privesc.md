@@ -5,6 +5,8 @@ description: "A comprehensive reference covering all Potato-family privilege esc
 categories: [TechBlog]
 tags: [windows, privilege-escalation, potato, seimpersonateprivilege, pentest, oscp]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-windows-potato-privesc-ja/
 ---
 
 ## TL;DR

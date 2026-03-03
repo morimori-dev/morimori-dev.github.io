@@ -5,6 +5,8 @@ description: "A practical reference for GetNPUsers.py (Impacket AS-REP Roasting)
 categories: [TechBlog]
 tags: [active-directory, kerberos, asrep-roasting, impacket, pentest, oscp]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-getnpusers-asrep-roasting-ja/
 ---
 
 ## TL;DR

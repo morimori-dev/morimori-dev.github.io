@@ -5,6 +5,8 @@ description: "A comprehensive reference covering all ESC1–ESC16 Active Directo
 categories: [TechBlog]
 tags: [active-directory, adcs, certificate-services, kerberos, privilege-escalation, windows, pentest]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-adcs-esc-attack-guide-ja/
 ---
 
 # AD CS Vulnerabilities (ESC1–16) Complete Attack Guide

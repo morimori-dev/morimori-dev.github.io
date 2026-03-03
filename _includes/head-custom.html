@@ -1,3 +1,13 @@
+{% if page.content_lang %}
+<meta name="page-lang" content="{{ page.content_lang }}">
+{% endif %}
+{% if page.alt_ja %}
+<meta name="lang-alt-ja" content="{{ page.alt_ja }}">
+{% endif %}
+{% if page.alt_en %}
+<meta name="lang-alt-en" content="{{ page.alt_en }}">
+{% endif %}
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TTQZGYE15D"></script>
 <script>
@@ -39,9 +49,114 @@
   #sidebar .site-subtitle {
     margin-top: 0.58rem !important;
   }
+
+  /* ── Language switcher bar ── */
+  .lang-switch-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 1.75rem;
+    padding: 0.3rem 0.75rem;
+    background: var(--card-bg, rgba(0,0,0,0.03));
+    border: 1px solid var(--border-color, rgba(0,0,0,0.12));
+    border-radius: 6px;
+    font-size: 0.85rem;
+    user-select: none;
+  }
+  .lang-switch-bar .lang-btn {
+    text-decoration: none;
+    color: var(--text-muted-color, #888);
+    font-weight: 500;
+    padding: 0.05rem 0.25rem;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .lang-switch-bar .lang-btn:hover {
+    color: var(--link-color, #4a90e2);
+  }
+  .lang-switch-bar .lang-btn.active {
+    color: var(--link-color, #4a90e2);
+    font-weight: 700;
+    pointer-events: none;
+  }
+  .lang-switch-bar .lang-sep {
+    color: var(--border-color, #ccc);
+    font-weight: 300;
+  }
 </style>
 
 <script>
+  // ── Language switcher ──
+  (function () {
+    var PREF_KEY = "techblogLang";
+
+    function getMeta(name) {
+      var el = document.querySelector('meta[name="' + name + '"]');
+      return el ? el.content : null;
+    }
+
+    function injectSwitcher(currentLang, altJa, altEn) {
+      var content = document.querySelector(".post-content") ||
+                    document.querySelector(".content") ||
+                    document.querySelector("article");
+      if (!content) return;
+      if (content.querySelector(".lang-switch-bar")) return;
+
+      var bar = document.createElement("div");
+      bar.className = "lang-switch-bar";
+
+      var enBtn = document.createElement("a");
+      enBtn.textContent = "EN";
+      enBtn.className = "lang-btn" + (currentLang === "en" ? " active" : "");
+      enBtn.href = altEn || "#";
+      enBtn.addEventListener("click", function () {
+        localStorage.setItem(PREF_KEY, "en");
+      });
+
+      var sep = document.createElement("span");
+      sep.textContent = " | ";
+      sep.className = "lang-sep";
+
+      var jaBtn = document.createElement("a");
+      jaBtn.textContent = "日本語";
+      jaBtn.className = "lang-btn" + (currentLang === "ja" ? " active" : "");
+      jaBtn.href = altJa || "#";
+      jaBtn.addEventListener("click", function () {
+        localStorage.setItem(PREF_KEY, "ja");
+      });
+
+      bar.appendChild(enBtn);
+      bar.appendChild(sep);
+      bar.appendChild(jaBtn);
+      content.insertBefore(bar, content.firstChild);
+    }
+
+    function init() {
+      var currentLang = getMeta("page-lang");
+      if (!currentLang) return;
+
+      var altJa = getMeta("lang-alt-ja");
+      var altEn = getMeta("lang-alt-en");
+      var pref = localStorage.getItem(PREF_KEY) || "en";
+
+      // Auto-redirect to preferred language version
+      if (pref === "ja" && currentLang === "en" && altJa) {
+        window.location.replace(altJa);
+        return;
+      }
+      if (pref === "en" && currentLang === "ja" && altEn) {
+        window.location.replace(altEn);
+        return;
+      }
+
+      injectSwitcher(currentLang, altJa, altEn);
+    }
+
+    ["DOMContentLoaded", "turbo:load", "pjax:complete"].forEach(function (ev) {
+      document.addEventListener(ev, init);
+    });
+  })();
+
   // Keep writeup categories on top and move TechBlog to the bottom on /categories/.
   (function () {
     function reorderCategories() {

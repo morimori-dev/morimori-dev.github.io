@@ -5,6 +5,8 @@ description: "A practical reference for GetUserSPNs.py (Impacket Kerberoasting).
 categories: [TechBlog]
 tags: [active-directory, kerberos, kerberoasting, impacket, pentest, oscp]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-getuserspns-kerberoasting-ja/
 ---
 
 ## TL;DR

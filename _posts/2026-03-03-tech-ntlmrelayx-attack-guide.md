@@ -5,6 +5,8 @@ description: "A practical reference for ntlmrelayx.py (Impacket). Covers relay t
 categories: [TechBlog]
 tags: [active-directory, ntlm, relay, impacket, pentest, oscp, adcs, rbcd]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-ntlmrelayx-attack-guide-ja/
 ---
 
 ## TL;DR

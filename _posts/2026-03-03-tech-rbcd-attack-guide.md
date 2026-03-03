@@ -5,6 +5,8 @@ description: "A complete guide to privilege escalation via Kerberos delegation a
 categories: [TechBlog]
 tags: [active-directory, kerberos, rbcd, delegation, privilege-escalation, windows, impacket, pentest]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-rbcd-attack-guide-ja/
 ---
 
 # RBCD (Resource-Based Constrained Delegation) Attack Guide
