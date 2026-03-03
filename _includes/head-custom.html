@@ -1,11 +1,11 @@
-{% if page.content_lang %}
-<meta name="page-lang" content="{{ page.content_lang }}">
-{% endif %}
+{% if page.layout == "post" %}
+<meta name="page-lang" content="{{ page.content_lang | default: page.lang | default: 'en' }}">
 {% if page.alt_ja %}
 <meta name="lang-alt-ja" content="{{ page.alt_ja }}">
 {% endif %}
 {% if page.alt_en %}
 <meta name="lang-alt-en" content="{{ page.alt_en }}">
+{% endif %}
 {% endif %}
 
 <!-- Google tag (gtag.js) -->
@@ -115,15 +115,46 @@
 <script>
   // ── Global language system ──
   (function () {
-    var PREF_KEY = "techblogLang";
+    var PREF_KEY = "siteContentLang";
+    var POST_LANG_MAP = {};
+{% for post in site.posts %}
+    POST_LANG_MAP[{{ post.url | relative_url | jsonify }}] = {{ post.content_lang | default: post.lang | default: "en" | downcase | jsonify }};
+{% endfor %}
 
     function getMeta(name) {
       var el = document.querySelector('meta[name="' + name + '"]');
       return el ? el.content : null;
     }
 
-    function isJaPostUrl(href) {
-      return /\/posts\/[^\/]+-ja\/?(\?.*)?$/.test(href || "");
+    function normalizePath(raw) {
+      try {
+        var url = new URL(raw, window.location.origin);
+        var path = url.pathname || "/";
+        if (!path.startsWith("/")) path = "/" + path;
+        if (path.endsWith("/index.html")) {
+          path = path.slice(0, -10) || "/";
+        }
+        return path;
+      } catch (err) {
+        return "";
+      }
+    }
+
+    function normalizePostPath(raw) {
+      var path = normalizePath(raw);
+      if (!path || path.indexOf("/posts/") === -1) return "";
+      if (!path.endsWith("/")) path += "/";
+      return path;
+    }
+
+    function isJapaneseLang(value) {
+      return String(value || "").toLowerCase() === "ja";
+    }
+
+    function resolvePostLang(rawHref) {
+      var path = normalizePostPath(rawHref);
+      if (!path) return null;
+      return POST_LANG_MAP[path] || (/-ja\/?$/.test(path) ? "ja" : "en");
     }
 
     // ── Topbar language selector ──
@@ -163,30 +194,73 @@
       if (sel) sel.value = lang;
     }
 
+    function previousHeading(el) {
+      var prev = el ? el.previousElementSibling : null;
+      return prev && /^H[1-6]$/.test(prev.tagName) ? prev : null;
+    }
+
+    function cleanupEmptySections() {
+      document.querySelectorAll("main .table-wrapper, #panel-wrapper .table-wrapper").forEach(function (wrapper) {
+        var rows = Array.from(wrapper.querySelectorAll("tbody tr"));
+        if (!rows.length) return;
+
+        var hasVisibleRows = rows.some(function (row) {
+          return row.style.display !== "none";
+        });
+
+        wrapper.style.display = hasVisibleRows ? "" : "none";
+        var heading = previousHeading(wrapper);
+        if (heading) heading.style.display = hasVisibleRows ? "" : "none";
+      });
+
+      document.querySelectorAll("main ul, #panel-wrapper ul").forEach(function (list) {
+        if (!list.querySelector("a[href*='/posts/']")) return;
+        var items = Array.from(list.children).filter(function (el) { return el.tagName === "LI"; });
+        if (!items.length) return;
+
+        var hasVisibleItems = items.some(function (item) {
+          return item.style.display !== "none";
+        });
+
+        list.style.display = hasVisibleItems ? "" : "none";
+        var heading = previousHeading(list);
+        if (heading) heading.style.display = hasVisibleItems ? "" : "none";
+      });
+    }
+
+    function findPostContainer(link) {
+      return (
+        link.closest("tr") ||
+        link.closest("article.card-wrapper") ||
+        link.closest("#search-results article") ||
+        link.closest("li")
+      );
+    }
+
     // ── Post list filter ──
     function filterPostList(lang) {
-      // Don't filter on individual post pages
-      if (getMeta("page-lang")) return;
-
       var postLinks = document.querySelectorAll("a[href*='/posts/']");
-      var processed = [];
+      var processed = new Set();
 
       postLinks.forEach(function (link) {
         // Skip sidebar, nav, breadcrumb, and per-post switcher bar
-        if (link.closest("#sidebar") || link.closest("nav") ||
-            link.closest(".breadcrumb") || link.closest(".lang-switch-bar")) return;
+        if (link.closest("#sidebar") ||
+            link.closest(".lang-switch-bar") ||
+            link.closest("#breadcrumb")) return;
 
-        // Walk up: li (category/tag pages), article (home cards), tr (techblog table)
-        var container = link.closest("li") ||
-                        link.closest("article") ||
-                        link.closest("tr");
-        if (!container || processed.indexOf(container) !== -1) return;
-        processed.push(container);
+        var container = findPostContainer(link);
+        if (!container || processed.has(container)) return;
+        processed.add(container);
 
-        var href = link.getAttribute("href") || "";
-        var isJa = isJaPostUrl(href);
-        container.style.display = (lang === "ja") === isJa ? "" : "none";
+        var href = link.getAttribute("href") || link.href || "";
+        var postLang = resolvePostLang(href);
+        if (!postLang) return;
+
+        var shouldShow = isJapaneseLang(lang) ? isJapaneseLang(postLang) : !isJapaneseLang(postLang);
+        container.style.display = shouldShow ? "" : "none";
       });
+
+      cleanupEmptySections();
     }
 
     // ── Per-post switcher bar ──
@@ -234,13 +308,13 @@
       filterPostList(lang);
 
       // If on a post page, redirect to alternate language version
-      var currentLang = getMeta("page-lang");
+      var currentLang = (getMeta("page-lang") || "").toLowerCase();
       if (currentLang) {
         var altJa = getMeta("lang-alt-ja");
         var altEn = getMeta("lang-alt-en");
-        if (lang === "ja" && currentLang === "en" && altJa) {
+        if (isJapaneseLang(lang) && currentLang === "en" && altJa) {
           window.location.replace(altJa);
-        } else if (lang === "en" && currentLang === "ja" && altEn) {
+        } else if (!isJapaneseLang(lang) && currentLang === "ja" && altEn) {
           window.location.replace(altEn);
         }
       }
@@ -257,17 +331,17 @@
       filterPostList(pref);
 
       // Per-post logic
-      var currentLang = getMeta("page-lang");
+      var currentLang = (getMeta("page-lang") || "").toLowerCase();
       if (currentLang) {
         var altJa = getMeta("lang-alt-ja");
         var altEn = getMeta("lang-alt-en");
 
         // Auto-redirect to preferred language version
-        if (pref === "ja" && currentLang === "en" && altJa) {
+        if (isJapaneseLang(pref) && currentLang === "en" && altJa) {
           window.location.replace(altJa);
           return;
         }
-        if (pref === "en" && currentLang === "ja" && altEn) {
+        if (!isJapaneseLang(pref) && currentLang === "ja" && altEn) {
           window.location.replace(altEn);
           return;
         }
