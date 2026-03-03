@@ -175,16 +175,25 @@
 
     // ── Post list filter ──
     function filterPostList(lang) {
-      var items = document.querySelectorAll(
-        "#post-list article, #post-list .card-wrapper, #post-list li"
-      );
-      if (!items.length) return;
-      items.forEach(function (item) {
-        var link = item.querySelector("a[href*='/posts/']") || item.querySelector("a");
-        if (!link) return;
+      // Don't filter on individual post pages
+      if (getMeta("page-lang")) return;
+
+      var postLinks = document.querySelectorAll("a[href*='/posts/']");
+      var processed = [];
+
+      postLinks.forEach(function (link) {
+        // Skip sidebar, nav, breadcrumb, and per-post switcher bar
+        if (link.closest("#sidebar") || link.closest("nav") ||
+            link.closest(".breadcrumb") || link.closest(".lang-switch-bar")) return;
+
+        // Walk up to the nearest list item or article card
+        var container = link.closest("li") || link.closest("article");
+        if (!container || processed.indexOf(container) !== -1) return;
+        processed.push(container);
+
         var href = link.getAttribute("href") || "";
         var isJa = isJaPostUrl(href);
-        item.style.display = (lang === "ja") === isJa ? "" : "none";
+        container.style.display = (lang === "ja") === isJa ? "" : "none";
       });
     }
 
