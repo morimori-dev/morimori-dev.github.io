@@ -109,7 +109,7 @@ chisel server -p 9001 --reverse
 
 ```mermaid
 sequenceDiagram
-    participant OP as Operator
+    participant OP as Attacker machine
     participant C2 as 攻撃側C2/Proxy
     participant H1 as 侵害Host-1 (DMZ)
     participant H2 as 侵害Host-2 (Internal)

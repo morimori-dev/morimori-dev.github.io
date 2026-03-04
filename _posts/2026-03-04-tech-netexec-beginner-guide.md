@@ -59,7 +59,7 @@ A practical beginner workflow is:
 
 ```mermaid
 sequenceDiagram
-    participant OP as Operator
+    participant OP as Attacker machine
     participant NXC as NetExec
     participant HOSTS as Target Hosts
     participant DC as Domain Controller
@@ -113,7 +113,7 @@ nxc smb targets.txt --gen-relay-list no_signing_hosts.txt
 
 ```mermaid
 sequenceDiagram
-    participant OP as Operator
+    participant OP as Attacker machine
     participant NXC as NetExec
     participant H as SMB Host
 
@@ -147,7 +147,7 @@ nxc smb targets.txt --local-auth -u 'administrator' -p 'P@ssw0rd!'
 
 ```mermaid
 sequenceDiagram
-    participant OP as Operator
+    participant OP as Attacker machine
     participant NXC as NetExec
     participant HOST as Target Host
 
@@ -207,7 +207,7 @@ nxc ldap 10.10.10.10 -u 'jane.doe' -p 'Winter2026!' --bloodhound -c All
 
 ```mermaid
 sequenceDiagram
-    participant OP as Operator
+    participant OP as Attacker machine
     participant NXC as NetExec LDAP
     participant DC as Domain Controller
 
@@ -258,7 +258,7 @@ nxc smb 10.10.10.20 -u 'administrator' -H '<NTHASH>' -M <module_name> -o KEY=VAL
 
 ```mermaid
 sequenceDiagram
-    participant OP as Operator
+    participant OP as Attacker machine
     participant NXC as NetExec
     participant MOD as Module Engine
     participant T as Target
