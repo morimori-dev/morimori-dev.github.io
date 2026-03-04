@@ -5,6 +5,8 @@ description: "Hack The Box Nibbles Linux writeup with service enumeration, footh
 categories: [HackTheBox, Linux]
 tags: [php, privilege-escalation, rce]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-nibbles-ja/
 ---
 
 ## Overview

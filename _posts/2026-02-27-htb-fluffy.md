@@ -5,6 +5,8 @@ description: "Hack The Box Fluffy Windows writeup with service enumeration, foot
 categories: [HackTheBox, Windows]
 tags: [active-directory, privilege-escalation, rce]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-fluffy-ja/
 ---
 
 ## Overview

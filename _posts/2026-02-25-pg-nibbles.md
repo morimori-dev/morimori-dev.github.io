@@ -5,6 +5,8 @@ description: "Proving Grounds Nibbles Linux walkthrough covering reconnaissance,
 categories: [Proving Grounds, Linux]
 tags: [postgresql, default-credentials, rce, suid, find, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-nibbles-ja/
 ---
 
 ## Overview

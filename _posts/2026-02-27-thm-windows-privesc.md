@@ -5,6 +5,8 @@ description: "TryHackMe Windows PrivEsc Windows walkthrough focused on practical
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-windows-privesc-ja/
 ---
 
 ## Overview

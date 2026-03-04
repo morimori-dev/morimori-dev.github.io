@@ -5,6 +5,8 @@ description: "TryHackMe Attacking Kerberos Windows walkthrough focused on practi
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-attacking-kerberos-ja/
 ---
 
 ## Overview

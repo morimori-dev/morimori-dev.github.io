@@ -59,17 +59,19 @@
     margin-top: 0.58rem !important;
   }
 
-  /* ── Language selector in topbar ── */
+  /* ── Language selector (fixed, always visible) ── */
   #lang-selector-wrap {
+    position: fixed;
+    top: 0.7rem;
+    right: 3.8rem;
+    z-index: 1030;
     display: flex;
     align-items: center;
-    margin-left: auto;
-    margin-right: 0.5rem;
   }
   #lang-selector {
     appearance: none;
     -webkit-appearance: none;
-    background: transparent;
+    background: var(--topbar-bg, var(--main-bg, #1e1e1e));
     border: 1px solid rgba(127, 127, 127, 0.4);
     border-radius: 5px;
     color: inherit;
@@ -183,13 +185,10 @@
       return POST_LANG_MAP[path] || (/-ja\/?$/.test(path) ? "ja" : "en");
     }
 
-    /* ── Topbar language selector ── */
+    /* ── Language selector (appended to body, pinned via CSS position:fixed) ── */
     function injectTopbarSelector(pref) {
       if (document.getElementById("lang-selector-wrap")) return;
-      var searchBox = document.getElementById("search");
-      var trigger = document.getElementById("search-trigger");
-      var topbar = document.getElementById("topbar");
-      if (!searchBox && !trigger && !topbar) return;
+      if (!document.body) return;
 
       var wrap = document.createElement("div");
       wrap.id = "lang-selector-wrap";
@@ -214,14 +213,7 @@
       });
 
       wrap.appendChild(sel);
-
-      if (searchBox) {
-        searchBox.insertAdjacentElement("beforebegin", wrap);
-      } else if (trigger) {
-        trigger.insertAdjacentElement("beforebegin", wrap);
-      } else if (topbar) {
-        topbar.appendChild(wrap);
-      }
+      document.body.appendChild(wrap);
     }
 
     function updateSelectorUI(lang) {

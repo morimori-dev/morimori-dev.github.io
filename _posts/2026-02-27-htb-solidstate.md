@@ -5,6 +5,8 @@ description: "Hack The Box SolidState Linux writeup with service enumeration, fo
 categories: [HackTheBox, Linux]
 tags: [privilege-escalation, rce]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-solidstate-ja/
 ---
 
 ## Overview

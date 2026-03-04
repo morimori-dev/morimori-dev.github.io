@@ -5,6 +5,8 @@ description: "Hack The Box CozyHosting Linux writeup with service enumeration, f
 categories: [HackTheBox, Linux]
 tags: [php, privilege-escalation, rce]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-cozyhosting-ja/
 ---
 
 ## Overview

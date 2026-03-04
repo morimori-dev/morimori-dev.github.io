@@ -5,6 +5,8 @@ description: "Hack The Box Pilgrimage Linux writeup with service enumeration, fo
 categories: [HackTheBox, Linux]
 tags: [php, privilege-escalation, rce]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-pilgrimage-ja/
 ---
 
 ## Overview

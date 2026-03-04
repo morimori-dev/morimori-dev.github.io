@@ -5,6 +5,8 @@ description: "TryHackMe HackPark Windows walkthrough focused on practical exploi
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-hackpark-ja/
 ---
 
 ## Overview

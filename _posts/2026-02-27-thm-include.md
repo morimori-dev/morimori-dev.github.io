@@ -5,6 +5,8 @@ description: "TryHackMe Include Linux walkthrough focused on practical exploitat
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-include-ja/
 ---
 
 ## Overview

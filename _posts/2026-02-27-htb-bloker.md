@@ -5,6 +5,8 @@ description: "Hack The Box Bloker Linux writeup with service enumeration, footho
 categories: [HackTheBox, Linux]
 tags: [php, privilege-escalation, rce, suid]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-bloker-ja/
 ---
 
 ## Overview

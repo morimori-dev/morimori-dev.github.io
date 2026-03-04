@@ -5,6 +5,8 @@ description: "Proving Grounds Extplorer Linux walkthrough covering reconnaissanc
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-extplorer-ja/
 ---
 
 ## Overview

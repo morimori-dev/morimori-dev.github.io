@@ -5,6 +5,8 @@ description: "Proving Grounds Bratarina Windows walkthrough covering reconnaissa
 categories: [Proving Grounds, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-bratarina-ja/
 ---
 
 ## Overview

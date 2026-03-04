@@ -5,6 +5,8 @@ description: "TryHackMe Game Zone Linux walkthrough focused on practical exploit
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-game-zone-ja/
 ---
 
 ## Overview

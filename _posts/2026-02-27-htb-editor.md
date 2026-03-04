@@ -5,6 +5,8 @@ description: "Hack The Box Editor Linux writeup with service enumeration, footho
 categories: [HackTheBox, Linux]
 tags: [privilege-escalation, rce, suid]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-editor-ja/
 ---
 
 ## Overview

@@ -5,6 +5,8 @@ description: "TryHackMe Blaster Windows walkthrough focused on practical exploit
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-blaster-ja/
 ---
 
 ## Overview

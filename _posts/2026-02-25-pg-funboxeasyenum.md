@@ -5,6 +5,8 @@ description: "Proving Grounds FunboxEasyEnum Linux walkthrough covering reconnai
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-funboxeasyenum-ja/
 ---
 
 ## Overview

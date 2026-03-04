@@ -5,6 +5,8 @@ description: "Proving Grounds DriftingBlue6 Linux walkthrough covering reconnais
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-driftingblue6-ja/
 ---
 
 ## Overview

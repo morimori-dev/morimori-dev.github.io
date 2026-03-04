@@ -5,6 +5,8 @@ description: "Hack The Box Codify Linux writeup with service enumeration, footho
 categories: [HackTheBox, Linux]
 tags: [privilege-escalation, rce]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-codify-ja/
 ---
 
 ## Overview

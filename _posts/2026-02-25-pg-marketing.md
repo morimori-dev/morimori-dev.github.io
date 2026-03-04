@@ -5,6 +5,8 @@ description: "Proving Grounds Marketing Linux walkthrough covering reconnaissanc
 categories: [Proving Grounds, Linux]
 tags: [pg, oscp, web, limesurvey, cve-2021-44967, sudo, credential-reuse, marketing]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-marketing-ja/
 ---
 
 # Marketing (Proving Grounds) Writeup

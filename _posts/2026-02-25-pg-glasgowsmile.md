@@ -5,6 +5,8 @@ description: "Proving Grounds GlasgowSmile Linux walkthrough covering reconnaiss
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-glasgowsmile-ja/
 ---
 
 ## Overview

@@ -5,6 +5,8 @@ description: "TryHackMe Linux PrivEsc Linux walkthrough focused on practical exp
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-linux-privesc-ja/
 ---
 
 ## Overview

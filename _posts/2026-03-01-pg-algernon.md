@@ -4,6 +4,8 @@ date: 2026-03-01
 description: "Proving Grounds Algernon Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
+content_lang: en
+alt_ja: /posts/pg-algernon-ja/
 ---
 
 ## Overview

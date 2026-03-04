@@ -5,6 +5,8 @@ description: "TryHackMe Mr Robot CTF Linux walkthrough focused on practical expl
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-mr-robot-ctf-ja/
 ---
 
 ## Overview

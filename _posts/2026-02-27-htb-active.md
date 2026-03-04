@@ -5,6 +5,8 @@ description: "Hack The Box Active Windows writeup with service enumeration, foot
 categories: [HackTheBox, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-active-ja/
 ---
 
 ## Overview

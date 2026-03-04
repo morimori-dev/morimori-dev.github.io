@@ -5,6 +5,8 @@ description: "Hack The Box MetaTwo Linux writeup with service enumeration, footh
 categories: [HackTheBox, Linux]
 tags: [php, privilege-escalation, rce, suid]
 mermaid: true
+content_lang: en
+alt_ja: /posts/htb-metatwo-ja/
 ---
 
 ## Overview

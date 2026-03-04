@@ -5,6 +5,8 @@ description: "Technical deep dive on linux privilege escalation: suid abuse with
 categories: [TechBlog]
 tags: [suid, privilege-escalation, linux, gtfobins, beginner]
 mermaid: true
+content_lang: en
+alt_ja: /posts/tech-suid-find-privesc-ja/
 ---
 
 ## TL;DR

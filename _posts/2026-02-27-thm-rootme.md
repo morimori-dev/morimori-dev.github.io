@@ -5,6 +5,8 @@ description: "TryHackMe RootMe Linux walkthrough focused on practical exploitati
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-rootme-ja/
 ---
 
 ## Overview

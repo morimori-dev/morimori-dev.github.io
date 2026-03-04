@@ -5,6 +5,8 @@ description: "TryHackMe UltraTech Windows walkthrough focused on practical explo
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-ultratech-ja/
 ---
 
 ## Overview

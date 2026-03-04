@@ -5,6 +5,8 @@ description: "Proving Grounds Exfiltrated Linux walkthrough covering reconnaissa
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-exfiltrated-ja/
 ---
 
 ## Overview

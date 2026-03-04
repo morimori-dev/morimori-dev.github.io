@@ -5,6 +5,8 @@ description: "TryHackMe Attacktive Directory Windows walkthrough focused on prac
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-attacktive-directory-ja/
 ---
 
 ## Overview

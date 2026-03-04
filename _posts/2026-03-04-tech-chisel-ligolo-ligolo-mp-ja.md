@@ -6,6 +6,7 @@ categories: [TechBlog]
 tags: [pivoting, tunneling, chisel, ligolo-ng, ligolo-mp, redteam, pentest, c2]
 mermaid: true
 content_lang: ja
+alt_en: /posts/tech-chisel-ligolo-ligolo-mp/
 ---
 
 ## TL;DR

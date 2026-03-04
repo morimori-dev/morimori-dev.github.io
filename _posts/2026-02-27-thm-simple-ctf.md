@@ -5,6 +5,8 @@ description: "TryHackMe Simple CTF Linux walkthrough focused on practical exploi
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-simple-ctf-ja/
 ---
 
 ## Overview

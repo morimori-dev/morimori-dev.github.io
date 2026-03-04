@@ -5,6 +5,8 @@ description: "TryHackMe Daily Bugle Linux walkthrough focused on practical explo
 categories: [TryHackMe, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-daily-bugle-ja/
 ---
 
 ## Overview

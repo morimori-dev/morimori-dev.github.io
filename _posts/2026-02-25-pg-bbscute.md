@@ -5,6 +5,8 @@ description: "Proving Grounds BBScute Linux walkthrough covering reconnaissance,
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/pg-bbscute-ja/
 ---
 
 ## Overview

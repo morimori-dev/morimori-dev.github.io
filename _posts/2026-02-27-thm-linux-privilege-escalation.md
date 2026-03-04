@@ -5,6 +5,8 @@ description: "TryHackMe Linux Privilege Escalation Windows walkthrough focused o
 categories: [TryHackMe, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
+content_lang: en
+alt_ja: /posts/thm-linux-privilege-escalation-ja/
 ---
 
 ## Overview
