@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - GlasgowSmile 解説 (Linux)"
+title: "Proving Grounds - GlasgowSmile (Linux)"
 date: 2026-02-25
 description: "Proving Grounds GlasgowSmile Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe - Game Zone 解説 (Linux)"
+title: "TryHackMe - Game Zone (Linux)"
 date: 2026-02-27
 description: "TryHackMe Game Zone Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]

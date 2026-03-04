@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe - All in One 解説 (Linux)"
+title: "TryHackMe - All in One (Linux)"
 date: 2026-02-27
 description: "TryHackMe All in One Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]

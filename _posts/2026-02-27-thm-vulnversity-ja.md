@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe - Vulnversity 解説 (Windows)"
+title: "TryHackMe - Vulnversity (Windows)"
 date: 2026-02-27
 description: "TryHackMe Vulnversity Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]

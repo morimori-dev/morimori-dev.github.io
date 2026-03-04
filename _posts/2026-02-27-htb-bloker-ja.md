@@ -1,5 +1,5 @@
 ---
-title: "HackTheBox - Bloker 解説 (Linux)"
+title: "HackTheBox - Bloker (Linux)"
 date: 2026-02-27
 description: "HackTheBox Bloker Linux writeup マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]

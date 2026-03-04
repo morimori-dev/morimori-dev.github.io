@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe - RootMe 解説 (Linux)"
+title: "TryHackMe - RootMe (Linux)"
 date: 2026-02-27
 description: "TryHackMe RootMe Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]

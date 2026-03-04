@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe - Steel Mountain 解説 (Windows)"
+title: "TryHackMe - Steel Mountain (Windows)"
 date: 2026-02-27
 description: "TryHackMe Steel Mountain Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]

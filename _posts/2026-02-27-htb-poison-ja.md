@@ -1,5 +1,5 @@
 ---
-title: "HackTheBox - Poison 解説 (Linux)"
+title: "HackTheBox - Poison (Linux)"
 date: 2026-02-27
 description: "HackTheBox Poison Linux writeup マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]

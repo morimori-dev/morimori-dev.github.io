@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Marshalled 解説 (Linux)"
+title: "Proving Grounds - Marshalled (Linux)"
 date: 2026-02-25
 description: "Proving Grounds Marshalled Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

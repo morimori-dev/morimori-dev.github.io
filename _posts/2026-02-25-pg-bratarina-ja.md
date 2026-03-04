@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Bratarina 解説 (Windows)"
+title: "Proving Grounds - Bratarina (Windows)"
 date: 2026-02-25
 description: "Proving Grounds Bratarina Windows マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Windows]

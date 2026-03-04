@@ -1,5 +1,5 @@
 ---
-title: "HackTheBox - MetaTwo 解説 (Linux)"
+title: "HackTheBox - MetaTwo (Linux)"
 date: 2026-02-27
 description: "HackTheBox MetaTwo Linux writeup マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]

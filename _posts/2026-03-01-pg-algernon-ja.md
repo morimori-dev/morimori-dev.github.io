@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Algernon 解説 (Linux)"
+title: "Proving Grounds - Algernon (Linux)"
 date: 2026-03-01
 description: "Proving Grounds Algernon Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

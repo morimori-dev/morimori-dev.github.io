@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Ochima 解説 (Linux)"
+title: "Proving Grounds - Ochima (Linux)"
 date: 2026-03-01
 description: "Proving Grounds Ochima Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

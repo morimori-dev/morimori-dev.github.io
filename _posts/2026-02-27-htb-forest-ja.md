@@ -1,5 +1,5 @@
 ---
-title: "HackTheBox - Forest 解説 (Windows)"
+title: "HackTheBox - Forest (Windows)"
 date: 2026-02-27
 description: "HackTheBox Forest Windows writeup マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Windows]

@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe - HackPark 解説 (Windows)"
+title: "TryHackMe - HackPark (Windows)"
 date: 2026-02-27
 description: "TryHackMe HackPark Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
