@@ -9,7 +9,8 @@
       "Bash(bundle show jekyll-theme-chirpy)",
       "Bash(sort -t_ -k1)",
       "Bash(git add assets/img/life/onsen-map.png _posts/2026-03-02-onsen-meguri.md)",
-      "Bash(grep \"^categories:\" /home/n0z0/work/morimori-dev.github.io/_posts/*.md)"
+      "Bash(grep \"^categories:\" /home/n0z0/work/morimori-dev.github.io/_posts/*.md)",
+      "Bash(git add _posts/2026-03-03-tech-adcs-esc-attack-guide.md _posts/2026-03-03-tech-rbcd-attack-guide.md)"
     ],
     "additionalDirectories": [
       "/home/n0z0/Pictures"
