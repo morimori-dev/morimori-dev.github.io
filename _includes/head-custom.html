@@ -89,6 +89,30 @@
     color: inherit;
   }
 
+  /* ─────────────────────────────────────────────────────────
+     Language-based post filtering via <html> class.
+     Uses CSS :has() so it works instantly, beats Bootstrap's
+     d-flex !important, and persists across Turbo navigations.
+     ───────────────────────────────────────────────────────── */
+
+  /* Japanese preference → hide English posts (slugs NOT ending in -ja/) */
+  html.lang-pref-ja #post-list article.card-wrapper:not(:has(a[href$="-ja/"])),
+  html.lang-pref-ja #page-category ul.content li:not(:has(a[href$="-ja/"])),
+  html.lang-pref-ja #page-tag      ul.content li:not(:has(a[href$="-ja/"])),
+  html.lang-pref-ja #archives ul.list-unstyled li:not(:has(a[href$="-ja/"])),
+  html.lang-pref-ja #search-results article:not(:has(a[href$="-ja/"])) {
+    display: none !important;
+  }
+
+  /* English preference → hide Japanese posts (slugs ending in -ja/) */
+  html.lang-pref-en #post-list article.card-wrapper:has(a[href$="-ja/"]),
+  html.lang-pref-en #page-category ul.content li:has(a[href$="-ja/"]),
+  html.lang-pref-en #page-tag      ul.content li:has(a[href$="-ja/"]),
+  html.lang-pref-en #archives ul.list-unstyled li:has(a[href$="-ja/"]),
+  html.lang-pref-en #search-results article:has(a[href$="-ja/"]) {
+    display: none !important;
+  }
+
   /* ── Per-post language switcher bar ── */
   .lang-switch-bar {
     display: inline-flex;
@@ -226,18 +250,27 @@
       return prev && /^H[1-6]$/.test(prev.tagName) ? prev : null;
     }
 
+    function isVisible(el) {
+      return window.getComputedStyle(el).display !== "none";
+    }
+
+    function setDisplay(el, show) {
+      if (show) {
+        el.style.removeProperty("display");
+      } else {
+        el.style.setProperty("display", "none", "important");
+      }
+    }
+
     function cleanupEmptySections() {
       document.querySelectorAll("main .table-wrapper, #panel-wrapper .table-wrapper").forEach(function (wrapper) {
         var rows = Array.from(wrapper.querySelectorAll("tbody tr"));
         if (!rows.length) return;
 
-        var hasVisibleRows = rows.some(function (row) {
-          return row.style.display !== "none";
-        });
-
-        wrapper.style.display = hasVisibleRows ? "" : "none";
+        var hasVisibleRows = rows.some(isVisible);
+        setDisplay(wrapper, hasVisibleRows);
         var heading = previousHeading(wrapper);
-        if (heading) heading.style.display = hasVisibleRows ? "" : "none";
+        if (heading) setDisplay(heading, hasVisibleRows);
       });
 
       document.querySelectorAll("main ul, #panel-wrapper ul").forEach(function (list) {
@@ -245,13 +278,14 @@
         var items = Array.from(list.children).filter(function (el) { return el.tagName === "LI"; });
         if (!items.length) return;
 
-        var hasVisibleItems = items.some(function (item) {
-          return item.style.display !== "none";
-        });
-
-        list.style.display = hasVisibleItems ? "" : "none";
+        var hasVisibleItems = items.some(isVisible);
+        setDisplay(list, hasVisibleItems);
         var heading = previousHeading(list);
-        if (heading) heading.style.display = hasVisibleItems ? "" : "none";
+        if (heading) setDisplay(heading, hasVisibleItems);
+
+        /* Also hide preceding <time> year labels in archives */
+        var prev = list.previousElementSibling;
+        if (prev && prev.tagName === "TIME") setDisplay(prev, hasVisibleItems);
       });
     }
 
@@ -264,7 +298,19 @@
       );
     }
 
-    /* ── Post list filter ── */
+    /* ── Apply lang preference class to <html> for CSS-based filtering ── */
+    function applyLangClass(lang) {
+      var html = document.documentElement;
+      if (isJapaneseLang(lang)) {
+        html.classList.add("lang-pref-ja");
+        html.classList.remove("lang-pref-en");
+      } else {
+        html.classList.add("lang-pref-en");
+        html.classList.remove("lang-pref-ja");
+      }
+    }
+
+    /* ── Post list filter (JS fallback — also fixes Bootstrap d-flex !important) ── */
     function filterPostList(lang) {
       var postLinks = document.querySelectorAll("a[href*='/posts/']");
       var processed = new Set();
@@ -284,7 +330,12 @@
         if (!postLang) return;
 
         var shouldShow = isJapaneseLang(lang) ? isJapaneseLang(postLang) : !isJapaneseLang(postLang);
-        container.style.display = shouldShow ? "" : "none";
+        /* Use setProperty with "important" to override Bootstrap's d-flex !important */
+        if (shouldShow) {
+          container.style.removeProperty("display");
+        } else {
+          container.style.setProperty("display", "none", "important");
+        }
       });
 
       cleanupEmptySections();
@@ -332,6 +383,7 @@
     function switchLang(lang) {
       setPrefLang(lang);
       updateSelectorUI(lang);
+      applyLangClass(lang);
       filterPostList(lang);
 
       /* If on a post page, redirect to alternate language version */
@@ -351,10 +403,13 @@
     function init() {
       var pref = getPrefLang();
 
+      /* Apply lang class to <html> immediately (CSS filtering, persists across Turbo) */
+      applyLangClass(pref);
+
       /* Topbar language selector (all pages) */
       injectTopbarSelector(pref);
 
-      /* Post list filter (home / techblog / category / tag pages) */
+      /* Post list filter fallback (home / techblog / category / tag pages) */
       filterPostList(pref);
 
       /* Per-post logic */
