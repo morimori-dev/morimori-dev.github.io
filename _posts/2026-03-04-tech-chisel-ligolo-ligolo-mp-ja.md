@@ -1,7 +1,7 @@
 ---
-title: "Chisel / Ligolo-ng / Ligolo-mp 実践ガイド（2026年版）"
+title: "Chisel・Ligolo-ng・Ligolo-mp 実践ガイド（2026年版）"
 date: 2026-03-04
-description: "ピボット・内部侵入で使う Chisel / Ligolo-ng / Ligolo-mp の違い、最新の実戦運用、構成判断、検知ポイントまでを Mermaid シーケンス図付きで解説。"
+description: "ピボット・内部侵入で使う Chisel・Ligolo-ng・Ligolo-mp の違い、最新の実戦運用、構成判断、検知ポイントまでを Mermaid シーケンス図付きで解説。"
 categories: [TechBlog]
 tags: [pivoting, tunneling, chisel, ligolo-ng, ligolo-mp, redteam, pentest, c2]
 mermaid: true
@@ -11,9 +11,9 @@ alt_en: /posts/tech-chisel-ligolo-ligolo-mp/
 
 ## TL;DR
 
-- **まず 1 本の安定トンネルがほしい**なら `Chisel`
-- **内部網を広く・速く・自然に扱いたい**なら `Ligolo-ng`
-- **複数エージェントをまとめて経路管理したい**なら `Ligolo-mp`
+- **まず 1 本の安定トンネルがほしい**なら **Chisel**
+- **内部網を広く・速く・自然に扱いたい**なら **Ligolo-ng**
+- **複数エージェントをまとめて経路管理したい**なら **Ligolo-mp**
 
 2026年時点の実務では、**初期足場 = Chisel、横展開 = Ligolo-ng、大規模運用 = Ligolo-mp** という使い分けが最も再現性が高いです。
 
@@ -110,7 +110,7 @@ chisel server -p 9001 --reverse
 
 ```mermaid
 sequenceDiagram
-    participant OP as Attacker machine
+    participant OP as Operator
     participant C2 as 攻撃側C2/Proxy
     participant H1 as 侵害Host-1 (DMZ)
     participant H2 as 侵害Host-2 (Internal)
