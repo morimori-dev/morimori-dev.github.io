@@ -135,10 +135,10 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(john)
+    participant A as "攻撃者 (john)"
     participant AD as Active Directory
-    participant Fake as 偽コンピューター<br/>(FAKE01$)
-    participant Target as 対象<br/>(WEB01)
+    participant Fake as "偽コンピューター (FAKE01$)"
+    participant Target as "対象 (WEB01)"
     participant DC as ドメインコントローラー
 
     Note over A,DC: フェーズ 1: 権限の確認と準備
@@ -603,9 +603,9 @@ foreach ($computer in $computers) {
 ```mermaid
 sequenceDiagram
     participant A as 攻撃者
-    participant UC as 制約なし委任<br/>サーバー
+    participant UC as "制約なし委任サーバー"
     participant DC as ドメインコントローラー
-    participant V as 被害者<br/>(Domain Admin)
+    participant V as "被害者 (Domain Admin)"
 
     Note over UC: TrustedForDelegation = True
 
@@ -642,9 +642,9 @@ sekurlsa::tickets /export
 ```mermaid
 sequenceDiagram
     participant A as 攻撃者
-    participant CD as 制約付き委任<br/>アカウント
+    participant CD as "制約付き委任アカウント"
     participant DC as ドメインコントローラー
-    participant T as 対象<br/>サービス
+    participant T as "対象サービス"
 
     Note over CD: msDS-AllowedToDelegateTo:<br/>CIFS/TARGET
 

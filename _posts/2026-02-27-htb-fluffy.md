@@ -810,7 +810,7 @@ flowchart LR
         direction TB
         K4A[ペイロード配置<br/>smbclient put]
         K4B[自動Executeトリガー<br/>File Explorer]
-        K4C[NTLM HashRetrieve<br/>p.agila::FLUFFY]
+        K4C["NTLM HashRetrieve<br/>p.agila::FLUFFY"]
         K4D[ハッシュクラック<br/>hashcat -m 5600]
 
         K4A --> K4B --> K4C --> K4D

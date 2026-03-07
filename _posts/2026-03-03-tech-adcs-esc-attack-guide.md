@@ -29,10 +29,10 @@ Detailed sequence diagrams, attack conditions, and execution commands for every 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as Attacker<br/>(Low-Privileged User)
-    participant Certify as Certify.exe /<br/>Certipy
-    participant T as Vulnerable Template<br/>(ESC1_Template)
-    participant CA as Certificate Authority<br/>(CA01)
+    participant A as "Attacker (Low-Privileged User)"
+    participant Certify as "Certify.exe / Certipy"
+    participant T as "Vulnerable Template (ESC1_Template)"
+    participant CA as "Certificate Authority (CA01)"
     participant DC as Domain Controller
 
     Note over A,DC: Prerequisite: Template scan completed
@@ -161,7 +161,7 @@ sequenceDiagram
     autonumber
     participant A as Attacker
     participant Certify as Certify.exe
-    participant T as Any Purpose<br/>Template
+    participant T as "Any Purpose Template"
     participant CA as Certificate Authority
     participant DC as Domain Controller
 
@@ -230,9 +230,9 @@ sequenceDiagram
     autonumber
     participant A as Attacker
     participant Certify as Certify.exe
-    participant EA as Enrollment Agent<br/>Template
+    participant EA as "Enrollment Agent Template"
     participant CA as Certificate Authority
-    participant CT as Client Auth<br/>Template
+    participant CT as "Client Auth Template"
     participant DC as Domain Controller
 
     Note over A: Phase 1: Obtain Enrollment Agent certificate
@@ -330,8 +330,8 @@ sequenceDiagram
     autonumber
     participant A as Attacker
     participant AD as Active Directory
-    participant T as Certificate Template<br/>(Before Modification)
-    participant T2 as Certificate Template<br/>(After Modification)
+    participant T as "Certificate Template (Before Modification)"
+    participant T2 as "Certificate Template (After Modification)"
     participant CA as Certificate Authority
     participant DC as Domain Controller
 
@@ -759,10 +759,10 @@ certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-D
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as Attacker<br/>(Relay Server)
-    participant V as Victim<br/>(Domain Admin)
+    participant A as "Attacker (Relay Server)"
+    participant V as "Victim (Domain Admin)"
     participant R as ntlmrelayx
-    participant W as Web Enrollment<br/>(HTTP)
+    participant W as "Web Enrollment (HTTP)"
     participant CA as Certificate Authority
     participant DC as Domain Controller
 
@@ -1052,10 +1052,10 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "Stro
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as Attacker<br/>(Relay Server)
-    participant V as Victim<br/>(Domain Admin)
+    participant A as "Attacker (Relay Server)"
+    participant V as "Victim (Domain Admin)"
     participant R as ntlmrelayx
-    participant RPC as AD CS RPC<br/>(ICertPassage)
+    participant RPC as "AD CS RPC (ICertPassage)"
     participant CA as Certificate Authority
     participant DC as Domain Controller
 
@@ -1262,7 +1262,7 @@ certipy auth -pfx fake_admin.pfx -dc-ip 10.10.10.100
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as Attacker<br/>(Low-Privileged User)
+    participant A as "Attacker (Low-Privileged User)"
     participant T as Certificate Template
     participant CA as Certificate Authority
     participant DC as Domain Controller
@@ -1463,7 +1463,7 @@ Restart-Service kdc
 sequenceDiagram
     autonumber
     participant A as Attacker
-    participant V1 as V1 Certificate<br/>Template
+    participant V1 as "V1 Certificate Template"
     participant CA as Certificate Authority
     participant DC as Domain Controller
 

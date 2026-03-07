@@ -49,7 +49,7 @@ alt_en: /posts/tech-psexec-lateral-movement/
 sequenceDiagram
     participant A as Attacker (psexec.py)
     participant SMB as SMB (port 445)
-    participant ADMIN as ADMIN$ share (C:\Windows)
+    participant ADMIN as "ADMIN$ share (C:\Windows)"
     participant SCM as Service Control Manager
     participant SVC as Uploaded Service (SYSTEM)
     participant NP as Named Pipe

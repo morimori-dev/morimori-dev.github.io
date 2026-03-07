@@ -29,10 +29,10 @@ alt_en: /posts/tech-adcs-esc-attack-guide/
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(低権限ユーザー)
-    participant Certify as Certify.exe /<br/>Certipy
-    participant T as 脆弱なテンプレート<br/>(ESC1_Template)
-    participant CA as 証明機関<br/>(CA01)
+    participant A as "攻撃者 (低権限ユーザー)"
+    participant Certify as "Certify.exe / Certipy"
+    participant T as "脆弱なテンプレート (ESC1_Template)"
+    participant CA as "証明機関 (CA01)"
     participant DC as ドメインコントローラー
 
     Note over A,DC: 前提条件: テンプレートスキャン完了
@@ -161,7 +161,7 @@ sequenceDiagram
     autonumber
     participant A as 攻撃者
     participant Certify as Certify.exe
-    participant T as Any Purpose<br/>テンプレート
+    participant T as "Any Purpose テンプレート"
     participant CA as 証明機関
     participant DC as ドメインコントローラー
 
@@ -230,9 +230,9 @@ sequenceDiagram
     autonumber
     participant A as 攻撃者
     participant Certify as Certify.exe
-    participant EA as Enrollment Agent<br/>テンプレート
+    participant EA as "Enrollment Agent テンプレート"
     participant CA as 証明機関
-    participant CT as クライアント認証<br/>テンプレート
+    participant CT as "クライアント認証テンプレート"
     participant DC as ドメインコントローラー
 
     Note over A: フェーズ 1: Enrollment Agent 証明書を取得
@@ -330,8 +330,8 @@ sequenceDiagram
     autonumber
     participant A as 攻撃者
     participant AD as Active Directory
-    participant T as 証明書テンプレート<br/>(変更前)
-    participant T2 as 証明書テンプレート<br/>(変更後)
+    participant T as "証明書テンプレート (変更前)"
+    participant T2 as "証明書テンプレート (変更後)"
     participant CA as 証明機関
     participant DC as ドメインコントローラー
 
@@ -759,10 +759,10 @@ certipy req -u john@corp.local -p 'Password123!' -dc-ip 10.10.10.100 -ca 'corp-D
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(リレーサーバー)
-    participant V as 被害者<br/>(Domain Admin)
+    participant A as "攻撃者 (リレーサーバー)"
+    participant V as "被害者 (Domain Admin)"
     participant R as ntlmrelayx
-    participant W as Web Enrollment<br/>(HTTP)
+    participant W as "Web Enrollment (HTTP)"
     participant CA as 証明機関
     participant DC as ドメインコントローラー
 
@@ -1052,10 +1052,10 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "Stro
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(リレーサーバー)
-    participant V as 被害者<br/>(Domain Admin)
+    participant A as "攻撃者 (リレーサーバー)"
+    participant V as "被害者 (Domain Admin)"
     participant R as ntlmrelayx
-    participant RPC as AD CS RPC<br/>(ICertPassage)
+    participant RPC as "AD CS RPC (ICertPassage)"
     participant CA as 証明機関
     participant DC as ドメインコントローラー
 
@@ -1262,7 +1262,7 @@ certipy auth -pfx fake_admin.pfx -dc-ip 10.10.10.100
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as 攻撃者<br/>(低権限ユーザー)
+    participant A as "攻撃者 (低権限ユーザー)"
     participant T as 証明書テンプレート
     participant CA as 証明機関
     participant DC as ドメインコントローラー
@@ -1463,7 +1463,7 @@ Restart-Service kdc
 sequenceDiagram
     autonumber
     participant A as 攻撃者
-    participant V1 as V1 証明書<br/>テンプレート
+    participant V1 as "V1 証明書テンプレート"
     participant CA as 証明機関
     participant DC as ドメインコントローラー
 

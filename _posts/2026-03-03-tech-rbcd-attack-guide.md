@@ -135,10 +135,10 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant A as Attacker<br/>(john)
+    participant A as "Attacker (john)"
     participant AD as Active Directory
-    participant Fake as Fake Computer<br/>(FAKE01$)
-    participant Target as Target<br/>(WEB01)
+    participant Fake as "Fake Computer (FAKE01$)"
+    participant Target as "Target (WEB01)"
     participant DC as Domain Controller
 
     Note over A,DC: Phase 1: Permission check and preparation
@@ -603,9 +603,9 @@ foreach ($computer in $computers) {
 ```mermaid
 sequenceDiagram
     participant A as Attacker
-    participant UC as Unconstrained<br/>Delegation<br/>Server
+    participant UC as "Unconstrained Delegation Server"
     participant DC as Domain Controller
-    participant V as Victim<br/>(Domain Admin)
+    participant V as "Victim (Domain Admin)"
 
     Note over UC: TrustedForDelegation = True
 
@@ -642,9 +642,9 @@ sekurlsa::tickets /export
 ```mermaid
 sequenceDiagram
     participant A as Attacker
-    participant CD as Constrained<br/>Delegation<br/>Account
+    participant CD as "Constrained Delegation Account"
     participant DC as Domain Controller
-    participant T as Target<br/>Service
+    participant T as "Target Service"
 
     Note over CD: msDS-AllowedToDelegateTo:<br/>CIFS/TARGET
 
