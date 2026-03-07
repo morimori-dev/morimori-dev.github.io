@@ -68,6 +68,14 @@
     display: flex;
     align-items: center;
   }
+
+  /* On mobile, move selector to the left (after hamburger) to avoid title overlap */
+  @media (max-width: 849px) {
+    #lang-selector-wrap {
+      left: 3.6rem;
+      right: auto;
+    }
+  }
   #lang-selector {
     appearance: none;
     -webkit-appearance: none;
