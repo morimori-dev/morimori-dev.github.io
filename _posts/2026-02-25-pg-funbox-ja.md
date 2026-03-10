@@ -15,9 +15,9 @@ alt_en: /posts/pg-funbox/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
-| 主な侵入経路 | Web-based initial access |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 攻撃対象 | Webアプリケーションおよび公開されたネットワークサービス |
+| 主な侵入経路 | Webベースの初期アクセス |
+| 権限昇格経路 | ローカル列挙 -> 設定ミスの悪用 -> root |
 
 ## 認証情報
 
@@ -26,8 +26,8 @@ alt_en: /posts/pg-funbox/
 ## 偵察
 
 ---
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象領域を把握し、悪用が成功しやすい箇所を特定します。正確なサービスおよびコンテンツの探索により、無駄な試行を減らし、的を絞った後続アクションを導きます。
 
 ## 初期足がかり
 
@@ -185,10 +185,10 @@ aca8f875ecd7f2719575492d6a623ac4
 www-data@funbox:/home/joe$
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
-The web foothold was confirmed, but this target was more reliably progressed through SSH using the recovered credentials. The next step is to switch from the limited web execution context to an interactive user shell. We are looking for a successful SSH login prompt to establish a stable foothold for local enumeration.
+Web経由の足がかりは確認済みですが、このターゲットは回収した認証情報を使ってSSH経由でより確実に進められます。次のステップは、制限のあるWeb実行コンテキストからインタラクティブなユーザーシェルへ切り替えることです。ローカル列挙のための安定した足がかりを確立するため、SSHログインの成功を目指します。
 
 ![Funbox interface context before switching to SSH for a stable foothold](/assets/img/pg/funbox/Pasted%20image%2020260131020745.png)
-*Caption: Visual confirmation before pivoting from web access to SSH-based shell access.*
+*Webアクセスから SSHベースのシェルアクセスへ切り替える前の視覚的な確認。*
 
 ❌[2:33][CPU:2][MEM:64][TUN0:192.168.45.180][/home/n0z0]
 🐉 > ssh joe@$ip
@@ -217,10 +217,10 @@ drwxr-xr-x  5 joe   joe   4096 Aug 21  2020 joe
 joe@funbox:/home$
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
-No additional logs saved.
+追加ログなし。
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期アクセスのステップでは、発見した弱点を連鎖させ、対象に対する実行可能な制御を確立します。足がかりの成功は、コマンド実行またはインタラクティブなシェルのコールバックによって検証されます。
 
 ## 権限昇格
 
@@ -370,8 +370,8 @@ crontab -l
 
 ```
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格はローカルの設定ミス、安全でないパーミッション、信頼された実行パスに依存します。これらの信頼境界を列挙して悪用することが、rootレベルのアクセスへの最短経路です。
 
 ## まとめ・学んだこと
 
@@ -380,7 +380,7 @@ Privilege escalation relies on local misconfigurations, unsafe permissions, and 
 - ワイルドカード展開やスクリプト化可能な特権ツールを避けるため sudo ポリシーを強化する。
 - 露出した認証情報と環境ファイルを重要機密として扱う。
 
-### Attack Flow
+### 攻撃フロー
 
 ---
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。

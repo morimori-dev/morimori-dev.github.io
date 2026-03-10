@@ -15,9 +15,9 @@ alt_en: /posts/pg-mantis/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
+| 攻撃対象 | Webアプリケーションおよび公開ネットワークサービス |
 | 主な侵入経路 | Web RCE (CVE-2019-15715) |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 権限昇格経路 | ローカル列挙 → 設定ミスの悪用 → root |
 
 ## 認証情報
 
@@ -26,8 +26,8 @@ alt_en: /posts/pg-mantis/
 ## 偵察
 
 ---
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象をマッピングし、攻撃が最も成功しやすい箇所を特定します。正確なサービスおよびコンテンツの探索により、無闇なテストを減らし、ターゲットを絞った後続アクションを促進します。
 
 ## 初期足がかり
 
