@@ -14,10 +14,10 @@ alt_en: /posts/pg-mzeeav/
 | Field | Value |
 |---|---|
 | OS | Linux |
-| 難易度 | Not explicitly stated |
-| 攻撃対象 | `22/tcp` SSH, `80/tcp` HTTP file upload service |
-| 主な侵入経路 | File upload bypass using `MZ` magic bytes and PHP reverse shell |
-| 権限昇格経路 | Abusing SUID `find`-like binary `/opt/fileS` |
+| 難易度 | 記録なし |
+| 攻撃対象 | `22/tcp` SSH, `80/tcp` HTTP ファイルアップロードサービス |
+| 主な侵入経路 | `MZ` マジックバイトを使用したファイルアップロードバイパスと PHP リバースシェル |
+| 権限昇格経路 | SUID の `find` 類似バイナリ `/opt/fileS` の悪用 |
 
 ## 認証情報
 
@@ -25,9 +25,9 @@ alt_en: /posts/pg-mzeeav/
 
 ## 偵察
 
-### Fast Port Discovery with RustScan
+### RustScan による高速ポート探索
 
-The first step is to enumerate all open TCP ports to establish the reachable attack surface. RustScan is used to quickly identify candidate services before deeper fingerprinting. At this stage, we are looking for web endpoints and any management services that could provide an entry point.
+最初のステップは、到達可能な攻撃対象を確立するために開いている全 TCP ポートを列挙することです。詳細なフィンガープリントを実行する前に、候補となるサービスを素早く特定するために RustScan を使用します。この段階では、Web エンドポイントとエントリポイントになり得る管理サービスを探します。
 
 ```bash
 rustscan -a $ip -r 1-65535 --ulimit 5000
@@ -54,8 +54,8 @@ Open 192.168.178.33:80
 
 ```
 
-💡 なぜ有効か  
-Fast full-range scanning quickly narrows focus to realistic entry points. With only SSH and HTTP exposed, the web application on port 80 becomes the most likely initial compromise vector.
+💡 なぜ有効か
+全範囲の高速スキャンにより、現実的なエントリポイントに素早く焦点を絞れます。SSH と HTTP のみが公開されているため、ポート 80 の Web アプリケーションが最も可能性の高い初期侵害ベクターとなります。
 
 ### Service Fingerprinting with Nmap
 
