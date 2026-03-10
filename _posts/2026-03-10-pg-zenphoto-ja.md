@@ -1,7 +1,7 @@
 ---
 title: "Proving Grounds - ZenPhoto (Linux)"
 date: 2026-03-10
-description: "Proving Grounds ZenPhoto Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
+description: "Proving Grounds ZenPhoto Linux マシン ウォークスルー。偵察・初期アクセス・権限昇格を網羅。"
 categories: [Proving Grounds, Linux]
 tags: [rce, suid, php, privilege-escalation]
 content_lang: ja
