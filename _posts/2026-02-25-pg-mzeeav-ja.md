@@ -14,10 +14,10 @@ alt_en: /posts/pg-mzeeav/
 | Field | Value |
 |---|---|
 | OS | Linux |
-| 難易度 | Not explicitly stated |
-| 攻撃対象 | `22/tcp` SSH, `80/tcp` HTTP file upload service |
-| 主な侵入経路 | File upload bypass using `MZ` magic bytes and PHP reverse shell |
-| 権限昇格経路 | Abusing SUID `find`-like binary `/opt/fileS` |
+| 難易度 | 記録なし |
+| 攻撃対象 | `22/tcp` SSH, `80/tcp` HTTP ファイルアップロードサービス |
+| 主な侵入経路 | `MZ` マジックバイトを使用したファイルアップロードバイパスと PHP リバースシェル |
+| 権限昇格経路 | SUID の `find` 類似バイナリ `/opt/fileS` の悪用 |
 
 ## 認証情報
 
@@ -25,9 +25,9 @@ alt_en: /posts/pg-mzeeav/
 
 ## 偵察
 
-### Fast Port Discovery with RustScan
+### RustScan による高速ポート探索
 
-The first step is to enumerate all open TCP ports to establish the reachable attack surface. RustScan is used to quickly identify candidate services before deeper fingerprinting. At this stage, we are looking for web endpoints and any management services that could provide an entry point.
+最初のステップは、到達可能な攻撃対象を確立するために開いている全 TCP ポートを列挙することです。詳細なフィンガープリントを実行する前に、候補となるサービスを素早く特定するために RustScan を使用します。この段階では、Web エンドポイントとエントリポイントになり得る管理サービスを探します。
 
 ```bash
 rustscan -a $ip -r 1-65535 --ulimit 5000
@@ -54,12 +54,12 @@ Open 192.168.178.33:80
 
 ```
 
-💡 なぜ有効か  
-Fast full-range scanning quickly narrows focus to realistic entry points. With only SSH and HTTP exposed, the web application on port 80 becomes the most likely initial compromise vector.
+💡 なぜ有効か
+全範囲の高速スキャンにより、現実的なエントリポイントに素早く焦点を絞れます。SSH と HTTP のみが公開されているため、ポート 80 の Web アプリケーションが最も可能性の高い初期侵害ベクターとなります。
 
-### Service Fingerprinting with Nmap
+### Nmap によるサービスフィンガープリント
 
-After identifying open ports, Nmap is used to collect version and service metadata. The selected flags combine script-based checks and version detection, which helps determine likely exploitation paths. We are specifically validating whether the HTTP service is custom and potentially vulnerable to file upload abuse.
+開放ポートを特定した後、Nmap を使ってバージョンとサービスのメタデータを収集します。選択したフラグはスクリプトベースのチェックとバージョン検出を組み合わせており、可能性の高い攻撃パスを特定するのに役立ちます。HTTP サービスがカスタムであり、ファイルアップロードの悪用に対して潜在的に脆弱かどうかを具体的に検証します。
 
 ```bash
 timestamp=$(date +%Y%m%d-%H%M%S)
@@ -109,19 +109,19 @@ Scan result saved to: /home/n0z0/work/scans/20260223-042024_192.168.178.33.xml
 
 ```
 
-💡 なぜ有効か  
-Service metadata gives context for attack strategy and narrows tool choices. Here the target is a custom upload-oriented web app, which strongly suggests input validation and file handling weaknesses as prime candidates.
+💡 なぜ有効か
+サービスメタデータは攻撃戦略のコンテキストを提供し、ツールの選択を絞り込みます。ここでのターゲットはカスタムのアップロード指向 Web アプリであり、入力検証とファイル処理の脆弱性が主要な候補として強く示唆されます。
 
 ## 初期足がかり
 
-### Analyze Upload Workflow and Magic-Byte Validation
+### アップロードワークフローとマジックバイト検証の分析
 
-The web interface indicates PE-file scanning functionality, so validation logic becomes the key target. The screenshot confirms attacker-controlled file upload is available, which is often exploitable when content validation is weak.
+Web インターフェースが PE ファイルのスキャン機能を示しているため、検証ロジックが主要なターゲットとなります。スクリーンショットにより、攻撃者が制御するファイルアップロードが可能であることが確認されており、コンテンツ検証が弱い場合に悪用可能です。
 
 ![MZEE-AV file upload interface with PE scanning prompt](/assets/img/pg/mzeeav/Pasted%20image%2020260223042258.png)
-*Caption: The target web application exposes a public file upload form and reports scan results.*
+*キャプション: ターゲット Web アプリケーションが公開ファイルアップロードフォームを公開し、スキャン結果を報告します。*
 
-The vulnerable logic checked only the first two bytes for `4D5A` (`MZ`) and did not validate file extension, MIME type, or full file format.
+脆弱なロジックは最初の 2 バイトの `4D5A`（`MZ`）のみをチェックしており、ファイル拡張子、MIME タイプ、またはファイル形式全体の検証を行っていませんでした。
 
 ```php
 $magic = fread($F, 2);          // 先頭2バイトだけ読む
@@ -130,12 +130,12 @@ if (strpos($magicbytes, '4D5A') === false)  // MZ かチェック
     exit();  // MZじゃなければ拒否
 ```
 
-💡 なぜ有効か  
-A two-byte signature check is insufficient for secure upload validation. Attackers can prepend the expected bytes while embedding executable server-side code later in the file, bypassing naive filters.
+💡 なぜ有効か
+2 バイトのシグネチャチェックは安全なアップロード検証として不十分です。攻撃者は期待されるバイトをファイルの先頭に追加しながら、後ろに実行可能なサーバーサイドコードを埋め込むことで、単純なフィルターを回避できます。
 
-### Build an `MZ`-Prefixed PHP Reverse Shell
+### `MZ` プレフィックス付き PHP リバースシェルの作成
 
-The payload prepends `\x4D\x5A` to satisfy the magic-byte check, then appends PHP reverse shell code. This is run locally before upload, and the result is a file that passes validation while still executing as PHP when requested.
+ペイロードはマジックバイトチェックを満たすために `\x4D\x5A` を先頭に追加し、その後に PHP リバースシェルコードを追記します。これはアップロード前にローカルで実行され、結果として検証をパスしながらリクエスト時に PHP として実行されるファイルが作成されます。
 
 ```bash
 printf '\x4D\x5A' > rev.php
@@ -153,17 +153,17 @@ EOF
 ```
 
 ![Uploaded file list showing attacker payload accepted by scanner](/assets/img/pg/mzeeav/Pasted%20image%2020260223112336.png)
-*Caption: The crafted `rev.php` upload is accepted by the server after the `MZ` bypass.*
+*キャプション: 細工された `rev.php` が `MZ` バイパス後にサーバーで受け入れられました。*
 
 ![Direct access to uploaded rev.php under the upload directory](/assets/img/pg/mzeeav/Pasted%20image%2020260223112451.png)
-*Caption: Accessing the uploaded file path triggers PHP execution of the payload.*
+*キャプション: アップロードされたファイルパスにアクセスすると、ペイロードの PHP 実行がトリガーされます。*
 
-💡 なぜ有効か  
-PHP ignores arbitrary bytes before the `<?php` opening tag, so prepended `MZ` does not break execution. The defense validated only file header bytes, not server-side execution risk.
+💡 なぜ有効か
+PHP は `<?php` 開始タグの前の任意のバイトを無視するため、先頭に追加した `MZ` は実行を妨げません。防御側はファイルヘッダーのバイトのみを検証しており、サーバーサイドの実行リスクを検証していませんでした。
 
-### Catch the Reverse Shell and Read `local.txt`
+### リバースシェルの受信と `local.txt` の読み取り
 
-A listener is started to catch the outbound callback from the uploaded payload. After connection, a pseudo-TTY is spawned for better shell stability and command handling. The expected output is a shell as `www-data`.
+アップロードしたペイロードからの発信コールバックを受け取るためにリスナーを起動します。接続後、より安定したシェルとコマンド処理のために擬似 TTY を生成します。期待される出力は `www-data` としてのシェルです。
 
 ```bash
 nc -lvnp 4444
@@ -182,7 +182,7 @@ zsh: suspended  nc -lvnp 4444
 
 ```
 
-With shell access confirmed, the next task is proof-of-compromise at user level by retrieving `local.txt`. `find` is used to discover the exact file location, then `cat` is used to read it.
+シェルアクセスが確認されたら、次の目標は `local.txt` を取得してユーザーレベルでの侵害の証拠とすることです。`find` を使って正確なファイルの場所を探索し、`cat` で読み取ります。
 
 ```bash
 find / -iname local.txt 2>/dev/null
@@ -197,14 +197,14 @@ www-data@mzeeav:/var/www/html/upload$ cat /home/avuser/local.txt
 
 ```
 
-💡 なぜ有効か  
-Once uploaded code executes in web context, outbound reverse shells provide interactive command execution without requiring inbound firewall openings. Reading `local.txt` confirms attacker-controlled execution on the target host.
+💡 なぜ有効か
+アップロードされたコードが Web コンテキストで実行されると、アウトバウンドのリバースシェルはインバウンドのファイアウォール開放なしにインタラクティブなコマンド実行を提供します。`local.txt` の読み取りにより、ターゲットホスト上での攻撃者制御の実行が確認されます。
 
 ## 権限昇格
 
-### Identify High-Risk SUID Binary
+### 高リスク SUID バイナリの特定
 
-Local enumeration flagged an uncommon SUID binary at `/opt/fileS`. Uncommon privileged binaries are high priority because they often wrap standard tools unsafely.
+ローカル列挙により、`/opt/fileS` に通常とは異なる SUID バイナリがフラグとして検出されました。一般的でない特権バイナリは、標準ツールを安全でない方法でラップしていることが多いため、優先度が高いです。
 
 ```bash
 [!] fst020 Uncommon setuid binaries........................................ yes!
@@ -213,9 +213,9 @@ Local enumeration flagged an uncommon SUID binary at `/opt/fileS`. Uncommon priv
 
 ```
 
-### Confirm `fileS` Behavior and Privileged Bits
+### `fileS` の動作と特権ビットの確認
 
-The next step is to verify what `fileS` actually does before exploitation. Its help text matched GNU `find` syntax and behavior, and file permissions confirmed SUID execution context. We are checking for command-execution features that can be abused under elevated effective UID.
+次のステップは、悪用前に `fileS` が実際に何をするかを確認することです。ヘルプテキストが GNU `find` の構文と動作に一致し、ファイルパーミッションが SUID 実行コンテキストを確認しました。昇格した実効 UID のもとで悪用可能なコマンド実行機能を確認します。
 
 ```bash
 ./fileS --help
@@ -275,9 +275,9 @@ drwxr-xr-x 18 root root   4096 Nov 13  2023 ..
 
 ```
 
-### Use GTFOBins `find` Technique to Reach Root
+### GTFOBins の `find` テクニックを使用して root に到達
 
-Because `fileS` behaves like `find` and carries SUID bits, the GTFOBins `-exec` technique can spawn a privileged shell. `/bin/bash -p` is used to preserve elevated privileges. The final validation is reading `/root/proof.txt`.
+`fileS` が `find` のように動作し SUID ビットを持つため、GTFOBins の `-exec` テクニックで特権シェルを起動できます。昇格した権限を保持するために `/bin/bash -p` を使用します。最終確認は `/root/proof.txt` の読み取りです。
 
 ```bash
 ./fileS . -exec /bin/bash -p \; -quit
@@ -296,15 +296,15 @@ bash-5.1# cat /root/proof.txt
 
 ```
 
-💡 なぜ有効か  
-The underlying mechanism is SUID privilege inheritance. `find`-style `-exec` runs a command under the binary's effective UID (root here), and `bash -p` prevents dropping those privileges, yielding a root shell.
+💡 なぜ有効か
+根本的なメカニズムは SUID 権限の継承です。`find` スタイルの `-exec` はバイナリの実効 UID（ここでは root）でコマンドを実行し、`bash -p` によってその権限が降格されるのを防ぎ、root シェルが得られます。
 
 ## まとめ・学んだこと
 
-- File-upload defenses must validate full file type, extension handling, and execution path isolation.
-- Magic-byte checks alone are bypassable and should never be treated as primary security control.
-- Uploaded files should not be directly executable from web-accessible directories.
-- Uncommon SUID binaries should be audited immediately; wrappers around standard tools are especially risky.
+- ファイルアップロードの防御はファイル種別全体、拡張子の処理、実行パスの分離を検証する必要があります。
+- マジックバイトチェックだけでは回避可能であり、主要なセキュリティコントロールとして扱うべきではありません。
+- アップロードされたファイルは Web アクセス可能なディレクトリから直接実行できるようにすべきではありません。
+- 一般的でない SUID バイナリはすぐに監査すべきです。標準ツールのラッパーは特にリスクが高いです。
 
 ```mermaid
 flowchart LR

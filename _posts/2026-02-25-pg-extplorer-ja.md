@@ -15,9 +15,9 @@ alt_en: /posts/pg-extplorer/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
-| 主な侵入経路 | Web-based initial access |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 攻撃対象 | Webアプリケーションおよび公開されたネットワークサービス |
+| 主な侵入経路 | Webベースの初期アクセス |
+| 権限昇格経路 | ローカル列挙 -> 設定ミスの悪用 -> root |
 
 ## 認証情報
 
@@ -26,8 +26,8 @@ alt_en: /posts/pg-extplorer/
 ## 偵察
 
 ---
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象領域を把握し、悪用が成功しやすい箇所を特定します。正確なサービスおよびコンテンツの探索により、無駄な試行を減らし、的を絞った後続アクションを導きます。
 
 ## 初期足がかり
 
@@ -96,8 +96,8 @@ curl http://192.168.200.16/wp-admin/simple-backdoor.php?cmd=whoami
 
 ```
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期アクセスのステップでは、発見した弱点を連鎖させ、対象に対する実行可能な制御を確立します。足がかりの成功は、コマンド実行またはインタラクティブなシェルのコールバックによって検証されます。
 
 ## 権限昇格
 
@@ -252,8 +252,8 @@ root@dora:~#
 
 ```
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格はローカルの設定ミス、安全でないパーミッション、信頼された実行パスに依存します。これらの信頼境界を列挙して悪用することが、rootレベルのアクセスへの最短経路です。
 
 ## まとめ・学んだこと
 

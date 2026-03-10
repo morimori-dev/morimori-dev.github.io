@@ -15,9 +15,9 @@ alt_en: /posts/pg-katana/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
+| 攻撃対象 | Webアプリケーションおよび公開ネットワークサービス |
 | 主な侵入経路 | Web RCE (CVE-2023-43740) |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 権限昇格経路 | ローカル列挙 → 設定ミスの悪用 → root |
 
 ## 認証情報
 
@@ -26,8 +26,8 @@ alt_en: /posts/pg-katana/
 ## 偵察
 
 ---
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象をマッピングし、攻撃が最も成功しやすい箇所を特定します。正確なサービスおよびコンテンツの探索により、無闇なテストを減らし、ターゲットを絞った後続アクションを促進します。
 
 ## 初期足がかり
 
@@ -85,7 +85,7 @@ by Ben "epi" Risher 🤓                 ver: 2.12.0
 *キャプション：このフェーズで取得したスクリーンショット*
 
 `http://192.168.126.83:8715/katana_rev.php`
-Reverse shell callback succeeded:
+リバースシェルのコールバックに成功:
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
 ```bash
@@ -105,7 +105,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 $
 ```
 
-Retrieved local.txt:
+local.txt を取得:
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
 ```bash
@@ -119,8 +119,8 @@ www-data@katana:/$ cat /var/www/local.txt
 
 ```
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期足がかりのステップでは、発見した脆弱性を連鎖させてターゲットへの実行制御を確立します。有効な足がかり技術は、コマンド実行またはインタラクティブなシェルのコールバックによって検証されます。
 
 ## 権限昇格
 
@@ -158,7 +158,7 @@ www-data@katana:/tmp$ python2.7 -c 'import os; os.setuid(0); os.system("/bin/bas
 root@katana:/tmp# id
 ```
 
-Retrieved proof.txt:
+proof.txt を取得:
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
 ```bash
@@ -173,10 +173,10 @@ root@katana:/tmp# cat /root/proof.txt
 
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
-No additional logs saved.
+追加ログなし。
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格はローカルの設定ミス、安全でないパーミッション、信頼された実行パスに依存します。これらの信頼境界を列挙して悪用することが root レベルのアクセスへの最速ルートです。
 
 ## まとめ・学んだこと
 
@@ -185,7 +185,7 @@ Privilege escalation relies on local misconfigurations, unsafe permissions, and 
 - ワイルドカード展開やスクリプト化可能な特権ツールを避けるため sudo ポリシーを強化する。
 - 露出した認証情報と環境ファイルを重要機密として扱う。
 
-### Attack Flow
+### 攻撃フロー
 
 ---
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。

@@ -15,9 +15,9 @@ alt_en: /posts/pg-cockpit/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
-| 主な侵入経路 | Web-based initial access |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 攻撃対象 | Webアプリケーションおよび公開されているネットワークサービス |
+| 主な侵入経路 | Webベースの初期アクセス |
+| 権限昇格経路 | ローカル列挙 -> 設定ミスの悪用 -> root |
 
 ## 認証情報
 
@@ -38,8 +38,8 @@ alt_en: /posts/pg-cockpit/
       ↓
       ↓
       ↓
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象領域を把握し、悪用が成功しやすい箇所を特定します。正確なサービス・コンテンツ探索により、無作為なテストを減らし、的を絞った後続アクションにつなげます。
 
 ## 初期足がかり
 
@@ -74,8 +74,8 @@ cat /usr/share/wordlists/seclists/Fuzzing/Databases/MySQL-SQLi-Login-Bypass.fuzz
 
 ```
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期足がかりのステップでは、発見した脆弱性を連鎖させてターゲットへの実行可能な制御を確立します。成功した足がかり技術は、コマンド実行やインタラクティブシェルのコールバックによって検証されます。
 
 ## 権限昇格
 
@@ -100,10 +100,10 @@ james@blaze:~$
 
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
-No additional logs saved.
+追加ログなし。
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格はローカルの設定ミス、安全でないパーミッション、信頼された実行パスに依存します。これらの信頼境界を列挙して悪用することが、rootレベルのアクセスへの最短経路です。
 
 ## まとめ・学んだこと
 

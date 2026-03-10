@@ -15,9 +15,9 @@ alt_en: /posts/pg-bitforge/
 |---------------------------|-------|
 | OS | Linux |
 | 難易度 | 記録なし |
-| 攻撃対象 | Web application and exposed network services |
+| 攻撃対象 | Webアプリケーションおよび公開されているネットワークサービス |
 | 主な侵入経路 | Web RCE (CVE-2024-27115) |
-| 権限昇格経路 | Local enumeration -> misconfiguration abuse -> root |
+| 権限昇格経路 | ローカル列挙 → 設定ミスの悪用 → root |
 
 ## 認証情報
 
@@ -26,8 +26,8 @@ alt_en: /posts/pg-bitforge/
 ## 偵察
 
 ---
-💡 なぜ有効か  
-This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+💡 なぜ有効か
+このフェーズでは到達可能な攻撃対象領域をマッピングし、悪用が最も成功しやすい箇所を特定します。正確なサービスおよびコンテンツ探索により、闇雲なテストを減らし、標的を絞った後続アクションに繋げます。
 
 ## 初期足がかり
 
@@ -196,8 +196,8 @@ soplaning:~$
 
 ```
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期足がかりのステップでは、発見した脆弱性を連鎖させてターゲットを実行制御下に置きます。成功した足がかり技法は、コマンド実行またはインタラクティブシェルの取得によって検証されます。
 
 ## 権限昇格
 
@@ -228,8 +228,8 @@ jack@BitForge:~$ cat /usr/bin/flask_password_changer
 
 ```
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格は、ローカルの設定ミス・安全でないパーミッション・信頼された実行パスを利用します。これらの信頼境界を列挙して悪用することが、rootレベルのアクセスへの最短経路です。
 
 ## まとめ・学んだこと
 

