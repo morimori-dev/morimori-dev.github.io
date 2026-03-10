@@ -1,7 +1,7 @@
 ---
 title: "HackTheBox - Active (Windows)"
 date: 2026-02-27
-description: "HackTheBox Active Windows writeup マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
+description: "HackTheBox Active Windows マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Windows]
 tags: [rce, suid, php, privilege-escalation]
 mermaid: true
