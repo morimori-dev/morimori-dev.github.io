@@ -1,3 +1,13 @@
+<!-- Noto Sans JP -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  body, .content, #sidebar, .post-title, h1, h2, h3, h4, h5, h6 {
+    font-family: "Noto Sans JP", sans-serif !important;
+  }
+</style>
+
 {% if page.layout == "post" %}
 <meta name="page-lang" content="{{ page.content_lang | default: page.lang | default: 'en' }}">
 {% if page.alt_ja %}
