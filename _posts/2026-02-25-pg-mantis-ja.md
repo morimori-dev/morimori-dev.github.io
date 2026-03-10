@@ -73,7 +73,7 @@ by Ben "epi" Risher 🤓                 ver: 2.12.0
 
 ```
 
-http://192.168.178.204/bugtracker/admin/install.phpが見つかった
+http://192.168.178.204/bugtracker/admin/install.php が見つかった
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
 
 ```bash
@@ -375,8 +375,8 @@ www-data@mantis:/var/www/html/bugtracker$ cat /home/mantis/local.txt
 
 ```
 
-💡 なぜ有効か  
-The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+💡 なぜ有効か
+初期足がかりのステップでは、発見した脆弱性を連鎖させてターゲットへの実行制御を確立します。有効な足がかり技術は、コマンド実行またはインタラクティブなシェルのコールバックによって検証されます。
 
 ## 権限昇格
 
@@ -451,8 +451,8 @@ root@mantis:~# cat /root/proof.txt
 
 ```
 
-💡 なぜ有効か  
-Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+💡 なぜ有効か
+権限昇格はローカルの設定ミス、安全でないパーミッション、信頼された実行パスに依存します。これらの信頼境界を列挙して悪用することが root レベルのアクセスへの最速ルートです。
 
 ## まとめ・学んだこと
 
@@ -461,7 +461,7 @@ Privilege escalation relies on local misconfigurations, unsafe permissions, and 
 - ワイルドカード展開やスクリプト化可能な特権ツールを避けるため sudo ポリシーを強化する。
 - 露出した認証情報と環境ファイルを重要機密として扱う。
 
-### Attack Flow
+### 攻撃フロー
 
 ---
 攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
