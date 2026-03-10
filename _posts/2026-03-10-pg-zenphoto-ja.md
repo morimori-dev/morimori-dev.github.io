@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - ZenPhoto 解説 (Linux)"
+title: "Proving Grounds - ZenPhoto (Linux)"
 date: 2026-03-10
 description: "Proving Grounds ZenPhoto Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

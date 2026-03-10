@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Shenzi 解説 (Windows)"
+title: "Proving Grounds - Shenzi (Windows)"
 date: 2026-03-10
 description: "Proving Grounds Shenzi Windows マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Windows]

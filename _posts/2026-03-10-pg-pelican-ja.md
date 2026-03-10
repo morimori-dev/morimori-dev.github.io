@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Pelican 解説 (Linux)"
+title: "Proving Grounds - Pelican (Linux)"
 date: 2026-03-10
 description: "Proving Grounds Pelican Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

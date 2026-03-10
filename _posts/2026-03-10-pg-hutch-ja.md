@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Hutch 解説 (Windows)"
+title: "Proving Grounds - Hutch (Windows)"
 date: 2026-03-10
 description: "Proving Grounds Hutch Windows マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Windows]

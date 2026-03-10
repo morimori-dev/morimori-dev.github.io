@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Readys 解説 (Linux)"
+title: "Proving Grounds - Readys (Linux)"
 date: 2026-03-10
 description: "Proving Grounds Readys Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]

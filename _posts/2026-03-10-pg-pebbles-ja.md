@@ -1,5 +1,5 @@
 ---
-title: "Proving Grounds - Pebbles 解説 (Linux)"
+title: "Proving Grounds - Pebbles (Linux)"
 date: 2026-03-10
 description: "Proving Grounds Pebbles Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
