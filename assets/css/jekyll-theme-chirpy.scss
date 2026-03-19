@@ -28,3 +28,145 @@
     max-width: none !important;
   }
 }
+
+/* ---------------------------------------------------------
+   Mermaid diagram color overrides for better readability
+   --------------------------------------------------------- */
+
+/* Dark mode overrides */
+[data-mode="dark"] .mermaid,
+html[data-mode="dark"] .mermaid {
+  /* Sequence diagram */
+  .actor {
+    fill: #2d3748 !important;
+    stroke: #63b3ed !important;
+  }
+  text.actor > tspan {
+    fill: #e2e8f0 !important;
+  }
+  .messageLine0,
+  .messageLine1 {
+    stroke: #90cdf4 !important;
+  }
+  .messageText {
+    fill: #e2e8f0 !important;
+  }
+  .loopText > tspan,
+  .noteText > tspan {
+    fill: #1a202c !important;
+  }
+  .note {
+    fill: #ecc94b !important;
+    stroke: #d69e2e !important;
+  }
+  .loopLine {
+    stroke: #a0aec0 !important;
+  }
+  .activation0,
+  .activation1,
+  .activation2 {
+    fill: #4a5568 !important;
+    stroke: #63b3ed !important;
+  }
+  line[class^="actor-line"] {
+    stroke: #718096 !important;
+  }
+  .sequenceNumber {
+    fill: #fff !important;
+  }
+
+  /* Flowchart */
+  .node rect,
+  .node polygon,
+  .node circle {
+    fill: #2d3748 !important;
+    stroke: #63b3ed !important;
+  }
+  .node .label {
+    color: #e2e8f0 !important;
+  }
+  .nodeLabel {
+    color: #e2e8f0 !important;
+  }
+  .edgeLabel {
+    background-color: #2d3748 !important;
+    color: #e2e8f0 !important;
+  }
+  .edgePath .path {
+    stroke: #90cdf4 !important;
+  }
+  marker {
+    fill: #90cdf4 !important;
+  }
+  .cluster rect {
+    fill: #1a202c !important;
+    stroke: #4a5568 !important;
+  }
+  .cluster span {
+    color: #cbd5e0 !important;
+  }
+}
+
+/* Light mode overrides */
+.mermaid {
+  /* Sequence diagram */
+  .actor {
+    fill: #ebf8ff !important;
+    stroke: #3182ce !important;
+  }
+  text.actor > tspan {
+    fill: #1a202c !important;
+  }
+  .messageLine0,
+  .messageLine1 {
+    stroke: #3182ce !important;
+  }
+  .messageText {
+    fill: #1a202c !important;
+  }
+  .loopText > tspan,
+  .noteText > tspan {
+    fill: #1a202c !important;
+  }
+  .note {
+    fill: #fefcbf !important;
+    stroke: #d69e2e !important;
+  }
+  .loopLine {
+    stroke: #718096 !important;
+  }
+  .activation0,
+  .activation1,
+  .activation2 {
+    fill: #bee3f8 !important;
+    stroke: #3182ce !important;
+  }
+  .sequenceNumber {
+    fill: #fff !important;
+  }
+
+  /* Flowchart */
+  .node rect,
+  .node polygon,
+  .node circle {
+    fill: #ebf8ff !important;
+    stroke: #3182ce !important;
+  }
+  .nodeLabel {
+    color: #1a202c !important;
+  }
+  .edgeLabel {
+    background-color: #fff !important;
+    color: #1a202c !important;
+  }
+  .edgePath .path {
+    stroke: #3182ce !important;
+  }
+  .cluster rect {
+    fill: #f7fafc !important;
+    stroke: #a0aec0 !important;
+  }
+  .cluster span {
+    color: #2d3748 !important;
+  }
+}

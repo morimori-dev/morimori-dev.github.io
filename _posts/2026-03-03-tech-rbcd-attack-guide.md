@@ -89,8 +89,8 @@ flowchart LR
         B2 --> B3[Allow delegation<br/>from Web Server]
     end
 
-    style A2 fill:#ff6b6b
-    style B2 fill:#4ecdc4
+    style A2 fill:#e53e3e,color:#fff
+    style B2 fill:#319795,color:#fff
 
     Note1[Requires Domain Admin privileges]
     Note2[Possible with GenericWrite]

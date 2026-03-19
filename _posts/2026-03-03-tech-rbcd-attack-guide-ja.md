@@ -89,8 +89,8 @@ flowchart LR
         B2 --> B3[Web サーバーからの<br/>委任を許可]
     end
 
-    style A2 fill:#ff6b6b
-    style B2 fill:#4ecdc4
+    style A2 fill:#e53e3e,color:#fff
+    style B2 fill:#319795,color:#fff
 
     Note1[Domain Admin 権限が必要]
     Note2[GenericWrite で可能]
