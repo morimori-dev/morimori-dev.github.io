@@ -46,16 +46,6 @@ In March 2026, I conducted a focused vulnerability hunting campaign across 105 o
 | CVE-2026-33692 | AVideo | .env Exposure via Docker Misconfiguration | 7.5 |
 | CVE-2026-33714 | Chamilo | SQLi — CVE-2026-30881 Incomplete Fix Bypass | 6.5 |
 
-**Campaign Summary:**
-
-| Metric | Value |
-|--------|:-----:|
-| Targets Investigated | 105 |
-| Vulnerabilities Reported | 58 |
-| GHSA Submissions | 31 (26 projects) |
-| GHSA with Critical/High CVSS | 15 |
-| CVEs Obtained | 4 |
-
 All vulnerabilities were reported through responsible disclosure.
 
 ---
