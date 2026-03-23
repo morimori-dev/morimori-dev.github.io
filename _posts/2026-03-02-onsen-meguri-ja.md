@@ -1,11 +1,11 @@
 ---
-title: "Touring Hot Springs Across Japan — Share Your Recommendations!"
+title: "日本全国の温泉を巡っています — おすすめの温泉があれば教えてください"
 date: 2026-03-02
-description: "Taking a break from security — sharing my journey touring onsen across Japan."
+description: "セキュリティの話ばかりのブログですが、たまには趣味の話を。"
 categories: [Life, Travel]
-tags: [onsen, travel, japan]
-content_lang: en
-alt_ja: /posts/onsen-meguri-ja/
+tags: [温泉, 旅行, 日本]
+content_lang: ja
+alt_en: /posts/onsen-meguri/
 ---
 
 セキュリティの話ばかりのブログですが、たまには趣味の話を。
