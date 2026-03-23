@@ -35,6 +35,31 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ---
 
+## Vulnerability Research & CVE Hunting
+
+In March 2026, I conducted a focused vulnerability hunting campaign across 105 open-source projects, resulting in **4 CVEs** and **31 GitHub Security Advisories**.
+
+| CVE ID | Project | Vulnerability | CVSS |
+|--------|---------|--------------|:----:|
+| [CVE-2026-33644](https://github.com/LycheeOrg/Lychee/security/advisories/GHSA-5245-4p8c-jwff) | Lychee | SSRF via DNS Rebinding Bypass | 2.3 |
+| [CVE-2026-33628](https://github.com/invoiceninja/invoiceninja/security/advisories/GHSA-98wm-cxpw-847p) | Invoice Ninja | Stored XSS Denylist Bypass | 5.4 |
+| CVE-2026-33692 | AVideo | .env Exposure via Docker Misconfiguration | 7.5 |
+| CVE-2026-33714 | Chamilo | SQLi — CVE-2026-30881 Incomplete Fix Bypass | 6.5 |
+
+**Campaign Summary:**
+
+| Metric | Value |
+|--------|:-----:|
+| Targets Investigated | 105 |
+| Vulnerabilities Reported | 58 |
+| GHSA Submissions | 31 (26 projects) |
+| GHSA with Critical/High CVSS | 15 |
+| CVEs Obtained | 4 |
+
+All vulnerabilities were reported through responsible disclosure.
+
+---
+
 ## Professional Background
 
 Before transitioning into cybersecurity, I worked in **IT infrastructure and network engineering**. This background gives me a solid foundation in networking protocols, system administration, and troubleshooting — skills that directly support my penetration testing practice.
