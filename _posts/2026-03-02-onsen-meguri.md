@@ -2,7 +2,6 @@
 title: "日本全国の温泉を巡っています — おすすめの温泉があれば教えてください"
 date: 2026-03-02
 description: "セキュリティの話ばかりのブログですが、たまには趣味の話を。"
-lang: ja
 categories: [Life, Travel]
 tags: [温泉, 旅行, 日本]
 ---
