@@ -55,9 +55,9 @@ Before transitioning into cybersecurity, I worked in **IT infrastructure and net
 
 ## Skills
 
-**Infrastructure & Networking** *(Professional Experience)*
+**Infrastructure & Cloud** *(Professional Experience)*
 
-Network Design and Troubleshooting, TCP/IP, DNS, DHCP, Firewall Configuration, VLAN, VPN, Linux Administration, Windows Server Administration
+AWS (Security, Solutions Architect Professional), Container Orchestration (Docker, Kubernetes), High Availability / Redundancy Architecture, Microsoft Endpoint Configuration Manager (MECM), Microsoft Defender for Endpoint (MDE), Splunk, Linux Administration, Windows Server Administration
 
 **Security Testing** *(Currently Developing)*
 
