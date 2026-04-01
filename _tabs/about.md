@@ -7,9 +7,7 @@ title: About
 
 ## About Me
 
-I am a cybersecurity enthusiast who began this journey in **August 2025**. With a positive attitude and strong motivation, I am committed to continuous growth in this field.
-
-I am currently preparing for the **OSCP** certification, dedicating myself to hands-on practice across platforms such as **Hack The Box**, **TryHackMe**, and **OSCP Proving Grounds**. Each machine I work through deepens my understanding of real-world attack techniques and defensive strategies.
+I am a cybersecurity professional who began this journey in **August 2025**. I obtained the **OSCP** certification in March 2026, building hands-on skills across platforms such as **Hack The Box**, **TryHackMe**, and **OSCP Proving Grounds**. Each machine I worked through deepened my understanding of real-world attack techniques and defensive strategies.
 
 As a non-native English speaker, I am also actively improving my English skills alongside my technical development. I believe that consistent effort and a willingness to step outside one's comfort zone are the foundations of meaningful progress — in both cybersecurity and language.
 
@@ -21,6 +19,7 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 | Certification                                     | Issuer                                        | Year |
 | :------------------------------------------------ | :-------------------------------------------- | :--- |
+| OSCP (Offensive Security Certified Professional)  | OffSec                                        | 2026 |
 | Registered Information Security Specialist (RISS) | Information-technology Promotion Agency (IPA) | 2024 |
 | AWS Certified Security – Specialty                | Amazon Web Services (AWS)                     | 2023 |
 | AWS Certified Solutions Architect – Professional  | Amazon Web Services (AWS)                     | 2022 |
@@ -59,17 +58,13 @@ Before transitioning into cybersecurity, I worked in **IT infrastructure and net
 
 AWS (Security, Solutions Architect Professional), Container Orchestration (Docker, Kubernetes), High Availability / Redundancy Architecture, Microsoft Endpoint Configuration Manager (MECM), Microsoft Defender for Endpoint (MDE), Splunk, Linux Administration, Windows Server Administration
 
-**Security Testing** *(Currently Developing)*
+**Security Testing**
 
-Reconnaissance and Enumeration (Nmap, Gobuster, feroxbuster, nikto), Web Application Testing (Burp Suite), Privilege Escalation Enumeration (LinPEAS / WinPEAS), Vulnerability Analysis, Report Writing
+Reconnaissance and Enumeration (Nmap, Gobuster, feroxbuster, nikto), Web Application Testing (Burp Suite Pro), Active Directory Attacks (BloodHound CE, Impacket, Certipy), Privilege Escalation (LinPEAS / WinPEAS), ADCS Exploitation, Kerberos Abuse, Lateral Movement, Tunneling (Ligolo-ng), Vulnerability Analysis, Report Writing
 
 **Scripting**
 
-Bash (command chaining, automation of enumeration tasks)
-
-**Currently Learning**
-
-Python for security tooling, Active Directory attacks, Buffer Overflow exploitation, Post-Exploitation techniques
+Bash (command chaining, automation of enumeration tasks), Python for security tooling
 
 ---
 
