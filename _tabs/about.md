@@ -36,13 +36,21 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ## Vulnerability Research & CVE Hunting
 
-The following CVEs are currently listed in the GitHub Advisory query `credit:morimori-dev` (checked on 2026-04-10 UTC).
+The GitHub Advisory query `credit:morimori-dev` currently shows **4 advisories** (checked on 2026-04-10 UTC): **3 CVEs + 1 GHSA-only advisory**.
+
+### CVE entries
 
 | CVE ID | Project | Vulnerability | CVSS |
 |--------|---------|--------------|:----:|
 | [CVE-2026-33628](https://github.com/invoiceninja/invoiceninja/security/advisories/GHSA-98wm-cxpw-847p) | Invoice Ninja | Stored XSS Denylist Bypass | 5.4 |
 | [CVE-2026-34203](https://github.com/nautobot/nautobot/security/advisories/GHSA-xmpv-j7p2-j873) | Nautobot | Password validators not enforced via REST API user management | 2.7 |
 | [CVE-2026-35187](https://github.com/pyload/pyload/security/advisories/GHSA-2wvg-62qm-gj33) | pyLoad | SSRF in parse_urls API endpoint via unvalidated URL parameter | 7.7 |
+
+### GHSA-only entry (no CVE listed)
+
+| Advisory ID | Project | Vulnerability | Severity |
+|-------------|---------|--------------|:--------:|
+| [GHSA-jfwg-rxf3-p7r9](https://github.com/advisories/GHSA-jfwg-rxf3-p7r9) | github.com/authorizerdev/authorizer (Go) | Authorizer: CQL/N1QL Injection in Cassandra and Couchbase Backends via fmt.Sprintf String Interpolation | High |
 
 All vulnerabilities were reported through responsible disclosure.  
 Related advisory query: <https://github.com/advisories?query=credit%3Amorimori-dev>
