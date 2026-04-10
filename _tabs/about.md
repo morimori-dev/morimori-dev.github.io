@@ -36,13 +36,11 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ## Vulnerability Research & CVE Hunting
 
-In March-April 2026, I conducted a focused vulnerability hunting campaign across open-source projects, resulting in **5 CVEs** and multiple GitHub Security Advisories.
+The following CVEs are currently listed in the GitHub Advisory query `credit:morimori-dev` (checked on 2026-04-10 UTC).
 
 | CVE ID | Project | Vulnerability | CVSS |
 |--------|---------|--------------|:----:|
-| [CVE-2026-33644](https://github.com/LycheeOrg/Lychee/security/advisories/GHSA-5245-4p8c-jwff) | Lychee | SSRF via DNS Rebinding Bypass | 2.3 |
 | [CVE-2026-33628](https://github.com/invoiceninja/invoiceninja/security/advisories/GHSA-98wm-cxpw-847p) | Invoice Ninja | Stored XSS Denylist Bypass | 5.4 |
-| [CVE-2026-33738](https://github.com/LycheeOrg/Lychee/security/advisories/GHSA-5574-7f3r-hm9j) | Lychee | Stored XSS in RSS/Atom/JSON Feed | 4.8 |
 | [CVE-2026-34203](https://github.com/nautobot/nautobot/security/advisories/GHSA-xmpv-j7p2-j873) | Nautobot | Password validators not enforced via REST API user management | 2.7 |
 | [CVE-2026-35187](https://github.com/pyload/pyload/security/advisories/GHSA-2wvg-62qm-gj33) | pyLoad | SSRF in parse_urls API endpoint via unvalidated URL parameter | 7.7 |
 
