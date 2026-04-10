@@ -47,7 +47,6 @@ The GitHub Advisory query `credit:morimori-dev` currently shows 4 advisories (ch
 | [CVE-2026-35187](https://github.com/pyload/pyload/security/advisories/GHSA-2wvg-62qm-gj33) | pyLoad | SSRF in parse_urls API endpoint via unvalidated URL parameter | 7.7 |
 
 All vulnerabilities were reported through responsible disclosure.  
-Note: One additional GHSA entry (`GHSA-jfwg-rxf3-p7r9`) is listed in the query as "No known CVE". CVE IDs are assigned by a CNA (e.g., MITRE/GitHub) and may remain unassigned if still under review, handled as a GHSA-only case, or split into separate advisories per CVE rules.  
 Related advisory query: <https://github.com/advisories?query=credit%3Amorimori-dev>
 
 ---
