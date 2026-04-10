@@ -36,7 +36,7 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ## Vulnerability Research & CVE Hunting
 
-The GitHub Advisory query `credit:morimori-dev` currently shows **4 advisories** (checked on 2026-04-10 UTC): **3 CVEs + 1 GHSA-only advisory**.
+The GitHub Advisory query `credit:morimori-dev` currently shows 4 advisories (checked on 2026-04-10 UTC), and **3 of them have CVE IDs assigned**.
 
 ### CVE entries
 
@@ -46,13 +46,8 @@ The GitHub Advisory query `credit:morimori-dev` currently shows **4 advisories**
 | [CVE-2026-34203](https://github.com/nautobot/nautobot/security/advisories/GHSA-xmpv-j7p2-j873) | Nautobot | Password validators not enforced via REST API user management | 2.7 |
 | [CVE-2026-35187](https://github.com/pyload/pyload/security/advisories/GHSA-2wvg-62qm-gj33) | pyLoad | SSRF in parse_urls API endpoint via unvalidated URL parameter | 7.7 |
 
-### GHSA-only entry (no CVE listed)
-
-| Advisory ID | Project | Vulnerability | Severity |
-|-------------|---------|--------------|:--------:|
-| [GHSA-jfwg-rxf3-p7r9](https://github.com/advisories/GHSA-jfwg-rxf3-p7r9) | github.com/authorizerdev/authorizer (Go) | Authorizer: CQL/N1QL Injection in Cassandra and Couchbase Backends via fmt.Sprintf String Interpolation | High |
-
 All vulnerabilities were reported through responsible disclosure.  
+Note: One additional GHSA entry is listed in the query without a CVE assignment yet.  
 Related advisory query: <https://github.com/advisories?query=credit%3Amorimori-dev>
 
 ---
