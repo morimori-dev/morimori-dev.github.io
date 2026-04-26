@@ -1,5 +1,5 @@
 ---
-title: "OSCP 合格体験記 — 学習方法・試験戦略・自作チートシート公開"
+title: "OSCP 合格体験記"
 date: 2026-04-27
 description: "OSCP (OffSec Certified Professional) 合格までの学習ロードマップ、PEN-200 / Proving Grounds / HTB の活用方法、24時間試験の時間配分、Buffer Overflow撤廃後の試験傾向、そして実際に試験で使った自作チートシート (github.com/morimori-dev/OSCP) を公開。これから受験する方への実践的なガイド。"
 categories: [TechBlog]
@@ -130,7 +130,7 @@ lang: ja
 
 ### 収録内容
 
-- **Enumeration**: nmap / gobuster / ffuf / smbclient / enum4linux-ng のフラグ込みコピペ集
+- **Enumeration**: nmap / gobuster / **feroxbuster** / smbclient のフラグ込みコピペ集
 - **Web**: SQLi / LFI / SSTI / 各種 CMS（WordPress, Drupal, Joomla）の検査コマンド
 - **AD**: BloodHound 収集 → kerberoast → ASREProast → DCSync までのワンライナー
 - **Linux PrivEsc**: linpeas を流す前にチェックすべき手筋（SUID, sudo -l, cron, capabilities）
