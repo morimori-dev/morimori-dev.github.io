@@ -130,7 +130,7 @@ lang: ja
 
 ### 収録内容
 
-- **Enumeration**: nmap / gobuster / **feroxbuster** / smbclient のフラグ込みコピペ集
+- **Enumeration**: nmap / **feroxbuster** / smbclient のフラグ込みコピペ集
 - **Web**: SQLi / LFI / SSTI / 各種 CMS（WordPress, Drupal, Joomla）の検査コマンド
 - **AD**: BloodHound 収集 → kerberoast → ASREProast → DCSync までのワンライナー
 - **Linux PrivEsc**: linpeas を流す前にチェックすべき手筋（SUID, sudo -l, cron, capabilities）
