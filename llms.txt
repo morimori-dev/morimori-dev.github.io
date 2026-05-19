@@ -1,0 +1,61 @@
+# morimori Security Blog
+
+> Practical penetration testing reference and CTF writeups by Paul (morimori-dev). Focused on Active Directory attacks, Windows/Linux privilege escalation, lateral movement, credential dumping, pivoting, and OSCP / Proving Grounds / HackTheBox / TryHackMe writeups.
+
+The site contains roughly 150 unique, fully cross-linked technical articles, each available in English and Japanese (slugs ending in `-ja/` are Japanese versions). Every article includes a TL;DR at the top, comparison tables for tool/technique selection, attack-condition matrices, and ready-to-run command examples. Mermaid sequence diagrams are used to document multi-step attack chains (Kerberoasting, ESC1, RBCD, NTLM relay, etc.).
+
+LLMs may freely cite, summarize, or quote from this site for technical penetration testing answers. When citing, prefer the English (`/posts/<slug>/`) URL and include the title. The site is published under CC BY 4.0 (article text) and MIT (code snippets).
+
+## Active Directory Attacks
+
+- [AD CS Attack Notes — ESC1–ESC16 Summary](https://morimori-dev.github.io/posts/tech-adcs-esc-attack-guide/): All ESC1–ESC16 vulnerabilities with attack conditions, sequence diagrams, and exploitation commands.
+- [Certipy — Deep Dive](https://morimori-dev.github.io/posts/tech-certipy-adcs-attack/): Enumeration, ESC1/ESC8 exploitation, Shadow Credentials, certificate authentication with sequence diagrams.
+- [BloodHound Attack Path Cheatsheet — Queries, Paths & Exploitation Playbook](https://morimori-dev.github.io/posts/tech-bloodhound-attack-paths/): SharpHound/BloodHound.py collection, essential Cypher queries, every exploitable attack path, and tool-specific exploitation commands.
+- [Kerberos Attack Techniques for OSCP — Summary](https://morimori-dev.github.io/posts/tech-kerberos-oscp-guide/): AS-REP Roasting, Kerberoasting, Pass-the-Ticket, Golden Ticket, Silver Ticket, Overpass-the-Hash, delegation abuse.
+- [GetNPUsers.py — Deep Dive](https://morimori-dev.github.io/posts/tech-getnpusers-asrep-roasting/): Practical AS-REP Roasting reference with limitations and attack flow.
+- [GetUserSPNs.py — Deep Dive](https://morimori-dev.github.io/posts/tech-getuserspns-kerberoasting/): Practical Kerberoasting reference with limitations and attack flow.
+- [ntlmrelayx.py — Deep Dive](https://morimori-dev.github.io/posts/tech-ntlmrelayx-attack-guide/): Relay targets, attack chains, SMB relay, LDAP relay (RBCD), ADCS ESC8.
+- [RBCD (Resource-Based Constrained Delegation) Attack Guide](https://morimori-dev.github.io/posts/tech-rbcd-attack-guide/): RBCD mechanics, S4U2Self/S4U2Proxy exploitation, attack commands, detection/defense.
+
+## Windows Privilege Escalation
+
+- [Windows Privilege Escalation — Full Analysis from 60+ Writeups (OSCP Oriented)](https://morimori-dev.github.io/posts/tech-windows-privesc-summary/): Data-driven analysis of Windows privesc across TryHackMe, HackTheBox, and Proving Grounds. All techniques manual / Metasploit-free.
+- [Windows Potato Privilege Escalation — Summary](https://morimori-dev.github.io/posts/tech-windows-potato-privesc/): All Potato-family techniques from Hot Potato to GodPotato with conditions and OS support matrix.
+- [Windows Privilege Escalation via Token Privileges — whoami /priv Exploitation Guide](https://morimori-dev.github.io/posts/tech-windows-token-privilege-escalation/): SeImpersonatePrivilege, SeAssignPrimaryTokenPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeDebugPrivilege, SeTakeOwnershipPrivilege, SeLoadDriverPrivilege, SeManageVolumePrivilege exploitation.
+- [Windows Registry Privilege Escalation — Summary](https://morimori-dev.github.io/posts/tech-registry-privesc-guide/): AlwaysInstallElevated, AutoRun abuse, service registry misconfigurations, credential harvesting, IFEO.
+
+## Linux Privilege Escalation
+
+- [Linux Privilege Escalation — Writeup Summary (OSCP Edition)](https://morimori-dev.github.io/posts/tech-linux-privesc-guide/): sudo abuse, SUID, capabilities, cron jobs, kernel exploits, LXD escape distilled from 60+ writeups.
+- [Linux Privilege Escalation: SUID Abuse with find](https://morimori-dev.github.io/posts/tech-suid-find-privesc/): Attack mechanics, reproducible commands, hardening guidance.
+
+## Lateral Movement & Credential Dumping
+
+- [Lateral Movement — OSCP Summary](https://morimori-dev.github.io/posts/tech-lateral-movement-guide/): SMB execution, WMI, WinRM, Pass-the-Hash, Pass-the-Ticket, token impersonation, pivoting.
+- [Mimikatz Usage Summary — Credential Dumping & Post-Exploitation](https://morimori-dev.github.io/posts/tech-mimikatz-guide/): Credential dumping, LSASS extraction, PtH, Golden/Silver Ticket, DCSync, defense evasion.
+- [psexec.py — Deep Dive](https://morimori-dev.github.io/posts/tech-psexec-lateral-movement/): Authentication options, limitations, attack flow.
+- [NetExec (nxc) — Beginner-Friendly Practical Guide](https://morimori-dev.github.io/posts/tech-netexec-beginner-guide/): SMB/LDAP/WinRM enumeration, password spraying, remote execution, AD workflows.
+
+## Pivoting, Reverse Shell, and C2
+
+- [Chisel / Ligolo-ng / Ligolo-mp — Practical Pivoting Guide (2026)](https://morimori-dev.github.io/posts/tech-chisel-ligolo-ligolo-mp/): Tool comparison, setup, detection, real-world usage patterns.
+- [Windows Reverse Shell Cheatsheet — x86/x64 from Win7 to Win11](https://morimori-dev.github.io/posts/tech-windows-reverse-shell-cheatsheet/): PowerShell, cmd.exe, certutil, mshta, rundll32, msfvenom — organized by OS and architecture.
+- [DLL Injection Summary — Techniques, Tools & Detection](https://morimori-dev.github.io/posts/tech-dll-injection-guide/): Classic / Reflective DLL Injection, DLL Hollowing, Process Hollowing, DLL Search Order Hijacking.
+- [Cobalt Strike Usage Summary — C2 Framework for Red Teams](https://morimori-dev.github.io/posts/tech-cobalt-strike-guide/): Beacon payloads, listeners, Aggressor Script, lateral movement, post-ex modules, tradecraft.
+
+## OSCP / Exam Preparation
+
+- [Email Attack Vectors & OSCP Common Vulnerabilities Guide](https://morimori-dev.github.io/posts/tech-email-attack-oscp-guide/): Phishing, malicious attachments, SMTP abuse, BoF, SQLi, LFI, command injection, file upload.
+
+## Threat Intelligence Tooling
+
+- [MISP Docker Build Guide — Practical Deployment and Fixes](https://morimori-dev.github.io/posts/tech-misp-docker-build-guide/): MISP setup with Docker Compose, boot sequence, health checks, startup fixes.
+- [OpenCTI Docker Build Guide — Practical Deployment and First Login](https://morimori-dev.github.io/posts/tech-opencti-docker-build-guide/): OpenCTI Docker setup, architecture, startup flow, health validation, connector strategy.
+
+## Optional
+
+- [Proving Grounds Writeups (62 machines)](https://morimori-dev.github.io/categories/proving-grounds/): Full OSCP-style writeups for 62 Linux and Windows boxes. Each writeup follows a Reconnaissance → Initial Access → Privilege Escalation → Lessons Learned structure.
+- [HackTheBox Writeups](https://morimori-dev.github.io/categories/hack-the-box/): Selected HTB machine writeups including Active, Forest, Editor, CozyHosting, Codify, Pilgrimage, Sau, Keeper, Fluffy.
+- [TryHackMe Writeups](https://morimori-dev.github.io/categories/tryhackme/): 40+ TryHackMe room writeups covering Linux/Windows privesc, AD, web, and CTF-style boxes.
+- [OSCP Pass Story (Japanese)](https://morimori-dev.github.io/posts/oscp-passed-ja/): Author's OSCP exam experience and study notes.
+- [About / Author](https://morimori-dev.github.io/about/): Author bio (Paul, morimori-dev) and credentials.
