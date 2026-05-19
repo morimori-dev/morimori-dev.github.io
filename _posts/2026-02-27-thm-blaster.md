@@ -3,7 +3,7 @@ title: "TryHackMe - Blaster (Windows)"
 date: 2026-02-27
 description: "TryHackMe Blaster Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, feroxbuster, wordpress, rdp, winrm, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-blaster-ja/

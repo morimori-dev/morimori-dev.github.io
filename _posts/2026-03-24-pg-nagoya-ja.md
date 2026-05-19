@@ -3,7 +3,7 @@ title: "Proving Grounds - Nagoya (Windows)"
 date: 2026-03-24
 description: "Proving Grounds Nagoya Windows マシン解説。パスワードスプレー、Kerberoasting、DACL悪用チェーン、.NETデコンパイル、Silver Ticket経由MSSQL sysadminを解説。"
 categories: [Proving Grounds, Windows]
-tags: [kerberoast, password-spray, dacl-abuse, silver-ticket, mssql, dotnet-decompile, active-directory, bloodhound]
+tags: [proving-grounds, oscp, windows, feroxbuster, netexec, kerbrute, smb-enum, password-spraying, dictionary-attack, iis, mssql, smb, evil-winrm, winrm, kerberoasting]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-nagoya/

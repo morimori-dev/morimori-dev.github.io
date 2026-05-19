@@ -3,7 +3,7 @@ title: "Proving Grounds - Hutch (Windows)"
 date: 2026-03-24
 description: "Proving Grounds Hutch Windows マシン解説。LDAP匿名列挙、LAPSパスワード取得、WebDAVシェルアップロードとGodPotatoを解説。"
 categories: [Proving Grounds, Windows]
-tags: [ldap, laps, webdav, godpotato, active-directory, iis]
+tags: [proving-grounds, oscp, windows, ldap-enum, webshell, iis, psexec, laps, potato-attack, webdav, active-directory, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-hutch/

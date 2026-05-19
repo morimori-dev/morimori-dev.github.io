@@ -3,7 +3,7 @@ title: "Proving Grounds - DriftingBlue6 (Linux)"
 date: 2026-02-25
 description: "Proving Grounds DriftingBlue6 Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, linux, feroxbuster, hash-cracking, suid, kernel-exploit, cve-2016-5195, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-driftingblue6-ja/

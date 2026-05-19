@@ -3,7 +3,7 @@ title: "HackTheBox - MetaTwo (Linux)"
 date: 2026-02-27
 description: "Hack The Box MetaTwo Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
-tags: [php, privilege-escalation, rce, suid]
+tags: [hackthebox, linux, feroxbuster, nikto, wpscan, wordpress, dictionary-attack, sqlmap, sql-injection, xxe, apache, nginx, mysql, vsftpd, ftp]
 mermaid: true
 content_lang: en
 alt_ja: /posts/htb-metatwo-ja/

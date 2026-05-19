@@ -3,7 +3,7 @@ title: "Proving Grounds - LaVita (Linux)"
 date: 2026-02-25
 description: "Proving Grounds LaVita Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, linux, feroxbuster, apache, mysql, laravel, ssh, sudo, suid, linux-capabilities, cron, pspy, reverse-shell, cve-2021-3129]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-lavita/

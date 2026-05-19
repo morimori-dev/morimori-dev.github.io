@@ -3,7 +3,7 @@ title: "Proving Grounds - Algernon (Windows)"
 date: 2026-03-11
 description: "Proving Grounds Algernon Windows walkthrough covering reconnaissance and initial access via SmarterMail RCE (CVE-2019-7214)."
 categories: [Proving Grounds, Windows]
-tags: [rce, smartermail, ftp, cve-2019-7214]
+tags: [proving-grounds, oscp, windows, iis, ftp, cve-2019-7214, web, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-algernon-ja/

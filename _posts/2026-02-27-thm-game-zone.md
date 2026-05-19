@@ -3,7 +3,7 @@ title: "TryHackMe - Game Zone (Linux)"
 date: 2026-02-27
 description: "TryHackMe Game Zone Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, linux, feroxbuster, nikto, dictionary-attack, sqlmap, sql-injection, apache, mysql, ssh, hash-cracking, hashcat, sudo, suid, metasploit]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-game-zone-ja/

@@ -3,7 +3,7 @@ title: "TryHackMe - UltraTech (Windows)"
 date: 2026-02-27
 description: "TryHackMe UltraTech Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, gobuster, feroxbuster, ffuf, dirb, nikto, dictionary-attack, wordpress, apache, vsftpd, ftp, ssh, hash-cracking, hashcat]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-ultratech-ja/

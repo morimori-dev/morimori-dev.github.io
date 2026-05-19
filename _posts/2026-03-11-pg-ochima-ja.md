@@ -3,7 +3,7 @@ title: "Proving Grounds - Ochima (Linux)"
 date: 2026-03-11
 description: "Proving Grounds Ochima Linux マシン解説。Maltrail RCE (CVE-2023-27163) と world-writable な cron スクリプト経由の権限昇格を解説。"
 categories: [Proving Grounds, Linux]
-tags: [maltrail, rce, cve-2023-27163, cron, privilege-escalation]
+tags: [proving-grounds, oscp, linux, feroxbuster, apache, ssh, cron, pspy, reverse-shell, cve-2023-27163, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-ochima/

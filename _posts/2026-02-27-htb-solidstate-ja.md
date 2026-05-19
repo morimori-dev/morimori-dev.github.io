@@ -3,7 +3,7 @@ title: "HackTheBox - SolidState (Linux)"
 date: 2026-02-27
 description: "HackTheBox SolidState Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [privilege-escalation, rce]
+tags: [hackthebox, linux, apache, ssh, hash-cracking, suid, cve-2015-7611, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-solidstate/

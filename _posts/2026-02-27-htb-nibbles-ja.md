@@ -3,7 +3,7 @@ title: "HackTheBox - Nibbles (Linux)"
 date: 2026-02-27
 description: "HackTheBox Nibbles Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [php, privilege-escalation, rce]
+tags: [hackthebox, linux, feroxbuster, whatweb, hydra, brute-force, file-upload, apache, ssh, sudo, suid, metasploit, cve-2015-6967, web, privilege-escalation]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-nibbles/

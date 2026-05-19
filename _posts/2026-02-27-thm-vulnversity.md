@@ -3,7 +3,7 @@ title: "TryHackMe - Vulnversity (Windows)"
 date: 2026-02-27
 description: "TryHackMe Vulnversity Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, gobuster, apache, vsftpd, ftp, samba, smb, ssh, suid, kernel-exploit, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-vulnversity-ja/

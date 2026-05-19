@@ -3,7 +3,7 @@ title: "Proving Grounds - Marketing (Linux)"
 date: 2026-02-25
 description: "Proving Grounds Marketing Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
-tags: [pg, oscp, web, limesurvey, cve-2021-44967, sudo, credential-reuse, marketing]
+tags: [proving-grounds, oscp, linux, feroxbuster, ffuf, dirb, nikto, whatweb, apache, mssql, mysql, ssh, sudo, reverse-shell, cve-2021-44967]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-marketing/

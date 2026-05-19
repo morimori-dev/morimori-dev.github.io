@@ -3,7 +3,7 @@ title: "Proving Grounds - Bratarina (Windows)"
 date: 2026-02-25
 description: "Proving Grounds Bratarina Windows マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, windows, netexec, smb-enum, postgresql, samba, smb, ssh, suid, searchsploit, cve-2020-7247, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-bratarina/

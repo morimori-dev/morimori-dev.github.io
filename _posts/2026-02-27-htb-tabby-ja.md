@@ -3,7 +3,7 @@ title: "HackTheBox - Tabby (Linux)"
 date: 2026-02-27
 description: "HackTheBox Tabby Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [php, privilege-escalation, rce]
+tags: [hackthebox, linux, medusa, brute-force, dictionary-attack, lfi, tomcat, apache, mysql, ssh, hash-cracking, suid, lxd-escape, msfvenom, web]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-tabby/

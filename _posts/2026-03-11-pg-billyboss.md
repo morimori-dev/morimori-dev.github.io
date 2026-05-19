@@ -3,7 +3,7 @@ title: "Proving Grounds - Billyboss (Windows)"
 date: 2026-03-11
 description: "Proving Grounds Billyboss Windows walkthrough covering Nexus Repository Manager RCE (CVE-2020-10199) and SeImpersonatePrivilege escalation via GodPotato."
 categories: [Proving Grounds, Windows]
-tags: [nexus, rce, cve-2020-10199, seimpersonate, godpotato, privilege-escalation]
+tags: [proving-grounds, oscp, windows, iis, ftp, seimpersonate, potato-attack, searchsploit, reverse-shell, cve-2020-10199, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-billyboss-ja/

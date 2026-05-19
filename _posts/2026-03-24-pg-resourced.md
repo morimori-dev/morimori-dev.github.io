@@ -3,7 +3,7 @@ title: "Proving Grounds - Resourced (Windows)"
 date: 2026-03-24
 description: "Proving Grounds Resourced Windows walkthrough covering RPC null session user enumeration, LDAP description password leak, ntds.dit extraction, and RBCD privilege escalation."
 categories: [Proving Grounds, Windows]
-tags: [active-directory, rpc, smb, ldap, pass-the-hash, rbcd, secretsdump, evil-winrm, impacket]
+tags: [proving-grounds, oscp, windows, rpc-enum, smb-enum, smb, evil-winrm, winrm, pass-the-hash, rbcd, constrained-delegation, ntds-dit, secretsdump, psexec, active-directory]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-resourced-ja/

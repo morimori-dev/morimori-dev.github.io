@@ -3,7 +3,7 @@ title: "TryHackMe - Mr Robot CTF (Linux)"
 date: 2026-02-27
 description: "TryHackMe Mr Robot CTF Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, linux, feroxbuster, wpscan, wordpress, hydra, brute-force, apache, ssh, sudo, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-mr-robot-ctf-ja/

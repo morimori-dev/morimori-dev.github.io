@@ -3,7 +3,7 @@ title: "Proving Grounds - GlasgowSmile (Linux)"
 date: 2026-02-25
 description: "Proving Grounds GlasgowSmile Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, linux, feroxbuster, joomscan, joomla, apache, mysql, ssh, suid, cron, pspy, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-glasgowsmile-ja/

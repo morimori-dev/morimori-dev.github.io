@@ -3,7 +3,7 @@ title: "TryHackMe - Startup🌶 (Windows)"
 date: 2026-02-27
 description: "TryHackMe Startup🌶 Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, ffuf, apache, vsftpd, ftp, ssh, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-startup-ja/

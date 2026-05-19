@@ -3,7 +3,7 @@ title: "TryHackMe - Include (Linux)"
 date: 2026-02-27
 description: "TryHackMe Include Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, linux, ffuf, hydra, brute-force, lfi, path-traversal, apache, phpmyadmin, ssh, sudo, suid, linux-capabilities, cron, web]
 mermaid: true
 content_lang: ja
 alt_en: /posts/thm-include/

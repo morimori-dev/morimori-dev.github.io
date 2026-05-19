@@ -3,7 +3,7 @@ title: "Proving Grounds - BlackGate (Linux)"
 date: 2026-02-25
 description: "Proving Grounds BlackGate Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, linux, redis, sudo, suid, linpeas, kernel-exploit, cve-2021-4034, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-blackgate/

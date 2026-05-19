@@ -3,7 +3,7 @@ title: "TryHackMe - Steel Mountain (Windows)"
 date: 2026-02-27
 description: "TryHackMe Steel Mountain Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, smb-enum, xss, csrf, file-upload, apache, iis, smb, ftp, rdp, sudo, suid, metasploit, searchsploit]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-steel-mountain-ja/

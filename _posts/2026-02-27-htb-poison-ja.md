@@ -3,7 +3,7 @@ title: "HackTheBox - Poison (Linux)"
 date: 2026-02-27
 description: "HackTheBox Poison Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [php, privilege-escalation, rce]
+tags: [hackthebox, linux, feroxbuster, hydra, brute-force, apache, ssh, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-poison/

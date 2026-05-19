@@ -3,7 +3,7 @@ title: "Proving Grounds - Access (Windows)"
 date: 2026-03-24
 description: "Proving Grounds Access Windows マシン解説。.htaccessバイパス・Kerberoasting・RunasCs横移動・DLLハイジャックによる権限昇格を解説。"
 categories: [Proving Grounds, Windows]
-tags: [htaccess-bypass, kerberoast, dll-hijack, runascs, active-directory, php-upload]
+tags: [proving-grounds, oscp, windows, gobuster, dictionary-attack, file-upload, apache, mssql, winrm, kerberoasting, samaccountname-spoofing, hash-cracking, hashcat, dll-hijacking, msfvenom]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-access/

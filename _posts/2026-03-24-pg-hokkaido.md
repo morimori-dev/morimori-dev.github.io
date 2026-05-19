@@ -3,7 +3,7 @@ title: "Proving Grounds - hokkaido (Windows)"
 date: 2026-03-24
 description: "Proving Grounds hokkaido Windows walkthrough covering Kerberoasting, password spray, ForceChangePassword lateral movement, UAC bypass, and SeBackupPrivilege abuse."
 categories: [Proving Grounds, Windows]
-tags: [active-directory, kerberoast, password-spray, mssql, bloodyad, force-change-password, sebackup-privilege, uac-bypass, pass-the-hash]
+tags: [proving-grounds, oscp, windows, netexec, kerbrute, password-spraying, dictionary-attack, iis, mssql, rdp, evil-winrm, winrm, kerberoasting, pass-the-hash, secretsdump]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-hokkaido-ja/

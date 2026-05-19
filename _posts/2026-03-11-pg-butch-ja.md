@@ -3,7 +3,7 @@ title: "Proving Grounds - Butch (Windows)"
 date: 2026-03-11
 description: "Proving Grounds Butch Windows マシン解説。偵察と Web アプリへのデフォルト認証情報による初期アクセスを解説。"
 categories: [Proving Grounds, Windows]
-tags: [iis, smtp, ftp, weak-credentials]
+tags: [proving-grounds, oscp, windows, smb-enum, iis, smb, ftp, web, pentest]
 mermaid: false
 content_lang: ja
 alt_en: /posts/pg-butch/

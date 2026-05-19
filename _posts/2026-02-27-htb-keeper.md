@@ -3,7 +3,7 @@ title: "HackTheBox - Keeper (Linux)"
 date: 2026-02-27
 description: "Hack The Box Keeper Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
-tags: [privilege-escalation, rce]
+tags: [hackthebox, linux, nginx, ssh, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/htb-keeper-ja/

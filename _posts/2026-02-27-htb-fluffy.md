@@ -3,7 +3,7 @@ title: "HackTheBox - Fluffy (Windows)"
 date: 2026-02-27
 description: "Hack The Box Fluffy Windows writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Windows]
-tags: [active-directory, privilege-escalation, rce]
+tags: [hackthebox, windows, netexec, rpc-enum, smb-enum, dictionary-attack, samba, smb, evil-winrm, winrm, as-rep-roasting, bloodhound, active-directory, certipy, adcs]
 mermaid: true
 content_lang: en
 alt_ja: /posts/htb-fluffy-ja/

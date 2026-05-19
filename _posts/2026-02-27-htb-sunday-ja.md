@@ -3,7 +3,7 @@ title: "HackTheBox - Sunday (Linux)"
 date: 2026-02-27
 description: "HackTheBox Sunday Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [privilege-escalation, rce, suid]
+tags: [hackthebox, linux, hydra, brute-force, dictionary-attack, apache, mysql, ftp, ssh, hash-cracking, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-sunday/

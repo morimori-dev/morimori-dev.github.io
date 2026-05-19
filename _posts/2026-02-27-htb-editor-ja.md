@@ -3,7 +3,7 @@ title: "HackTheBox - Editor (Linux)"
 date: 2026-02-27
 description: "HackTheBox Editor Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [privilege-escalation, rce, suid]
+tags: [hackthebox, linux, nginx, ssh, suid, kernel-exploit, cve-2025-24893, cve-2024-32019, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-editor/

@@ -3,7 +3,7 @@ title: "TryHackMe - Expose (Windows)"
 date: 2026-02-27
 description: "TryHackMe Expose Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, ffuf, dirb, sqlmap, sql-injection, apache, mysql, redis, vsftpd, ftp, phpmyadmin, ssh, sudo, suid]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-expose-ja/

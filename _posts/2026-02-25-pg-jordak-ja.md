@@ -3,7 +3,7 @@ title: "Proving Grounds - Jordak (Linux)"
 date: 2026-02-25
 description: "Proving Grounds Jordak Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
-tags: [rce, cve-2023-26469, jorani, log-poisoning, sudo, env, privilege-escalation, web]
+tags: [proving-grounds, oscp, linux, feroxbuster, lfi, path-traversal, log-poisoning, apache, jorani, ssh, sudo, reverse-shell, cve-2023-26469, web, privilege-escalation]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-jordak/

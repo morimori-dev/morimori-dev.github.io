@@ -3,7 +3,7 @@ title: "HackTheBox - Legacy (Windows)"
 date: 2026-02-27
 description: "Hack The Box Legacy Windows writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [hackthebox, windows, enum4linux, rpc-enum, smb-enum, smb, ms17-010, eternalblue, sudo, suid, cve-2008-4250, cve-2017-0143, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/htb-legacy-ja/

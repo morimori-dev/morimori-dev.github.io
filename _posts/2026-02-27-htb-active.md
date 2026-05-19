@@ -3,7 +3,7 @@ title: "HackTheBox - Active (Windows)"
 date: 2026-02-27
 description: "Hack The Box Active Windows writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [hackthebox, windows, enum4linux, netexec, kerbrute, ldap-enum, rpc-enum, smb-enum, dictionary-attack, samba, smb, winrm, kerberoasting, gpp-decrypt, sysvol]
 mermaid: true
 content_lang: en
 alt_ja: /posts/htb-active-ja/

@@ -3,7 +3,7 @@ title: "TryHackMe - Stealth (Windows)"
 date: 2026-02-27
 description: "TryHackMe Stealth Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, ffuf, phpmyadmin, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/thm-stealth/

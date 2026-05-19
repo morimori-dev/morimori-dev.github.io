@@ -3,7 +3,7 @@ title: "TryHackMe - Attacktive Directory (Windows)"
 date: 2026-02-27
 description: "TryHackMe Attacktive Directory Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, enum4linux, kerbrute, iis, samba, smb, rdp, evil-winrm, winrm, as-rep-roasting, secretsdump, hash-cracking, suid, active-directory]
 mermaid: true
 content_lang: ja
 alt_en: /posts/thm-attacktive-directory/

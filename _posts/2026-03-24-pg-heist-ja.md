@@ -3,7 +3,7 @@ title: "Proving Grounds - Heist (Windows)"
 date: 2026-03-24
 description: "Proving Grounds Heist Windows マシン解説。SSRFによるNTLMリレー、gMSAパスワード取得、SeRestorePrivilege悪用を解説。"
 categories: [Proving Grounds, Windows]
-tags: [ssrf, ntlm-relay, responder, gmsa, SeRestorePrivilege, active-directory, evil-winrm]
+tags: [proving-grounds, oscp, windows, feroxbuster, dictionary-attack, ssrf, rdp, evil-winrm, winrm, pass-the-hash, responder, llmnr-poisoning, hash-cracking, gmsa, active-directory]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-heist/

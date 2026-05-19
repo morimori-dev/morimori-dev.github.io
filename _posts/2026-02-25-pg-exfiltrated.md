@@ -3,7 +3,7 @@ title: "Proving Grounds - Exfiltrated (Linux)"
 date: 2026-02-25
 description: "Proving Grounds Exfiltrated Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, linux, csrf, file-upload, webshell, suid, reverse-shell, cve-2018-19422, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-exfiltrated-ja/

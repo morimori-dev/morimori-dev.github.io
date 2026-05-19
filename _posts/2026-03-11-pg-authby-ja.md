@@ -3,7 +3,7 @@ title: "Proving Grounds - AuthBy (Windows)"
 date: 2026-03-11
 description: "Proving Grounds AuthBy Windows マシン解説。FTP列挙・認証情報クラック・PHPリバースシェル・MS11-046カーネルエクスプロイトを解説。"
 categories: [Proving Grounds, Windows]
-tags: [ftp, php, rce, ms11-046, cve-2011-1249, privilege-escalation]
+tags: [proving-grounds, oscp, windows, dictionary-attack, apache, ftp, hash-cracking, reverse-shell, cve-2011-1249, web, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/pg-authby/

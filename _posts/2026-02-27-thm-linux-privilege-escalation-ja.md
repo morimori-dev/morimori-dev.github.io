@@ -3,7 +3,7 @@ title: "TryHackMe - Linux Privilege Escalation (Windows)"
 date: 2026-02-27
 description: "TryHackMe Linux Privilege Escalation Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, dictionary-attack, ssh, hash-cracking, hashcat, sudo, suid, linux-capabilities, cron, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/thm-linux-privilege-escalation/

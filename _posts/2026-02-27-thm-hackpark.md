@@ -3,7 +3,7 @@ title: "TryHackMe - HackPark (Windows)"
 date: 2026-02-27
 description: "TryHackMe HackPark Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
-tags: [rce, suid, php, privilege-escalation]
+tags: [tryhackme, windows, nikto, hydra, brute-force, dictionary-attack, iis, rdp, winrm, ssh, mimikatz, gpp-decrypt, sysvol, ntds-dit, sudo]
 mermaid: true
 content_lang: en
 alt_ja: /posts/thm-hackpark-ja/

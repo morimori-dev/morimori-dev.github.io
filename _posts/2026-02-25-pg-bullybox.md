@@ -3,7 +3,7 @@ title: "Proving Grounds - bullyBox (Linux)"
 date: 2026-02-25
 description: "Proving Grounds bullyBox Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
-tags: [rce, suid, php, privilege-escalation]
+tags: [proving-grounds, oscp, linux, feroxbuster, ssti, mysql, sudo, suid, git-dump, cve-2022-3552, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/pg-bullybox-ja/

@@ -3,7 +3,7 @@ title: "HackTheBox - Bloker (Linux)"
 date: 2026-02-27
 description: "HackTheBox Bloker Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [php, privilege-escalation, rce, suid]
+tags: [hackthebox, linux, nikto, deserialization, apache, nginx, mysql, vsftpd, ftp, ssh, sudo, suid, sgid, linux-capabilities, cron]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-bloker/

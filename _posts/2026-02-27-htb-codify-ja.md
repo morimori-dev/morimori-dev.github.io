@@ -3,7 +3,7 @@ title: "HackTheBox - Codify (Linux)"
 date: 2026-02-27
 description: "HackTheBox Codify Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
-tags: [privilege-escalation, rce]
+tags: [hackthebox, linux, hydra, brute-force, dictionary-attack, apache, mysql, ssh, sudo, suid, cron, cve-2023-37466, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
 alt_en: /posts/htb-codify/

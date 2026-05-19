@@ -3,7 +3,7 @@ title: "HackTheBox - Editor (Linux)"
 date: 2026-02-27
 description: "Hack The Box Editor Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
-tags: [privilege-escalation, rce, suid]
+tags: [hackthebox, linux, nginx, ssh, suid, kernel-exploit, cve-2025-24893, cve-2024-32019, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
 alt_ja: /posts/htb-editor-ja/
