@@ -1,5 +1,5 @@
 ---
-title: "DLL Injection Complete Guide — Techniques, Tools & Detection"
+title: "DLL Injection Summary — Techniques, Tools & Detection"
 date: 2026-03-10
 description: "A comprehensive reference for DLL injection techniques in penetration testing. Covers Classic DLL Injection, Reflective DLL Injection, DLL Hollowing, Process Hollowing, and DLL Search Order Hijacking with practical examples and detection strategies."
 categories: [TechBlog]

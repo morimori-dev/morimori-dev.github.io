@@ -1,5 +1,5 @@
 ---
-title: "Linux Privilege Escalation — Complete Writeup Analysis (OSCP Edition)"
+title: "Linux Privilege Escalation — Writeup Summary (OSCP Edition)"
 date: 2026-03-07
 description: "A comprehensive Linux privilege escalation reference distilled from 60+ TryHackMe, HackTheBox, and Proving Grounds writeups. Covers sudo abuse, SUID, capabilities, cron jobs, kernel exploits, LXD escape, and more — with real machine examples and detection notes."
 categories: [TechBlog]

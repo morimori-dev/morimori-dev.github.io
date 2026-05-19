@@ -1,5 +1,5 @@
 ---
-title: "Linux 権限昇格 — Writeup全網羅分析（OSCP対策版）"
+title: "Linux 権限昇格 — Writeup 分析まとめ（OSCP 対策版）"
 date: 2026-03-07
 description: "TryHackMe・HackTheBox・Proving Grounds の60件超のWriteupから抽出したLinux権限昇格の完全リファレンス。sudo悪用・SUID・Capabilities・Cronジョブ・カーネルエクスプロイト・LXD脱出まで、実機マシン事例とコマンド付きで網羅。"
 categories: [TechBlog]

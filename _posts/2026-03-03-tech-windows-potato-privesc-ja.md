@@ -1,5 +1,5 @@
 ---
-title: "Windows Potato 権限昇格 — 完全ガイド"
+title: "Windows Potato 権限昇格まとめ"
 date: 2026-03-03
 description: "Hot Potato から GodPotato まで、Windows Potato ファミリーの権限昇格テクニックを網羅したリファレンス。攻撃条件・仕組み・コマンド・対象 OS を解説。"
 categories: [TechBlog]

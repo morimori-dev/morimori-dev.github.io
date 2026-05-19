@@ -1,5 +1,5 @@
 ---
-title: "Windows Registry Privilege Escalation — Complete Guide"
+title: "Windows Registry Privilege Escalation — Summary"
 date: 2026-03-10
 description: "A comprehensive reference for Windows privilege escalation techniques that leverage the Registry. Covers AlwaysInstallElevated, AutoRun abuse, service registry misconfigurations, credential harvesting, and image file execution options with practical OSCP-oriented examples."
 categories: [TechBlog]

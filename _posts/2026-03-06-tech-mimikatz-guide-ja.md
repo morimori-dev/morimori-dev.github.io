@@ -1,5 +1,5 @@
 ---
-title: "Mimikatz 完全使い方ガイド — 資格情報ダンプ & ポストエクスプロイテーション"
+title: "Mimikatz 使い方まとめ — 資格情報ダンプ & ポストエクスプロイテーション"
 date: 2026-03-06
 description: "ペネトレーションテスト・OSCP向け Mimikatz 活用リファレンス。資格情報ダンプ・LSASS 抽出・Pass-the-Hash・Golden/Silver Ticket 偽造・DCSync・トークン偽装まで、コマンド例とともに解説。"
 categories: [TechBlog]

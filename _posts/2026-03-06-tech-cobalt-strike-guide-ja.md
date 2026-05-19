@@ -1,5 +1,5 @@
 ---
-title: "Cobalt Strike 完全使い方ガイド — レッドチーム向け C2 フレームワーク"
+title: "Cobalt Strike 使い方まとめ — レッドチーム向け C2 フレームワーク"
 date: 2026-03-06
 description: "許可されたペネトレーションテスト向け Cobalt Strike 活用リファレンス。Beacon ペイロード・リスナー設定・Aggressor Script・横移動・ポストエクスプロイテーション・Malleable C2 プロファイルまで実践コマンドとともに解説。"
 categories: [TechBlog]

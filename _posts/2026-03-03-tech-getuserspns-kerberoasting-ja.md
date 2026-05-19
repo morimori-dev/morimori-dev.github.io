@@ -1,5 +1,5 @@
 ---
-title: "GetUserSPNs.py — できることとできないこと"
+title: "GetUserSPNs.py を深掘りしてみた"
 date: 2026-03-03
 description: "Impacket の GetUserSPNs.py (Kerberoasting) 実践リファレンス。できること・制限・使いどころ・Mermaid シーケンス図付きで解説。GetNPUsers.py との違いも比較。"
 categories: [TechBlog]

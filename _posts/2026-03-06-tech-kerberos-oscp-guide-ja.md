@@ -1,5 +1,5 @@
 ---
-title: "OSCP で使う Kerberos 攻撃テクニック完全ガイド"
+title: "OSCP で使う Kerberos 攻撃テクニックまとめ"
 date: 2026-03-06
 description: "OSCP 試験・Proving Grounds で活用できる Kerberos 攻撃テクニックを網羅したリファレンス。AS-REP Roasting・Kerberoasting・Pass-the-Ticket・Golden Ticket・Silver Ticket など各手法の仕組み・使いどころ・コマンド例を解説。"
 categories: [TechBlog]

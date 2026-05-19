@@ -1,5 +1,5 @@
 ---
-title: "Windowsレジストリ権限昇格 — 完全ガイド"
+title: "Windowsレジストリ権限昇格まとめ"
 date: 2026-03-10
 description: "Windowsレジストリを活用した権限昇格技術の包括的リファレンス。AlwaysInstallElevated、AutoRun悪用、サービスレジストリの設定ミス、認証情報窃取、Image File Execution Optionsを実践的なOSCP指向の例とともに解説。"
 categories: [TechBlog]

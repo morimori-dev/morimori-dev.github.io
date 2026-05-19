@@ -1,5 +1,5 @@
 ---
-title: "AD CS Attack Guide: ESC1–ESC16 Complete Reference"
+title: "AD CS Attack Notes — ESC1–ESC16 Summary"
 date: 2026-03-03
 description: "A comprehensive reference covering all ESC1–ESC16 Active Directory Certificate Services vulnerabilities — attack conditions, sequence diagrams, and exploitation commands."
 categories: [TechBlog]

@@ -1,5 +1,5 @@
 ---
-title: "Lateral Movement — Complete OSCP Reference"
+title: "Lateral Movement — OSCP Summary"
 date: 2026-03-06
 description: "A comprehensive lateral movement reference for OSCP and internal network pentests. Covers SMB execution, WMI, WinRM, Pass-the-Hash, Pass-the-Ticket, token impersonation, and pivoting — all in one place."
 categories: [TechBlog]
@@ -529,10 +529,10 @@ netsh advfirewall firewall add rule name="Block ADMIN$ from non-mgmt" ...
 
 ## Related Articles
 
-- [psexec.py — What It Can and Cannot Do](/posts/tech-psexec-lateral-movement/)
+- [psexec.py — Deep Dive](/posts/tech-psexec-lateral-movement/)
 - [NetExec (nxc) — Beginner-Friendly Practical Guide](/posts/tech-netexec-beginner-guide/)
 - [Chisel / Ligolo-ng / Ligolo-mp — Practical Pivoting Guide](/posts/tech-chisel-ligolo-ligolo-mp/)
-- [ntlmrelayx.py — What It Can and Cannot Do](/posts/tech-ntlmrelayx-attack-guide/)
+- [ntlmrelayx.py — Deep Dive](/posts/tech-ntlmrelayx-attack-guide/)
 - [Mimikatz — Complete Usage Guide](/posts/tech-mimikatz-guide/)
 - [Kerberos Attack Techniques for OSCP](/posts/tech-kerberos-oscp-guide/)
 

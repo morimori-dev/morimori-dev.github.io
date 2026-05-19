@@ -1,5 +1,5 @@
 ---
-title: "Cobalt Strike Complete Usage Guide — C2 Framework for Red Teams"
+title: "Cobalt Strike Usage Summary — C2 Framework for Red Teams"
 date: 2026-03-06
 description: "A comprehensive reference for Cobalt Strike usage in authorized penetration testing. Covers Beacon payloads, listeners, Aggressor Script, lateral movement, post-exploitation modules, and operational tradecraft for red team engagements."
 categories: [TechBlog]

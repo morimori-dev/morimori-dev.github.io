@@ -1,5 +1,5 @@
 ---
-title: "Kerberos Attack Techniques for OSCP — Complete Guide"
+title: "Kerberos Attack Techniques for OSCP — Summary"
 date: 2026-03-06
 description: "A comprehensive reference for Kerberos attack techniques applicable to OSCP and Proving Grounds. Covers AS-REP Roasting, Kerberoasting, Pass-the-Ticket, Golden Ticket, Silver Ticket, Overpass-the-Hash, and delegation abuse with attack flows, conditions, and command examples."
 categories: [TechBlog]

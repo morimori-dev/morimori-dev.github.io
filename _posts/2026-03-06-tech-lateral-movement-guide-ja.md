@@ -1,5 +1,5 @@
 ---
-title: "ラテラルムーブメント完全リファレンス — OSCP対応"
+title: "ラテラルムーブメントまとめ — OSCP 対応"
 date: 2026-03-06
 description: "OSCPと社内ネットワークペンテスト向けのラテラルムーブメント完全リファレンス。SMB実行・WMI・WinRM・Pass-the-Hash・Pass-the-Ticket・トークン偽装・ピボットをまとめて解説。"
 categories: [TechBlog]
@@ -526,10 +526,10 @@ netsh advfirewall firewall add rule name="Block ADMIN$ from non-mgmt" ...
 
 ## 関連記事
 
-- [psexec.py — できることとできないこと](/posts/tech-psexec-lateral-movement-ja/)
+- [psexec.py を深掘りしてみた](/posts/tech-psexec-lateral-movement-ja/)
 - [NetExec (nxc) — 初心者向け実践ガイド](/posts/tech-netexec-beginner-guide-ja/)
 - [Chisel / Ligolo-ng / Ligolo-mp — ピボットガイド](/posts/tech-chisel-ligolo-ligolo-mp-ja/)
-- [ntlmrelayx.py — できることとできないこと](/posts/tech-ntlmrelayx-attack-guide-ja/)
+- [ntlmrelayx.py を深掘りしてみた](/posts/tech-ntlmrelayx-attack-guide-ja/)
 - [Mimikatz 完全使用ガイド](/posts/tech-mimikatz-guide-ja/)
 - [Kerberos OSCP 攻撃テクニック](/posts/tech-kerberos-oscp-guide-ja/)
 

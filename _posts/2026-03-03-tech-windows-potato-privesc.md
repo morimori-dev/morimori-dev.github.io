@@ -1,5 +1,5 @@
 ---
-title: "Windows Potato Privilege Escalation — Complete Guide"
+title: "Windows Potato Privilege Escalation — Summary"
 date: 2026-03-03
 description: "A comprehensive reference covering all Potato-family privilege escalation techniques on Windows — from Hot Potato to GodPotato. Covers attack conditions, mechanisms, commands, and target OS support."
 categories: [TechBlog]
