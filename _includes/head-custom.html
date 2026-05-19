@@ -16,6 +16,75 @@
 {% if page.alt_en %}
 <meta name="lang-alt-en" content="{{ page.alt_en }}">
 {% endif %}
+
+{%- comment -%}
+  TechArticle JSON-LD — supplements Chirpy's default BlogPosting schema.
+  TechArticle signals to search engines and LLMs that the content is a
+  technical reference, which improves Answer Engine / AI search citations.
+{%- endcomment -%}
+{%- assign post_lang = page.content_lang | default: page.lang | default: "en" -%}
+{%- assign post_url = page.url | absolute_url -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": {{ page.title | strip_html | normalize_whitespace | jsonify }},
+  {%- if page.description %}
+  "description": {{ page.description | strip_html | normalize_whitespace | jsonify }},
+  {%- endif %}
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+  "inLanguage": "{{ post_lang }}",
+  "url": "{{ post_url }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ post_url }}"
+  },
+  "author": {
+    "@type": "Person",
+    "name": {{ site.social.name | default: "Paul" | jsonify }},
+    {%- if site.social.links %}
+    "sameAs": {{ site.social.links | jsonify }},
+    {%- endif %}
+    "url": "{{ '/about/' | absolute_url }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ site.title | jsonify }},
+    "url": "{{ '/' | absolute_url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ site.avatar | default: '/assets/img/avatar.png' | absolute_url }}"
+    }
+  }{%- if page.tags and page.tags.size > 0 %},
+  "keywords": {{ page.tags | join: ", " | jsonify }}{%- endif -%}
+  {%- if page.categories and page.categories.size > 0 %},
+  "articleSection": {{ page.categories | join: ", " | jsonify }}{%- endif -%}
+  {%- if page.alt_ja or page.alt_en %},
+  "workTranslation": {
+    "@type": "TechArticle",
+    "inLanguage": "{% if post_lang == 'ja' %}en{% else %}ja{% endif %}",
+    "url": "{{ page.alt_ja | default: page.alt_en | absolute_url }}"
+  }{%- endif %},
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Penetration Testers, Security Researchers, Red Teamers, OSCP / CPTS Candidates"
+  },
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+</script>
+
+{%- comment -%} hreflang alternates for EN/JA sister pages {%- endcomment -%}
+{%- if page.alt_ja %}
+<link rel="alternate" hreflang="ja" href="{{ page.alt_ja | absolute_url }}">
+<link rel="alternate" hreflang="en" href="{{ page.url | absolute_url }}">
+<link rel="alternate" hreflang="x-default" href="{{ page.url | absolute_url }}">
+{%- elsif page.alt_en %}
+<link rel="alternate" hreflang="en" href="{{ page.alt_en | absolute_url }}">
+<link rel="alternate" hreflang="ja" href="{{ page.url | absolute_url }}">
+<link rel="alternate" hreflang="x-default" href="{{ page.alt_en | absolute_url }}">
+{%- endif %}
 {% endif %}
 
 <!-- Google tag (gtag.js) -->
