@@ -17,22 +17,22 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ## Certifications
 
-| Certification                                                                | Issuer                                        | Year |
-| :--------------------------------------------------------------------------- | :-------------------------------------------- | :--- |
-| OSCP (Offensive Security Certified Professional)                             | OffSec                                        | 2026 |
-| HTB Certified Penetration Testing Specialist (CPTS) — 5/162                  | Hack The Box                                  | 2026 |
-| HTB Certified Junior Cybersecurity Associate (CJCA) — 5/5                    | Hack The Box                                  | 2026 |
-| Registered Information Security Specialist (RISS) | Information-technology Promotion Agency (IPA) | 2024 |
-| AWS Certified Security – Specialty                | Amazon Web Services (AWS)                     | 2023 |
-| AWS Certified Solutions Architect – Professional  | Amazon Web Services (AWS)                     | 2022 |
-| AWS Certified Solutions Architect – Associate     | Amazon Web Services (AWS)                     | 2021 |
-| IT Passport (IP)                                  | Information-technology Promotion Agency (IPA) | 2017 |
-| ITIL Foundation                                   | AXELOS Limited                                | 2016 |
-| Applied Information Technology Engineer (AP)      | Information-technology Promotion Agency (IPA) | 2016 |
-| Oracle Java Silver                                | Oracle Corporation                            | 2015 |
-| Fundamental Information Technology Engineer (FE)  | Information-technology Promotion Agency (IPA) | 2014 |
-| Oracle Java Bronze                                | Oracle Corporation                            | 2014 |
-| NTT .Com Master ADVANCED ★★                       | NTT Communications Corporation                | 2013 |
+| Certification                                            | Issuer                                        |
+| :------------------------------------------------------- | :-------------------------------------------- |
+| OSCP (Offensive Security Certified Professional)         | OffSec                                        |
+| CPTS (HTB Certified Penetration Testing Specialist) — 5/162 | Hack The Box                               |
+| CJCA (HTB Certified Junior Cybersecurity Associate) — 5/5 | Hack The Box                                 |
+| RISS (Registered Information Security Specialist)        | Information-technology Promotion Agency (IPA) |
+| AWS Certified Security – Specialty                       | Amazon Web Services (AWS)                     |
+| AWS Certified Solutions Architect – Professional         | Amazon Web Services (AWS)                     |
+| AWS Certified Solutions Architect – Associate            | Amazon Web Services (AWS)                     |
+| IP (IT Passport)                                         | Information-technology Promotion Agency (IPA) |
+| ITIL Foundation                                          | AXELOS Limited                                |
+| AP (Applied Information Technology Engineer)             | Information-technology Promotion Agency (IPA) |
+| Oracle Java Silver                                       | Oracle Corporation                            |
+| FE (Fundamental Information Technology Engineer)         | Information-technology Promotion Agency (IPA) |
+| Oracle Java Bronze                                       | Oracle Corporation                            |
+| NTT .Com Master ADVANCED ★★                              | NTT Communications Corporation                |
 
 ---
 
