@@ -7,7 +7,7 @@ title: About
 
 ## About Me
 
-I am a cybersecurity professional who began this journey in **August 2025**. I obtained the **OSCP** certification in March 2026 and the **HTB CPTS** and **HTB CJCA** in 2026, building hands-on skills across platforms such as **Hack The Box**, **TryHackMe**, and **OSCP Proving Grounds**. Each machine I worked through deepened my understanding of real-world attack techniques and defensive strategies.
+I am a cybersecurity professional. I hold the **OSCP**, **HTB CPTS**, and **HTB CJCA** certifications, building hands-on skills across platforms such as **Hack The Box**, **TryHackMe**, and **OSCP Proving Grounds**. Each machine I worked through deepened my understanding of real-world attack techniques and defensive strategies.
 
 As a non-native English speaker, I am also actively improving my English skills alongside my technical development. I believe that consistent effort and a willingness to step outside one's comfort zone are the foundations of meaningful progress — in both cybersecurity and language.
 
@@ -20,8 +20,8 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 | Certification                                            | Issuer                                        |
 | :------------------------------------------------------- | :-------------------------------------------- |
 | OSCP (Offensive Security Certified Professional)         | OffSec                                        |
-| CPTS (HTB Certified Penetration Testing Specialist) — 5/162 | Hack The Box                               |
-| CJCA (HTB Certified Junior Cybersecurity Associate) — 5/5 | Hack The Box                                 |
+| CPTS (HTB Certified Penetration Testing Specialist)      | Hack The Box                                  |
+| CJCA (HTB Certified Junior Cybersecurity Associate)      | Hack The Box                                  |
 | RISS (Registered Information Security Specialist)        | Information-technology Promotion Agency (IPA) |
 | AWS Certified Security – Specialty                       | Amazon Web Services (AWS)                     |
 | AWS Certified Solutions Architect – Professional         | Amazon Web Services (AWS)                     |
@@ -38,7 +38,7 @@ This site documents my ongoing journey in offensive security. I hope that my wri
 
 ## Vulnerability Research & CVE Hunting
 
-**19 published CVEs** with CVE IDs assigned and patched releases shipped (as of 2026-05-24 UTC). Vulnerability classes span SSRF, Stored XSS, SQLi, SSTI, CQL Injection, Privilege Escalation, ExifTool argument injection, and weak password validation. Two coordinated co-credited disclosures (Open WebUI / MantisBT). Five additional CVE IDs are assigned but not yet published.
+**19 published CVEs** with CVE IDs assigned and patched releases shipped. Vulnerability classes span SSRF, Stored XSS, SQLi, SSTI, CQL Injection, Privilege Escalation, ExifTool argument injection, and weak password validation. Two coordinated co-credited disclosures (Open WebUI / MantisBT). Five additional CVE IDs are assigned but not yet published.
 
 ### CVE entries
 
