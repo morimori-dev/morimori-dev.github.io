@@ -1,5 +1,5 @@
 ---
-title: "How I Passed OSCP"
+title: "My Journey to OSCP+"
 date: 2026-04-27
 description: "OSCP (OffSec Certified Professional) learning roadmap, how I used PEN-200 / Proving Grounds / HTB, time management during the 24-hour exam, exam trends after the Buffer Overflow removal, and my personal cheat sheet used in the actual exam (github.com/morimori-dev/OSCP). A practical guide for those planning to take the exam."
 categories: [TechBlog]
