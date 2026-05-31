@@ -159,4 +159,3 @@ OSCP が「24 時間で機械と格闘するマラソン」だとすれば、CJC
 - [HTB CJCA 公式](https://www.hackthebox.com/certifications/htb-certified-junior-cybersecurity-associate)
 - [HTB Academy — Junior Cybersecurity Analyst Path](https://academy.hackthebox.com/path/preview/junior-cybersecurity-analyst)
 - [SysReptor（レポートツール）](https://docs.sysreptor.com/)
-- [自作チートシート (OSCP/CJCA 共通)](https://github.com/morimori-dev/OSCP)
