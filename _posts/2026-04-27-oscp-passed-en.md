@@ -22,6 +22,8 @@ lang: en
   - AD set 40pts + Standalone 2 roots (40pts) = **80pts to pass** (don't chase the 3rd Standalone)
   - Invest 70% of your time in enumeration
 
+<img src="/assets/img/life/oscp/certificate.jpeg" alt="OSCP Certificate" class="normal" style="margin:1em 0;">
+
 ---
 
 ## Exam Results Summary
