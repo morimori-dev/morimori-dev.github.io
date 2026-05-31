@@ -22,6 +22,8 @@ lang: ja
   - Red Team 終了後は全時間をレポートと triage に投資する戦略が効いた
   - OSCP の次のステップとして **攻撃と防御の両面** を試せる、費用対効果の高い試験
 
+<img src="/assets/img/life/cjca/certificate.jpeg" alt="CJCA 合格証" class="normal" style="width:80%; margin:1em 0;">
+
 ---
 
 ## 試験結果サマリー
