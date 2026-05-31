@@ -152,26 +152,6 @@ OSCP が「24 時間で機械と格闘するマラソン」だとすれば、CJC
 
 ---
 
-## 次のステップ
-
-CJCA で Blue Team の感覚をつかんだことで、次に積みたいスキルの輪郭が見えてきました。
-
-| 資格 | 位置付け |
-|---|---|
-| **OSEP (PEN-300)** | AV/EDR バイパス、現実的な AD 攻撃の深掘り |
-| **CRTO** | Cobalt Strike / C2 運用、OPSEC 意識の体得 |
-| **OSWE (WEB-300)** | ホワイトボックス Web 監査、CVE ハンティングとの親和性 |
-
-攻撃側の技術を上げながら、CJCA で得た「自分の攻撃が SIEM にどう映るか」という視点も武器にしていきたいと思っています。
-
----
-
-## 謝辞
-
-2 か月連続（OSCP: 2026-03、CJCA: 2026-04）で試験に挑む機会と費用を出してくれた会社、そして直前期も含めて一度も嫌な顔をせず背中を押してくれた妻に、改めて感謝します。
-
----
-
 ## 参考リンク
 
 - [HTB CJCA 公式](https://www.hackthebox.com/certifications/htb-certified-junior-cybersecurity-associate)
