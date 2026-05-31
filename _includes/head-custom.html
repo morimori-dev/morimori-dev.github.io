@@ -10,6 +10,9 @@
 
 {% if page.layout == "post" %}
 <meta name="page-lang" content="{{ page.content_lang | default: page.lang | default: 'en' }}">
+{% unless page.categories contains "TechBlog" %}
+<meta name="show-lang-bar" content="true">
+{% endunless %}
 {% if page.alt_ja %}
 <meta name="lang-alt-ja" content="{{ page.alt_ja }}">
 {% endif %}
@@ -138,61 +141,73 @@
     margin-top: 0.58rem !important;
   }
 
-  /* ── Language selector (fixed, always visible) ── */
-  #lang-selector-wrap {
-    position: fixed;
-    top: 0.65rem;
-    right: 3.8rem;
-    z-index: 1030;
-    display: flex;
-    align-items: center;
-  }
-
-  /* On mobile, move selector to the left (after hamburger) to avoid title overlap */
-  @media (max-width: 849px) {
-    #lang-selector-wrap {
-      left: 3.6rem;
-      right: auto;
-    }
-  }
-  #lang-selector {
+  /* ── Language pill toggle — shared (topbar + per-post) ── */
+  .lang-pill {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.2rem;
+    padding: 3px;
     background: var(--topbar-bg, var(--main-bg, #1e1e1e));
     border: 1.5px solid rgba(240, 133, 53, 0.45);
     border-radius: 20px;
-    padding: 0.28rem 0.75rem;
-    cursor: default;
-    outline: none;
-    transition: transform 0.15s ease, border-color 0.15s, box-shadow 0.15s;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     user-select: none;
+    flex-shrink: 0;
+    cursor: default;
+    transition: transform 0.15s ease, border-color 0.15s, box-shadow 0.15s;
   }
-  #lang-selector:hover {
-    transform: scale(1.1);
+  .lang-pill:hover {
+    transform: scale(1.08);
     border-color: #f08535;
     box-shadow: 0 0 8px rgba(240, 133, 53, 0.3);
   }
-  #lang-selector .lang-opt {
+  .lang-pill .pill-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    bottom: 3px;
+    width: calc(50% - 3px);
+    background: #f08535;
+    border-radius: 14px;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* EN active: slide thumb to the right half */
+  .lang-pill[data-active="en"] .pill-thumb {
+    transform: translateX(100%);
+  }
+  .lang-pill .pill-opt {
+    position: relative;
+    z-index: 1;
+    min-width: 2rem;
+    padding: 0.18rem 0.55rem;
+    text-align: center;
     color: var(--text-muted-color, #888);
-    font-weight: 500;
-    padding: 0 0.15rem;
+    text-decoration: none;
     cursor: pointer;
+    font-weight: 500;
     transition: color 0.15s;
-    border-radius: 10px;
+    border-radius: 14px;
   }
-  #lang-selector .lang-opt:hover {
-    color: #f08535;
-  }
-  #lang-selector .lang-opt.active {
-    color: #f08535;
+  .lang-pill .pill-opt.on {
+    color: #fff;
     font-weight: 700;
     pointer-events: none;
+    cursor: default;
   }
-  #lang-selector .lang-sep {
-    color: rgba(127, 127, 127, 0.4);
-    font-weight: 300;
+
+  /* ── Topbar placement: flex child of #topbar, no position:fixed ── */
+  #lang-selector-wrap {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+  }
+  /* Mobile (<992px): order 9 puts pill just before search-trigger (order 10) */
+  @media (max-width: 991px) {
+    #lang-selector-wrap { order: 9; }
+    #search-trigger      { order: 10; }
   }
 
   /* ─────────────────────────────────────────────────────────
@@ -219,44 +234,11 @@
     display: none !important;
   }
 
-  /* ── Per-post language switcher bar ── */
+  /* ── Per-post pill: override background + add margin ── */
   .lang-switch-bar {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    margin-bottom: 1.75rem;
-    padding: 0.35rem 0.9rem;
     background: var(--card-bg, rgba(0,0,0,0.03));
-    border: 1.5px solid rgba(240, 133, 53, 0.35);
-    border-radius: 20px;
-    font-size: 0.9rem;
-    user-select: none;
-    transition: border-color 0.15s;
-  }
-  .lang-switch-bar:hover {
-    border-color: rgba(240, 133, 53, 0.65);
-  }
-  .lang-switch-bar .lang-btn {
-    text-decoration: none;
-    color: var(--text-muted-color, #888);
-    font-weight: 500;
-    padding: 0.05rem 0.35rem;
-    border-radius: 10px;
-    display: inline-block;
-    transition: color 0.15s, transform 0.15s ease;
-  }
-  .lang-switch-bar .lang-btn:hover {
-    color: #f08535;
-    transform: scale(1.15);
-  }
-  .lang-switch-bar .lang-btn.active {
-    color: #f08535;
-    font-weight: 700;
-    pointer-events: none;
-  }
-  .lang-switch-bar .lang-sep {
-    color: rgba(127, 127, 127, 0.4);
-    font-weight: 300;
+    font-size: 0.88rem;
+    margin-bottom: 1.75rem;
   }
 </style>
 
@@ -321,48 +303,58 @@
       return POST_LANG_MAP[path] || (/-ja\/?$/.test(path) ? "ja" : "en");
     }
 
-    /* ── Language selector (appended to body, pinned via CSS position:fixed) ── */
+    /* ── Language pill toggle (injected into #topbar as flex child) ── */
+    function makePill(activeIsJa) {
+      var pill = document.createElement("div");
+      pill.id = "lang-selector";
+      pill.className = "lang-pill";
+      pill.dataset.active = activeIsJa ? "ja" : "en";
+
+      var thumb = document.createElement("span");
+      thumb.className = "pill-thumb";
+
+      var jaOpt = document.createElement("span");
+      jaOpt.className = "pill-opt" + (activeIsJa ? " on" : "");
+      jaOpt.textContent = "JA";
+      jaOpt.dataset.lang = "ja";
+      jaOpt.addEventListener("click", function () { switchLang("ja"); });
+
+      var enOpt = document.createElement("span");
+      enOpt.className = "pill-opt" + (!activeIsJa ? " on" : "");
+      enOpt.textContent = "EN";
+      enOpt.dataset.lang = "en";
+      enOpt.addEventListener("click", function () { switchLang("en"); });
+
+      pill.appendChild(thumb);
+      pill.appendChild(jaOpt);
+      pill.appendChild(enOpt);
+      return pill;
+    }
+
     function injectTopbarSelector(pref) {
       if (document.getElementById("lang-selector-wrap")) return;
-      if (!document.body) return;
+      var topbar = document.getElementById("topbar");
+      if (!topbar && !document.body) return;
 
       var wrap = document.createElement("div");
       wrap.id = "lang-selector-wrap";
+      wrap.appendChild(makePill(isJapaneseLang(pref)));
 
-      var sel = document.createElement("div");
-      sel.id = "lang-selector";
-
-      var optEn = document.createElement("span");
-      optEn.className = "lang-opt" + (pref !== "ja" ? " active" : "");
-      optEn.textContent = "EN";
-      optEn.dataset.lang = "en";
-      optEn.addEventListener("click", function () { switchLang("en"); });
-
-      var sep = document.createElement("span");
-      sep.className = "lang-sep";
-      sep.textContent = "|";
-
-      var optJa = document.createElement("span");
-      optJa.className = "lang-opt" + (pref === "ja" ? " active" : "");
-      optJa.textContent = "日本語";
-      optJa.dataset.lang = "ja";
-      optJa.addEventListener("click", function () { switchLang("ja"); });
-
-      sel.appendChild(optEn);
-      sel.appendChild(sep);
-      sel.appendChild(optJa);
-      wrap.appendChild(sel);
-      document.body.appendChild(wrap);
+      if (topbar) {
+        topbar.appendChild(wrap);  /* flex child — no position:fixed needed */
+      } else {
+        document.body.appendChild(wrap);
+      }
     }
 
     function updateSelectorUI(lang) {
-      var opts = document.querySelectorAll("#lang-selector .lang-opt");
-      opts.forEach(function (opt) {
-        if (opt.dataset.lang === lang) {
-          opt.classList.add("active");
-        } else {
-          opt.classList.remove("active");
-        }
+      var pill = document.getElementById("lang-selector");
+      if (!pill) return;
+      var isJa = isJapaneseLang(lang);
+      pill.dataset.active = isJa ? "ja" : "en";
+      pill.querySelectorAll(".pill-opt").forEach(function (opt) {
+        var match = (opt.dataset.lang === "ja") === isJa;
+        opt.classList.toggle("on", match);
       });
     }
 
@@ -471,32 +463,32 @@
                     document.querySelector("main");
       if (!content) return;
 
+      var isJa = isJapaneseLang(currentLang);
+
       var bar = document.createElement("div");
-      bar.className = "lang-switch-bar";
+      bar.className = "lang-pill lang-switch-bar";
+      bar.dataset.active = isJa ? "ja" : "en";
+
+      var thumb = document.createElement("span");
+      thumb.className = "pill-thumb";
+
+      var jaBtn = document.createElement("a");
+      jaBtn.textContent = "JA";
+      jaBtn.className = "pill-opt" + (isJa ? " on" : "");
+      jaBtn.dataset.lang = "ja";
+      jaBtn.href = altJa || "#";
+      jaBtn.addEventListener("click", function () { setPrefLang("ja"); });
 
       var enBtn = document.createElement("a");
       enBtn.textContent = "EN";
-      enBtn.className = "lang-btn" + (currentLang === "en" ? " active" : "");
+      enBtn.className = "pill-opt" + (!isJa ? " on" : "");
+      enBtn.dataset.lang = "en";
       enBtn.href = altEn || "#";
-      enBtn.addEventListener("click", function () {
-        setPrefLang("en");
-      });
+      enBtn.addEventListener("click", function () { setPrefLang("en"); });
 
-      var sep = document.createElement("span");
-      sep.textContent = " | ";
-      sep.className = "lang-sep";
-
-      var jaBtn = document.createElement("a");
-      jaBtn.textContent = "日本語";
-      jaBtn.className = "lang-btn" + (currentLang === "ja" ? " active" : "");
-      jaBtn.href = altJa || "#";
-      jaBtn.addEventListener("click", function () {
-        setPrefLang("ja");
-      });
-
-      bar.appendChild(enBtn);
-      bar.appendChild(sep);
+      bar.appendChild(thumb);
       bar.appendChild(jaBtn);
+      bar.appendChild(enBtn);
       content.insertBefore(bar, content.firstChild);
     }
 
@@ -549,7 +541,11 @@
           return;
         }
 
-        injectPostSwitcher(currentLang, altJa, altEn);
+        /* Only show per-post switcher when an alternate version exists
+           AND the page is not TechBlog (meta show-lang-bar must be present) */
+        if ((altJa || altEn) && getMeta("show-lang-bar") === "true") {
+          injectPostSwitcher(currentLang, altJa, altEn);
+        }
       }
     }
 
