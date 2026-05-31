@@ -32,8 +32,6 @@ lang: ja
 | 結果 | **PASSED（100 / 100）** |
 | Red Team | 5 マシン 10 flag 全制覇（Day 1 完了） |
 | Blue Team | 約 40 件 triage 完了 |
-| レポート | SysReptor / 英語 / 商用品質 |
-| 合格通知 | 受験から約 20 営業日後 |
 
 ---
 
