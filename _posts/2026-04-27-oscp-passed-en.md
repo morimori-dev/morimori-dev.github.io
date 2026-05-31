@@ -105,26 +105,24 @@ Comfort on exam day has a surprising effect on the outcome. For the 2nd attempt,
 
 ---
 
-## Exam Day Time Log (Real Record)
+## Exam Day Time Log
 
-> **Exam window**: 2026-03-29 10:00 – 2026-03-30 10:00 (24 hours)
-
-| Time | Elapsed | Progress |
-|---|---|---|
-| 03/29 10:00 | 0h | Exam start, launched nmap against all machines simultaneously |
-| 03/29 10:30 | 0.5h | AD client entry → initial foothold |
-| 03/29 12:00 | 2h | AD client user.txt (10pts) |
-| 03/29 14:00 | 4h | AD pivot → DC compromise → full AD takeover (**40pts**) |
-| 03/29 14:30 | 4.5h | Light meal + started Standalone1 enumeration |
-| 03/29 16:30 | 6.5h | Standalone1 user.txt (10pts) |
-| 03/29 18:00 | 8h | Standalone1 root.txt (**+10pts / total 60pts**) |
-| 03/29 18:30 | 8.5h | Started Standalone2 enumeration |
-| 03/29 20:30 | 10.5h | Standalone2 user.txt (10pts) |
-| 03/29 22:00 | 12h | Standalone2 root.txt (**+10pts / total 80pts = passed**) |
-| 03/29 23:30 | 13.5h | Touched Standalone3 but didn't chase it; switched to screenshot and command cleanup |
-| 03/30 03:00 | 17h | 4h sleep |
-| 03/30 07:00 | 21h | Verified no missing screenshots, captured what was needed |
-| 03/30 10:00 | 24h | Exam ended |
+| Elapsed | Progress |
+|---|---|
+| 0h | Exam start, launched nmap against all machines simultaneously |
+| ~0.5h | AD environment entry → initial foothold |
+| ~2h | AD user.txt (10pts) |
+| ~4h | AD pivot → DC compromise → full AD takeover (**40pts**) |
+| ~4.5h | Light meal + started Standalone1 enumeration |
+| ~6.5h | Standalone1 user.txt (10pts) |
+| ~8h | Standalone1 root.txt (**+10pts / total 60pts**) |
+| ~8.5h | Started Standalone2 enumeration |
+| ~10.5h | Standalone2 user.txt (10pts) |
+| ~12h | Standalone2 root.txt (**+10pts / total 80pts = passed**) |
+| ~13.5h | Touched Standalone3 but didn't chase it; switched to screenshot and command cleanup |
+| ~17h | 4h sleep |
+| ~21h | Verified no missing screenshots, captured what was needed |
+| 24h | Exam ended |
 
 ### Decisions That Made the Difference
 

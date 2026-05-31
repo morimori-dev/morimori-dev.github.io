@@ -1,7 +1,7 @@
 ---
-title: "Passing CJCA with a Perfect Score"
+title: "Passing the HTB CJCA Exam"
 date: 2026-05-31
-description: "My experience passing the HTB Certified Junior Cybersecurity Associate (CJCA) with a perfect score. A detailed breakdown of the unique 3-phase structure — Red Team (5 machines), Blue Team (SIEM alert triage), and a commercial-quality pentest report — including how I approached each phase and what to watch out for."
+description: "My experience passing the HTB Certified Junior Cybersecurity Associate (CJCA). A detailed breakdown of the unique 3-phase structure — Red Team, Blue Team (SIEM alert triage), and a commercial-quality pentest report — including how I approached each phase and what to watch out for."
 categories: [TechBlog]
 tags: [cjca, htb, hackthebox, pentest, blue-team, siem, report, certification, career]
 mermaid: true
@@ -11,7 +11,7 @@ lang: en
 
 ## TL;DR
 
-- **Result**: CJCA **passed with a perfect score** (exam: 2026-04-29 → result: 2026-05)
+- **Result**: CJCA **passed** (exam: 2026-04-29 → result: 2026-05)
 - **Exam duration**: 5 days (120 hours)
 - **Red Team**: All flags captured
 - **Blue Team**: Completed SIEM alert TP/FP triage
