@@ -141,7 +141,7 @@
   /* ── Language selector (fixed, always visible) ── */
   #lang-selector-wrap {
     position: fixed;
-    top: 0.7rem;
+    top: 0.65rem;
     right: 3.8rem;
     z-index: 1030;
     display: flex;
@@ -156,24 +156,43 @@
     }
   }
   #lang-selector {
-    appearance: none;
-    -webkit-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
     background: var(--topbar-bg, var(--main-bg, #1e1e1e));
-    border: 1px solid rgba(127, 127, 127, 0.4);
-    border-radius: 5px;
-    color: inherit;
-    font-size: 0.78rem;
-    padding: 0.2rem 0.55rem;
-    cursor: pointer;
+    border: 1.5px solid rgba(240, 133, 53, 0.45);
+    border-radius: 20px;
+    padding: 0.28rem 0.75rem;
+    cursor: default;
     outline: none;
-    transition: border-color 0.15s;
+    transition: transform 0.15s ease, border-color 0.15s, box-shadow 0.15s;
+    font-size: 0.82rem;
+    user-select: none;
   }
   #lang-selector:hover {
-    border-color: rgba(127, 127, 127, 0.7);
+    transform: scale(1.1);
+    border-color: #f08535;
+    box-shadow: 0 0 8px rgba(240, 133, 53, 0.3);
   }
-  #lang-selector option {
-    background: var(--main-bg, #1e1e1e);
-    color: inherit;
+  #lang-selector .lang-opt {
+    color: var(--text-muted-color, #888);
+    font-weight: 500;
+    padding: 0 0.15rem;
+    cursor: pointer;
+    transition: color 0.15s;
+    border-radius: 10px;
+  }
+  #lang-selector .lang-opt:hover {
+    color: #f08535;
+  }
+  #lang-selector .lang-opt.active {
+    color: #f08535;
+    font-weight: 700;
+    pointer-events: none;
+  }
+  #lang-selector .lang-sep {
+    color: rgba(127, 127, 127, 0.4);
+    font-weight: 300;
   }
 
   /* ─────────────────────────────────────────────────────────
@@ -206,31 +225,37 @@
     align-items: center;
     gap: 0.25rem;
     margin-bottom: 1.75rem;
-    padding: 0.3rem 0.75rem;
+    padding: 0.35rem 0.9rem;
     background: var(--card-bg, rgba(0,0,0,0.03));
-    border: 1px solid var(--border-color, rgba(0,0,0,0.12));
-    border-radius: 6px;
-    font-size: 0.85rem;
+    border: 1.5px solid rgba(240, 133, 53, 0.35);
+    border-radius: 20px;
+    font-size: 0.9rem;
     user-select: none;
+    transition: border-color 0.15s;
+  }
+  .lang-switch-bar:hover {
+    border-color: rgba(240, 133, 53, 0.65);
   }
   .lang-switch-bar .lang-btn {
     text-decoration: none;
     color: var(--text-muted-color, #888);
     font-weight: 500;
-    padding: 0.05rem 0.25rem;
-    border-radius: 4px;
-    transition: color 0.15s;
+    padding: 0.05rem 0.35rem;
+    border-radius: 10px;
+    display: inline-block;
+    transition: color 0.15s, transform 0.15s ease;
   }
   .lang-switch-bar .lang-btn:hover {
-    color: var(--link-color, #4a90e2);
+    color: #f08535;
+    transform: scale(1.15);
   }
   .lang-switch-bar .lang-btn.active {
-    color: var(--link-color, #4a90e2);
+    color: #f08535;
     font-weight: 700;
     pointer-events: none;
   }
   .lang-switch-bar .lang-sep {
-    color: var(--border-color, #ccc);
+    color: rgba(127, 127, 127, 0.4);
     font-weight: 300;
   }
 </style>
@@ -304,32 +329,41 @@
       var wrap = document.createElement("div");
       wrap.id = "lang-selector-wrap";
 
-      var sel = document.createElement("select");
+      var sel = document.createElement("div");
       sel.id = "lang-selector";
 
-      var optEn = document.createElement("option");
-      optEn.value = "en";
+      var optEn = document.createElement("span");
+      optEn.className = "lang-opt" + (pref !== "ja" ? " active" : "");
       optEn.textContent = "EN";
-      optEn.selected = (pref !== "ja");
+      optEn.dataset.lang = "en";
+      optEn.addEventListener("click", function () { switchLang("en"); });
 
-      var optJa = document.createElement("option");
-      optJa.value = "ja";
+      var sep = document.createElement("span");
+      sep.className = "lang-sep";
+      sep.textContent = "|";
+
+      var optJa = document.createElement("span");
+      optJa.className = "lang-opt" + (pref === "ja" ? " active" : "");
       optJa.textContent = "日本語";
-      optJa.selected = (pref === "ja");
+      optJa.dataset.lang = "ja";
+      optJa.addEventListener("click", function () { switchLang("ja"); });
 
       sel.appendChild(optEn);
+      sel.appendChild(sep);
       sel.appendChild(optJa);
-      sel.addEventListener("change", function () {
-        switchLang(this.value);
-      });
-
       wrap.appendChild(sel);
       document.body.appendChild(wrap);
     }
 
     function updateSelectorUI(lang) {
-      var sel = document.getElementById("lang-selector");
-      if (sel) sel.value = lang;
+      var opts = document.querySelectorAll("#lang-selector .lang-opt");
+      opts.forEach(function (opt) {
+        if (opt.dataset.lang === lang) {
+          opt.classList.add("active");
+        } else {
+          opt.classList.remove("active");
+        }
+      });
     }
 
     function previousHeading(el) {
