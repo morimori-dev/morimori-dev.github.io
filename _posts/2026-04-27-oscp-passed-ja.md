@@ -22,7 +22,7 @@ lang: ja
   - AD セット 40 点 + Standalone 2 台 root (40 点) = **80 点で合格**（Standalone 3 台目は深追いしない）
   - 列挙 (Enumeration) に 7 割の時間を投資する
 
-<img src="/assets/img/life/oscp/certificate.jpeg" alt="OSCP 合格証" class="normal" style="margin:1em 0;">
+<img src="/assets/img/life/oscp/certificate.jpeg" alt="OSCP 合格証" class="normal" style="width:80%; margin:1em 0;">
 
 ---
 
