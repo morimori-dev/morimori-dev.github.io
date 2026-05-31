@@ -95,7 +95,7 @@ lang: ja
 
 - **ホワイトボード** — AD の構成図やピボット経路をその場で描いて整理するのに使った。頭の中だけで持ちきれない AD の接続関係が一目で見えるようになり、詰まったときの打開策を考えるのが格段に楽になった
 
-<img src="/assets/img/life/oscp/whiteboard.jpeg" alt="試験当日のホワイトボード" width="148" class="left" style="margin:0.5em 0 1em 0;">
+<img src="/assets/img/life/oscp/whiteboard.jpeg" alt="試験当日のホワイトボード" width="148" class="normal" style="margin:0.5em 0 1em 0;">
 
 - **Uber Eats** — 24 時間試験中に席を離れたくなかったため、食事はデリバリーで完結させた。体力と集中力の維持に直結するので侮れない。ちなみに北極ラーメンを注文した。これだけで東京に住んで良かったと何度も思えます
 
