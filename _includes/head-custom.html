@@ -245,6 +245,14 @@
     font-size: 0.88rem;
     margin-bottom: 1.75rem;
   }
+
+  /* ── Static tab bilingual content blocks (e.g. tags page) ── */
+  .tab-lang-ja { display: none; }
+  .tab-lang-en { display: block; }
+  html.lang-pref-ja .tab-lang-ja { display: block; }
+  html.lang-pref-ja .tab-lang-en { display: none; }
+  html.lang-pref-en .tab-lang-ja { display: none; }
+  html.lang-pref-en .tab-lang-en { display: block; }
 </style>
 
 <script>

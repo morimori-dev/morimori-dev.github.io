@@ -194,7 +194,12 @@ mermaid: true
   {% endif %}
 {% endfor %}
 
+<div class="tab-lang-en" markdown="1">
 ## Tag Explorer
+</div>
+<div class="tab-lang-ja" markdown="1">
+## タグエクスプローラー
+</div>
 
 <div id="tags" class="d-flex flex-wrap gap-2">
   {% assign sorted_tags = site.tags | sort %}
@@ -210,11 +215,23 @@ mermaid: true
 
 ---
 
+<div class="tab-lang-en" markdown="1">
 ## Attack Trends Overview
 
 The following charts are generated from post front matter across **{{ writeup_count }}** writeups (Linux: {{ linux_count }}, Windows: {{ windows_count }}). Each writeup is classified into a single primary intrusion category by priority order.
+</div>
+<div class="tab-lang-ja" markdown="1">
+## 攻撃トレンド概観
 
+以下のチャートは **{{ writeup_count }}** 件の Writeup（Linux: {{ linux_count }}、Windows: {{ windows_count }}）のフロントマターから自動生成しています。各 Writeup は優先順位に基づき主たる初期侵入カテゴリ 1 つに分類しています。
+</div>
+
+<div class="tab-lang-en" markdown="1">
 ### 1. Initial Intrusion Path (All)
+</div>
+<div class="tab-lang-ja" markdown="1">
+### 1. 初期侵入経路（全体）
+</div>
 
 ```mermaid
 pie showData title Initial intrusion vectors — all writeups
@@ -230,9 +247,19 @@ pie showData title Initial intrusion vectors — all writeups
   "Other" : {{ init_other }}
 ```
 
+<div class="tab-lang-en" markdown="1">
 > **Classification priority (first match wins):** AD/Kerberos → Known CVE → SQLi → File Upload → LFI → Code Injection → CMS → Brute-force → Misconfig → Other. This reflects the most distinctive vulnerability used to achieve initial foothold, not every technique applied.
+</div>
+<div class="tab-lang-ja" markdown="1">
+> **分類優先度（最初にマッチしたものを採用）:** AD/Kerberos → 既知 CVE → SQLi → ファイルアップロード → LFI → コードインジェクション → CMS → ブルートフォース → 設定不備 → その他。初期足場確立に用いた最も特徴的な脆弱性を採用しており、適用された全テクニックを網羅するものではありません。
+</div>
 
+<div class="tab-lang-en" markdown="1">
 ### 2. Initial Intrusion Path — Linux ({{ linux_count }} writeups)
+</div>
+<div class="tab-lang-ja" markdown="1">
+### 2. 初期侵入経路 — Linux（{{ linux_count }} 件）
+</div>
 
 ```mermaid
 pie showData title Linux initial intrusion vectors
@@ -247,7 +274,12 @@ pie showData title Linux initial intrusion vectors
   "Other" : {{ init_other_lin }}
 ```
 
+<div class="tab-lang-en" markdown="1">
 ### 3. Initial Intrusion Path — Windows ({{ windows_count }} writeups)
+</div>
+<div class="tab-lang-ja" markdown="1">
+### 3. 初期侵入経路 — Windows（{{ windows_count }} 件）
+</div>
 
 ```mermaid
 pie showData title Windows initial intrusion vectors
@@ -263,7 +295,12 @@ pie showData title Windows initial intrusion vectors
   "Other" : {{ init_other_win }}
 ```
 
+<div class="tab-lang-en" markdown="1">
 ### 4. Privilege Escalation — Linux ({{ linux_count }} writeups)
+</div>
+<div class="tab-lang-ja" markdown="1">
+### 4. 権限昇格 — Linux（{{ linux_count }} 件）
+</div>
 
 ```mermaid
 pie showData title Linux privilege escalation primitives
@@ -277,9 +314,19 @@ pie showData title Linux privilege escalation primitives
   "Other / Generic" : {{ pe_lin_other }}
 ```
 
-> **Linux priority (first match wins):** SUID → sudo → capabilities → cron/systemd → kernel exploit → credential reuse → PATH/library hijack → other.
+<div class="tab-lang-en" markdown="1">
+> **Linux priority (first match wins):** Kernel → capabilities → cron/systemd → PATH/library/writable file → credential / SSH key reuse → sudo → SUID → other.
+</div>
+<div class="tab-lang-ja" markdown="1">
+> **Linux 優先度（最初にマッチしたものを採用）:** カーネル → capabilities → cron/systemd → PATH/ライブラリ/書き込み可ファイル → 認証情報 / SSH 鍵流用 → sudo → SUID → その他。
+</div>
 
+<div class="tab-lang-en" markdown="1">
 ### 5. Privilege Escalation — Windows ({{ windows_count }} writeups)
+</div>
+<div class="tab-lang-ja" markdown="1">
+### 5. 権限昇格 — Windows（{{ windows_count }} 件）
+</div>
 
 ```mermaid
 pie showData title Windows privilege escalation primitives
@@ -293,8 +340,14 @@ pie showData title Windows privilege escalation primitives
   "Other / Generic" : {{ pe_win_other }}
 ```
 
-> **Windows priority (first match wins):** AD ACL/Kerberos/ADCS → Token impersonation → Service/MSI abuse → DLL hijack → UAC bypass → Kernel exploit → Credential dumping → other.
+<div class="tab-lang-en" markdown="1">
+> **Windows priority (first match wins):** AD ACL/Kerberos/ADCS → Credential dumping (LSASS/SAM/NTDS) → Token impersonation → Service/MSI abuse → DLL hijack → UAC bypass → Kernel exploit → other.
+</div>
+<div class="tab-lang-ja" markdown="1">
+> **Windows 優先度（最初にマッチしたものを採用）:** AD ACL / Kerberos / ADCS → 認証情報ダンプ（LSASS/SAM/NTDS）→ トークン偽装 → サービス / MSI 悪用 → DLL ハイジャック → UAC バイパス → カーネル exploit → その他。
+</div>
 
+<div class="tab-lang-en" markdown="1">
 ### 6. Technique Signal Snapshot
 
 | Technique Signal | Posts |
@@ -310,3 +363,21 @@ pie showData title Windows privilege escalation primitives
 | **Total Writeups** | **{{ writeup_count }}** |
 | **Linux Writeups** | **{{ linux_count }}** |
 | **Windows Writeups** | **{{ windows_count }}** |
+</div>
+<div class="tab-lang-ja" markdown="1">
+### 6. テクニックシグナル一覧
+
+| テクニックシグナル | 記事数 |
+| :--- | ---: |
+| `cve-*`（任意 CVE） | {{ tag_cve }} |
+| `suid` | {{ tag_suid }} |
+| `sudo` | {{ tag_sudo }} |
+| `web` | {{ tag_web }} |
+| `file-upload` | {{ tag_file_upload }} |
+| `sql-injection` / `sqli` | {{ tag_sqli }} |
+| `kerberoasting` | {{ tag_kerberoasting }} |
+| `rce` | {{ tag_rce }} |
+| **Writeup 総数** | **{{ writeup_count }}** |
+| **Linux Writeup** | **{{ linux_count }}** |
+| **Windows Writeup** | **{{ windows_count }}** |
+</div>
