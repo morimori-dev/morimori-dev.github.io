@@ -6,133 +6,162 @@ title: Tags
 mermaid: true
 ---
 
-{% assign linux_posts = 0 %}
-{% assign windows_posts = 0 %}
-{% assign other_posts = 0 %}
+{%- comment -%}
+  Initial intrusion category counters (priority-ordered, first match wins per writeup).
+  Categories derived from front-matter tags across ~150 writeups.
+{%- endcomment -%}
 
-{% assign linux_init_web = 0 %}
-{% assign linux_init_db = 0 %}
-{% assign linux_init_cred = 0 %}
-{% assign linux_init_cve = 0 %}
-{% assign linux_init_other = 0 %}
-
-{% assign windows_init_web = 0 %}
-{% assign windows_init_db = 0 %}
-{% assign windows_init_cred = 0 %}
-{% assign windows_init_cve = 0 %}
-{% assign windows_init_other = 0 %}
+{% assign init_cve = 0 %}
+{% assign init_ad = 0 %}
+{% assign init_sqli = 0 %}
+{% assign init_upload = 0 %}
+{% assign init_lfi = 0 %}
+{% assign init_injection = 0 %}
+{% assign init_brute = 0 %}
+{% assign init_cms = 0 %}
+{% assign init_misconfig = 0 %}
+{% assign init_other = 0 %}
 
 {% assign pe_suid = 0 %}
 {% assign pe_sudo = 0 %}
+{% assign pe_kernel = 0 %}
+{% assign pe_cred = 0 %}
 {% assign pe_other = 0 %}
 
 {% assign tag_rce = 0 %}
 {% assign tag_suid = 0 %}
-{% assign tag_php = 0 %}
 {% assign tag_web = 0 %}
 {% assign tag_sudo = 0 %}
 {% assign tag_cve = 0 %}
 {% assign tag_file_upload = 0 %}
-{% assign tag_postgresql = 0 %}
+{% assign tag_kerberoasting = 0 %}
+{% assign tag_sqli = 0 %}
+
+{% assign writeup_count = 0 %}
 
 {% for post in site.posts %}
-  {% assign is_linux = false %}
-  {% assign is_windows = false %}
-  {% assign has_cve = false %}
-
-  {% if post.categories contains 'Linux' %}
-    {% assign is_linux = true %}
-    {% assign linux_posts = linux_posts | plus: 1 %}
-  {% elsif post.categories contains 'Windows' %}
-    {% assign is_windows = true %}
-    {% assign windows_posts = windows_posts | plus: 1 %}
-  {% else %}
-    {% assign other_posts = other_posts | plus: 1 %}
+  {%- comment -%} Only count actual writeups, not tech-blog posts {%- endcomment -%}
+  {% assign is_writeup = false %}
+  {% if post.categories contains 'Proving Grounds' or post.categories contains 'Hack The Box' or post.categories contains 'TryHackMe' %}
+    {% assign is_writeup = true %}
   {% endif %}
 
-  {% for tag in post.tags %}
-    {% assign normalized_tag = tag | downcase %}
-    {% if normalized_tag contains 'cve-' %}
-      {% assign has_cve = true %}
-    {% endif %}
-  {% endfor %}
+  {% if is_writeup %}
+    {% assign writeup_count = writeup_count | plus: 1 %}
 
-  {% assign is_cred = false %}
-  {% if post.tags contains 'default-credentials' or post.tags contains 'credential-reuse' %}
-    {% assign is_cred = true %}
-  {% endif %}
+    {%- comment -%} Detect CVE presence {%- endcomment -%}
+    {% assign has_cve = false %}
+    {% for tag in post.tags %}
+      {% assign t = tag | downcase %}
+      {% if t contains 'cve-' %}
+        {% assign has_cve = true %}
+      {% endif %}
+    {% endfor %}
 
-  {% assign is_db = false %}
-  {% if post.tags contains 'postgresql' %}
-    {% assign is_db = true %}
-  {% endif %}
+    {%- comment -%} Initial intrusion classification (priority order) {%- endcomment -%}
+    {% assign classified = false %}
 
-  {% assign is_web = false %}
-  {% if post.tags contains 'php' or post.tags contains 'web' or post.tags contains 'file-upload' or post.tags contains 'command-injection' or post.tags contains 'log-poisoning' or post.tags contains 'limesurvey' or post.tags contains 'jorani' %}
-    {% assign is_web = true %}
-  {% endif %}
+    {%- comment -%} 1. AD/Kerberos attacks {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'kerberoasting' or post.tags contains 'asrep-roasting' or post.tags contains 'asreproast' or post.tags contains 'as-rep-roasting' or post.tags contains 'llmnr-poisoning' or post.tags contains 'eternalblue' or post.tags contains 'ms17-010' or post.tags contains 'responder' or post.tags contains 'samaccountname-spoofing' or post.tags contains 'kerbrute' %}
+        {% assign init_ad = init_ad | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
 
-  {% if is_linux %}
-    {% if is_cred %}
-      {% assign linux_init_cred = linux_init_cred | plus: 1 %}
-    {% elsif has_cve %}
-      {% assign linux_init_cve = linux_init_cve | plus: 1 %}
-    {% elsif is_db %}
-      {% assign linux_init_db = linux_init_db | plus: 1 %}
-    {% elsif is_web %}
-      {% assign linux_init_web = linux_init_web | plus: 1 %}
+    {%- comment -%} 2. Known CVE exploit (when no AD primary) {%- endcomment -%}
+    {% unless classified %}
+      {% if has_cve %}
+        {% assign init_cve = init_cve | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 3. SQL Injection {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'sql-injection' or post.tags contains 'sqli' or post.tags contains 'sqlmap' %}
+        {% assign init_sqli = init_sqli | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 4. File Upload / Webshell {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'file-upload' or post.tags contains 'webshell' %}
+        {% assign init_upload = init_upload | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 5. LFI / Path Traversal {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'lfi' or post.tags contains 'rfi' or post.tags contains 'path-traversal' or post.tags contains 'file-inclusion' %}
+        {% assign init_lfi = init_lfi | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 6. SSTI / Command Injection / Deserialization / XXE {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'ssti' or post.tags contains 'command-injection' or post.tags contains 'deserialization' or post.tags contains 'log-poisoning' or post.tags contains 'xxe' or post.tags contains 'rce' %}
+        {% assign init_injection = init_injection | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 7. CMS Exploit {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'wordpress' or post.tags contains 'wpscan' or post.tags contains 'joomla' or post.tags contains 'joomscan' or post.tags contains 'drupal' %}
+        {% assign init_cms = init_cms | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 8. Brute-force / Credential Spraying {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'brute-force' or post.tags contains 'dictionary-attack' or post.tags contains 'hydra' or post.tags contains 'medusa' or post.tags contains 'password-spraying' or post.tags contains 'default-credentials' or post.tags contains 'credential-reuse' %}
+        {% assign init_brute = init_brute | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 9. Service Misconfiguration {%- endcomment -%}
+    {% unless classified %}
+      {% if post.tags contains 'redis' or post.tags contains 'gitlab' or post.tags contains 'jenkins' or post.tags contains 'openfire' or post.tags contains 'tomcat' or post.tags contains 'phpmyadmin' or post.tags contains 'postgresql' or post.tags contains 'mssql' or post.tags contains 'samba' or post.tags contains 'smb-enum' or post.tags contains 'rpc-enum' or post.tags contains 'nfs' or post.tags contains 'snmp' or post.tags contains 'ftp' or post.tags contains 'vsftpd' or post.tags contains 'proftpd' %}
+        {% assign init_misconfig = init_misconfig | plus: 1 %}
+        {% assign classified = true %}
+      {% endif %}
+    {% endunless %}
+
+    {%- comment -%} 10. Other / Generic web {%- endcomment -%}
+    {% unless classified %}
+      {% assign init_other = init_other | plus: 1 %}
+    {% endunless %}
+
+    {%- comment -%} Privilege escalation classification {%- endcomment -%}
+    {% if post.tags contains 'suid' %}
+      {% assign pe_suid = pe_suid | plus: 1 %}
+    {% elsif post.tags contains 'sudo' %}
+      {% assign pe_sudo = pe_sudo | plus: 1 %}
+    {% elsif post.tags contains 'kernel-exploit' %}
+      {% assign pe_kernel = pe_kernel | plus: 1 %}
+    {% elsif post.tags contains 'credential-dumping' or post.tags contains 'credential-harvesting' or post.tags contains 'pass-the-hash' or post.tags contains 'dcsync' or post.tags contains 'mimikatz' %}
+      {% assign pe_cred = pe_cred | plus: 1 %}
     {% else %}
-      {% assign linux_init_other = linux_init_other | plus: 1 %}
+      {% assign pe_other = pe_other | plus: 1 %}
     {% endif %}
-  {% elsif is_windows %}
-    {% if is_cred %}
-      {% assign windows_init_cred = windows_init_cred | plus: 1 %}
-    {% elsif has_cve %}
-      {% assign windows_init_cve = windows_init_cve | plus: 1 %}
-    {% elsif is_db %}
-      {% assign windows_init_db = windows_init_db | plus: 1 %}
-    {% elsif is_web %}
-      {% assign windows_init_web = windows_init_web | plus: 1 %}
-    {% else %}
-      {% assign windows_init_other = windows_init_other | plus: 1 %}
-    {% endif %}
-  {% endif %}
 
-  {% if post.tags contains 'suid' or post.tags contains 'find' %}
-    {% assign pe_suid = pe_suid | plus: 1 %}
-  {% elsif post.tags contains 'sudo' %}
-    {% assign pe_sudo = pe_sudo | plus: 1 %}
-  {% else %}
-    {% assign pe_other = pe_other | plus: 1 %}
-  {% endif %}
-
-  {% if post.tags contains 'rce' %}
-    {% assign tag_rce = tag_rce | plus: 1 %}
-  {% endif %}
-  {% if post.tags contains 'suid' %}
-    {% assign tag_suid = tag_suid | plus: 1 %}
-  {% endif %}
-  {% if post.tags contains 'php' %}
-    {% assign tag_php = tag_php | plus: 1 %}
-  {% endif %}
-  {% if post.tags contains 'web' %}
-    {% assign tag_web = tag_web | plus: 1 %}
-  {% endif %}
-  {% if post.tags contains 'sudo' %}
-    {% assign tag_sudo = tag_sudo | plus: 1 %}
-  {% endif %}
-  {% if post.tags contains 'file-upload' %}
-    {% assign tag_file_upload = tag_file_upload | plus: 1 %}
-  {% endif %}
-  {% if post.tags contains 'postgresql' %}
-    {% assign tag_postgresql = tag_postgresql | plus: 1 %}
-  {% endif %}
-  {% if has_cve %}
-    {% assign tag_cve = tag_cve | plus: 1 %}
+    {%- comment -%} Technique signal totals {%- endcomment -%}
+    {% if post.tags contains 'rce' %}{% assign tag_rce = tag_rce | plus: 1 %}{% endif %}
+    {% if post.tags contains 'suid' %}{% assign tag_suid = tag_suid | plus: 1 %}{% endif %}
+    {% if post.tags contains 'web' %}{% assign tag_web = tag_web | plus: 1 %}{% endif %}
+    {% if post.tags contains 'sudo' %}{% assign tag_sudo = tag_sudo | plus: 1 %}{% endif %}
+    {% if post.tags contains 'file-upload' %}{% assign tag_file_upload = tag_file_upload | plus: 1 %}{% endif %}
+    {% if post.tags contains 'kerberoasting' %}{% assign tag_kerberoasting = tag_kerberoasting | plus: 1 %}{% endif %}
+    {% if post.tags contains 'sql-injection' or post.tags contains 'sqli' %}{% assign tag_sqli = tag_sqli | plus: 1 %}{% endif %}
+    {% if has_cve %}{% assign tag_cve = tag_cve | plus: 1 %}{% endif %}
   {% endif %}
 {% endfor %}
-
-{% assign total_posts = linux_posts | plus: windows_posts | plus: other_posts %}
 
 ## Tag Explorer
 
@@ -152,56 +181,47 @@ mermaid: true
 
 ## Attack Trends Overview
 
-The following charts are generated from post front matter and update automatically when new writeups are added.
+The following charts are generated from post front matter across **{{ writeup_count }}** writeups (Proving Grounds, Hack The Box, TryHackMe). Each writeup is classified into a single primary intrusion category by priority order.
 
-### 1. OS Distribution
+### 1. Initial Intrusion Path
 
 ```mermaid
-pie title OS distribution across writeups
-  "Linux" : {{ linux_posts }}
-  "Windows" : {{ windows_posts }}
-  "Other / Unknown" : {{ other_posts }}
+pie showData title Initial intrusion vectors across writeups
+  "Known CVE Exploit" : {{ init_cve }}
+  "AD / Kerberos Attack" : {{ init_ad }}
+  "SQL Injection" : {{ init_sqli }}
+  "File Upload / Webshell" : {{ init_upload }}
+  "LFI / Path Traversal" : {{ init_lfi }}
+  "Code / Template / Cmd Injection" : {{ init_injection }}
+  "CMS Exploit (WP / Joomla)" : {{ init_cms }}
+  "Brute-force / Default Creds" : {{ init_brute }}
+  "Service Misconfiguration" : {{ init_misconfig }}
+  "Other" : {{ init_other }}
 ```
 
-### 2. Initial Access Pattern by OS
+> **Classification priority (first match wins):** AD/Kerberos → Known CVE → SQLi → File Upload → LFI → Code Injection → CMS → Brute-force → Misconfig → Other. This reflects the most distinctive vulnerability used to achieve initial foothold, not every technique applied.
+
+### 2. Privilege Escalation Primitive
 
 ```mermaid
-pie title Linux initial access pattern
-  "Web / App Exploit" : {{ linux_init_web }}
-  "Database Abuse" : {{ linux_init_db }}
-  "Credential Abuse" : {{ linux_init_cred }}
-  "CVE-driven Exploit" : {{ linux_init_cve }}
-  "Other" : {{ linux_init_other }}
-```
-
-```mermaid
-pie title Windows initial access pattern
-  "Web / App Exploit" : {{ windows_init_web }}
-  "Database Abuse" : {{ windows_init_db }}
-  "Credential Abuse" : {{ windows_init_cred }}
-  "CVE-driven Exploit" : {{ windows_init_cve }}
-  "Other" : {{ windows_init_other }}
-```
-
-### 3. Privilege Escalation Primitive Share
-
-```mermaid
-pie title Privilege escalation primitive share
-  "SUID / GTFOBins-like" : {{ pe_suid }}
+pie showData title Privilege escalation primitives
+  "SUID / GTFOBins" : {{ pe_suid }}
   "sudo policy abuse" : {{ pe_sudo }}
+  "Kernel exploit" : {{ pe_kernel }}
+  "Credential dumping / PtH" : {{ pe_cred }}
   "Other / Generic" : {{ pe_other }}
 ```
 
-### 4. Technique Signal Snapshot
+### 3. Technique Signal Snapshot
 
 | Technique Signal | Posts |
 | :--- | ---: |
-| `rce` | {{ tag_rce }} |
+| `cve-*` (any CVE) | {{ tag_cve }} |
 | `suid` | {{ tag_suid }} |
-| `php` | {{ tag_php }} |
-| `web` | {{ tag_web }} |
 | `sudo` | {{ tag_sudo }} |
-| `cve-*` | {{ tag_cve }} |
+| `web` | {{ tag_web }} |
 | `file-upload` | {{ tag_file_upload }} |
-| `postgresql` | {{ tag_postgresql }} |
-| **Total Writeups** | **{{ total_posts }}** |
+| `sql-injection` / `sqli` | {{ tag_sqli }} |
+| `kerberoasting` | {{ tag_kerberoasting }} |
+| `rce` | {{ tag_rce }} |
+| **Total Writeups** | **{{ writeup_count }}** |

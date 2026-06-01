@@ -10,9 +10,6 @@
 
 {% if page.layout == "post" %}
 <meta name="page-lang" content="{{ page.content_lang | default: page.lang | default: 'en' }}">
-{% unless page.categories contains "TechBlog" %}
-<meta name="show-lang-bar" content="true">
-{% endunless %}
 {% if page.alt_ja %}
 <meta name="lang-alt-ja" content="{{ page.alt_ja }}">
 {% endif %}
@@ -208,6 +205,14 @@
   @media (max-width: 991px) {
     #lang-selector-wrap { order: 9; }
     #search-trigger      { order: 10; }
+  }
+
+  /* Desktop (>=992px): center the search input between breadcrumb and pill */
+  @media (min-width: 992px) {
+    #topbar #search {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
   }
 
   /* ─────────────────────────────────────────────────────────
@@ -541,11 +546,7 @@
           return;
         }
 
-        /* Only show per-post switcher when an alternate version exists
-           AND the page is not TechBlog (meta show-lang-bar must be present) */
-        if ((altJa || altEn) && getMeta("show-lang-bar") === "true") {
-          injectPostSwitcher(currentLang, altJa, altEn);
-        }
+        /* Per-post switcher disabled — use topbar pill exclusively */
       }
     }
 
