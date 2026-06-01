@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "blog",
+      "name": "jekyll",
       "runtimeExecutable": "bundle",
-      "runtimeArgs": ["exec", "jekyll", "serve", "--host", "127.0.0.1", "--port", "4000", "--livereload", "--incremental"],
+      "runtimeArgs": ["exec", "jekyll", "serve", "--livereload", "--port", "4000"],
       "port": 4000
     }
   ]
