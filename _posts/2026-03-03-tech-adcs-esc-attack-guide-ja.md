@@ -375,7 +375,7 @@ sequenceDiagram
 **1. 権限の確認**
 
 ```powershell
-# PowerView で権限を確認
+# PowerView.ps1 で権限を確認
 Import-Module .\PowerView.ps1
 Get-DomainObjectAcl -Identity "VulnerableTemplate" -ResolveGUIDs | Where-Object {$_.ActiveDirectoryRights -match "WriteProperty|WriteDacl"}
 ```
@@ -488,7 +488,7 @@ sequenceDiagram
 # Certify で権限を確認
 .\Certify.exe find /vulnerable
 
-# PowerView で詳細確認
+# PowerView.ps1 で詳細確認
 Get-DomainObjectAcl -Identity "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -ResolveGUIDs
 ```
 

