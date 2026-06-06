@@ -26,3 +26,6 @@ package-lock.json
 _sass/vendors
 assets/js/dist
 medium-export/
+
+# Claude Code
+.claude/
