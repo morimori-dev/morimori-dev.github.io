@@ -9,7 +9,7 @@ content_lang: en
 alt_ja: /posts/tech-rbcd-attack-guide-ja/
 ---
 
-# RBCD (Resource-Based Constrained Delegation) Attack Guide
+## RBCD (Resource-Based Constrained Delegation) Attack Guide
 
 A complete guide to privilege escalation via Kerberos delegation abuse.
 
