@@ -50,6 +50,11 @@ PORT     STATE SERVICE VERSION
 |_http-server-header: Maltrail/0.52
 ```
 
+主要な発見はポート `8338` の `Maltrail/0.52` です。CVE-2023-27163 と一致しており、非認証 RCE の初期アクセス経路に直結します。
+
+![Maltrail web interface showing version 0.52 on port 8338](/assets/img/pg/ochima/Pasted%20image%2020260301091820.png)
+*キャプション: 攻撃前に Maltrail インターフェースでバージョン 0.52 を確認。*
+
 ポート8338へのディレクトリ列挙でMaltrailのログインエンドポイントを特定:
 
 ```bash
