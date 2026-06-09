@@ -1,14 +1,17 @@
 ---
-title: "HackTheBox - Bloker (Linux)"
+title: "HackTheBox - Broker (Linux)"
 date: 2026-02-27
-permalink: /en/posts/htb-bloker/
+permalink: /en/posts/htb-broker/
 legacy_permalink: /posts/htb-bloker/
-description: "Hack The Box Bloker Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
+legacy_permalinks:
+  - /en/posts/htb-bloker/
+  - /posts/htb-broker/
+description: "Hack The Box Broker Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, nikto, deserialization, apache, nginx, mysql, vsftpd, ftp, ssh, sudo, suid, sgid, linux-capabilities, cron]
 mermaid: true
 content_lang: en
-alt_ja: /ja/posts/htb-bloker/
+alt_ja: /ja/posts/htb-broker/
 ---
 
 ## Overview
@@ -167,8 +170,8 @@ This command is used here to enumerate the exposed services and collect actionab
 
 ```
 
-![Screenshot showing exploitation evidence on bloker (step 1)](/assets/img/htb/bloker/Pasted%20image%2020250507224624.png)
-*Caption: Screenshot captured during bloker at stage 1 of the attack chain.*
+![Screenshot showing exploitation evidence on Broker (step 1)](/assets/img/htb/broker/Pasted%20image%2020250507224624.png)
+*Caption: Screenshot captured during Broker at stage 1 of the attack chain.*
 
 This command is used here to enumerate the exposed services and collect actionable fingerprints before exploitation. The focus is on discovering open ports, service versions, and protocol behavior that can guide the next attack decision. Key flags are kept visible so the same scan can be reproduced during validation or retesting.
 

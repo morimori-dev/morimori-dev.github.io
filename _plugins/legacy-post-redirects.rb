@@ -86,12 +86,28 @@ module Jekyll
     priority :low
 
     def generate(site)
+      redirects = {}
+
       site.posts.docs.each do |post|
-        legacy = post.data["legacy_permalink"].to_s
-        next if legacy.empty? || legacy == post.url
+        legacy_permalinks = [post.data["legacy_permalink"], post.data["legacy_permalinks"]]
+                            .flatten
+                            .compact
+                            .map(&:to_s)
+                            .reject(&:empty?)
+                            .uniq
 
         target_url = "#{site.config["url"].to_s.chomp("/")}#{post.url}"
-        site.static_files << LegacyPostRedirectFile.new(site, legacy, target_url)
+        legacy_permalinks.each do |legacy|
+          next if legacy == post.url
+
+          if redirects.key?(legacy)
+            Jekyll.logger.warn "Legacy redirect conflict:", "#{legacy} already points to #{redirects[legacy]}"
+            next
+          end
+
+          redirects[legacy] = target_url
+          site.static_files << LegacyPostRedirectFile.new(site, legacy, target_url)
+        end
       end
     end
   end
