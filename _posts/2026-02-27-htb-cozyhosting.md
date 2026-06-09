@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - CozyHosting (Linux)"
 date: 2026-02-27
+permalink: /en/posts/htb-cozyhosting/
+legacy_permalink: /posts/htb-cozyhosting/
 description: "Hack The Box CozyHosting Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, feroxbuster, nginx, ssh, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/htb-cozyhosting-ja/
+alt_ja: /ja/posts/htb-cozyhosting/
 ---
 
 ## Overview

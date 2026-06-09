@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Alfred (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-alfred/
+legacy_permalink: /posts/thm-alfred-ja/
 description: "TryHackMe Alfred Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, feroxbuster, jenkins, sudo, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-alfred/
+alt_en: /en/posts/thm-alfred/
 ---
 
 ## 概要

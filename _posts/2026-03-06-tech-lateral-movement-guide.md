@@ -1,12 +1,14 @@
 ---
 title: "Lateral Movement — OSCP Summary"
 date: 2026-03-06
+permalink: /en/posts/tech-lateral-movement-guide/
+legacy_permalink: /posts/tech-lateral-movement-guide/
 description: "A comprehensive lateral movement reference for OSCP and internal network pentests. Covers SMB execution, WMI, WinRM, Pass-the-Hash, Pass-the-Ticket, token impersonation, and pivoting — all in one place."
 categories: [TechBlog]
 tags: [windows, lateral-movement, impacket, smb, wmi, winrm, pass-the-hash, pass-the-ticket, oscp, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-lateral-movement-guide-ja/
+alt_ja: /ja/posts/tech-lateral-movement-guide/
 ---
 
 ## TL;DR
@@ -391,7 +393,7 @@ nxc winrm 10.10.10.0/24 -u administrator -p Password1
 
 ## 10. Pivoting / Network Tunneling
 
-Once inside, you often need to reach network segments not directly accessible. See the [Chisel / Ligolo-ng guide](/posts/tech-chisel-ligolo-ligolo-mp/) for full details.
+Once inside, you often need to reach network segments not directly accessible. See the [Chisel / Ligolo-ng guide](/en/posts/tech-chisel-ligolo-ligolo-mp/) for full details.
 
 ```mermaid
 flowchart LR
@@ -529,12 +531,12 @@ netsh advfirewall firewall add rule name="Block ADMIN$ from non-mgmt" ...
 
 ## Related Articles
 
-- [psexec.py — Deep Dive](/posts/tech-psexec-lateral-movement/)
-- [NetExec (nxc) — Beginner-Friendly Practical Guide](/posts/tech-netexec-beginner-guide/)
-- [Chisel / Ligolo-ng / Ligolo-mp — Practical Pivoting Guide](/posts/tech-chisel-ligolo-ligolo-mp/)
-- [ntlmrelayx.py — Deep Dive](/posts/tech-ntlmrelayx-attack-guide/)
-- [Mimikatz — Complete Usage Guide](/posts/tech-mimikatz-guide/)
-- [Kerberos Attack Techniques for OSCP](/posts/tech-kerberos-oscp-guide/)
+- [psexec.py — Deep Dive](/en/posts/tech-psexec-lateral-movement/)
+- [NetExec (nxc) — Beginner-Friendly Practical Guide](/en/posts/tech-netexec-beginner-guide/)
+- [Chisel / Ligolo-ng / Ligolo-mp — Practical Pivoting Guide](/en/posts/tech-chisel-ligolo-ligolo-mp/)
+- [ntlmrelayx.py — Deep Dive](/en/posts/tech-ntlmrelayx-attack-guide/)
+- [Mimikatz — Complete Usage Guide](/en/posts/tech-mimikatz-guide/)
+- [Kerberos Attack Techniques for OSCP](/en/posts/tech-kerberos-oscp-guide/)
 
 ---
 

@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Pilgrimage (Linux)"
 date: 2026-02-27
+permalink: /en/posts/htb-pilgrimage/
+legacy_permalink: /posts/htb-pilgrimage/
 description: "Hack The Box Pilgrimage Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, nginx, imagemagick, ssh, suid, searchsploit, cve-2022-44268, cve-2022-4510, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/htb-pilgrimage-ja/
+alt_ja: /ja/posts/htb-pilgrimage/
 ---
 
 ## Overview

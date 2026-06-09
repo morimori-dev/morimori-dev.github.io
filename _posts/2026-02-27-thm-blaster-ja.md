@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Blaster (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-blaster/
+legacy_permalink: /posts/thm-blaster-ja/
 description: "TryHackMe Blaster Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, feroxbuster, wordpress, rdp, winrm, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-blaster/
+alt_en: /en/posts/thm-blaster/
 ---
 
 ## 概要

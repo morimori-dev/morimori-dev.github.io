@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Tabby (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/htb-tabby/
+legacy_permalink: /posts/htb-tabby-ja/
 description: "HackTheBox Tabby Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, medusa, brute-force, dictionary-attack, lfi, tomcat, apache, mysql, ssh, hash-cracking, suid, lxd-escape, msfvenom, web]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-tabby/
+alt_en: /en/posts/htb-tabby/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Funbox (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-funbox/
+legacy_permalink: /posts/pg-funbox-ja/
 description: "Proving Grounds Funbox Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, wpscan, wordpress, dictionary-attack, apache, ssh, suid, cron, pspy, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-funbox/
+alt_en: /en/posts/pg-funbox/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Image (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-image/
+legacy_permalink: /posts/pg-image-ja/
 description: "Proving Grounds Image Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, command-injection, apache, imagemagick, ssh, suid, linpeas, reverse-shell, cve-2023-34152, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-image/
+alt_en: /en/posts/pg-image/
 ---
 
 ## 概要

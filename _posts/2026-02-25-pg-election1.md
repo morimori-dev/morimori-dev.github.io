@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Election1 (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-election1/
+legacy_permalink: /posts/pg-election1/
 description: "Proving Grounds Election1 Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, wordpress, phpmyadmin, ftp, suid, searchsploit, cve-2016-5734, cve-2019-12181, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-election1-ja/
+alt_ja: /ja/posts/pg-election1/
 ---
 
 ## Overview

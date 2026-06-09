@@ -1,12 +1,14 @@
 ---
 title: "Kerberos Attack Techniques for OSCP — Summary"
 date: 2026-03-06
+permalink: /en/posts/tech-kerberos-oscp-guide/
+legacy_permalink: /posts/tech-kerberos-oscp-guide/
 description: "A comprehensive reference for Kerberos attack techniques applicable to OSCP and Proving Grounds. Covers AS-REP Roasting, Kerberoasting, Pass-the-Ticket, Golden Ticket, Silver Ticket, Overpass-the-Hash, and delegation abuse with attack flows, conditions, and command examples."
 categories: [TechBlog]
 tags: [active-directory, kerberos, kerberoasting, asrep-roasting, pass-the-ticket, golden-ticket, silver-ticket, overpass-the-hash, impacket, rubeus, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-kerberos-oscp-guide-ja/
+alt_ja: /ja/posts/tech-kerberos-oscp-guide/
 ---
 
 ## TL;DR
@@ -627,11 +629,11 @@ kdestroy
 
 ## Related Posts
 
-- [GetNPUsers.py — AS-REP Roasting Complete Guide](/posts/tech-getnpusers-asrep-roasting/)
-- [GetUserSPNs.py — Kerberoasting Complete Guide](/posts/tech-getuserspns-kerberoasting/)
-- [RBCD Attack Guide](/posts/tech-rbcd-attack-guide/)
-- [ADCS Attack Guide (ESC1–16)](/posts/tech-adcs-esc-attack-guide/)
-- [NTLM Relay Attack Guide](/posts/tech-ntlmrelayx-attack-guide/)
+- [GetNPUsers.py — AS-REP Roasting Complete Guide](/en/posts/tech-getnpusers-asrep-roasting/)
+- [GetUserSPNs.py — Kerberoasting Complete Guide](/en/posts/tech-getuserspns-kerberoasting/)
+- [RBCD Attack Guide](/en/posts/tech-rbcd-attack-guide/)
+- [ADCS Attack Guide (ESC1–16)](/en/posts/tech-adcs-esc-attack-guide/)
+- [NTLM Relay Attack Guide](/en/posts/tech-ntlmrelayx-attack-guide/)
 
 ---
 

@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Educated (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-educated/
+legacy_permalink: /posts/pg-educated/
 description: "Proving Grounds Educated Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, suid, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-educated-ja/
+alt_ja: /ja/posts/pg-educated/
 ---
 
 ## Overview

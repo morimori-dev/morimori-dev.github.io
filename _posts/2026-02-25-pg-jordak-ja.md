@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Jordak (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-jordak/
+legacy_permalink: /posts/pg-jordak-ja/
 description: "Proving Grounds Jordak Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, lfi, path-traversal, log-poisoning, apache, jorani, ssh, sudo, reverse-shell, cve-2023-26469, web, privilege-escalation]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-jordak/
+alt_en: /en/posts/pg-jordak/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "Cobalt Strike 使い方まとめ — レッドチーム向け C2 フレームワーク"
 date: 2026-03-06
+permalink: /ja/posts/tech-cobalt-strike-guide/
+legacy_permalink: /posts/tech-cobalt-strike-guide-ja/
 description: "許可されたペネトレーションテスト向け Cobalt Strike 活用リファレンス。Beacon ペイロード・リスナー設定・Aggressor Script・横移動・ポストエクスプロイテーション・Malleable C2 プロファイルまで実践コマンドとともに解説。"
 categories: [TechBlog]
 tags: [cobalt-strike, c2, red-team, beacon, post-exploitation, lateral-movement, aggressor-script, pentest, active-directory]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-cobalt-strike-guide/
+alt_en: /en/posts/tech-cobalt-strike-guide/
 ---
 
 > **注意:** 本記事は許可されたペネトレーションテスト・レッドチーム演習・セキュリティ研究を目的としています。所有権がない、または書面による明示的な許可のないシステムへの無断使用は違法です。

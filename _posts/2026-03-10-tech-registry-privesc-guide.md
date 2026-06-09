@@ -1,12 +1,14 @@
 ---
 title: "Windows Registry Privilege Escalation — Summary"
 date: 2026-03-10
+permalink: /en/posts/tech-registry-privesc-guide/
+legacy_permalink: /posts/tech-registry-privesc-guide/
 description: "A comprehensive reference for Windows privilege escalation techniques that leverage the Registry. Covers AlwaysInstallElevated, AutoRun abuse, service registry misconfigurations, credential harvesting, and image file execution options with practical OSCP-oriented examples."
 categories: [TechBlog]
 tags: [windows, privilege-escalation, registry, alwaysinstallelevated, autorun, service-misconfig, credential-harvesting, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-registry-privesc-guide-ja/
+alt_ja: /ja/posts/tech-registry-privesc-guide/
 ---
 
 ## TL;DR

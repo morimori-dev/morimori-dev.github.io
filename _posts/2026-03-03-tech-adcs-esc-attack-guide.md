@@ -1,12 +1,14 @@
 ---
 title: "AD CS Attack Notes — ESC1–ESC16 Summary"
 date: 2026-03-03
+permalink: /en/posts/tech-adcs-esc-attack-guide/
+legacy_permalink: /posts/tech-adcs-esc-attack-guide/
 description: "A comprehensive reference covering all ESC1–ESC16 Active Directory Certificate Services vulnerabilities — attack conditions, sequence diagrams, and exploitation commands."
 categories: [TechBlog]
 tags: [active-directory, adcs, certificate-services, kerberos, privilege-escalation, windows, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-adcs-esc-attack-guide-ja/
+alt_ja: /ja/posts/tech-adcs-esc-attack-guide/
 ---
 
 ## AD CS Vulnerabilities (ESC1–16) Complete Attack Guide

@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Startup🌶 (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-startup/
+legacy_permalink: /posts/thm-startup-ja/
 description: "TryHackMe Startup🌶 Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, ffuf, apache, vsftpd, ftp, ssh, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-startup/
+alt_en: /en/posts/thm-startup/
 ---
 
 ## 概要

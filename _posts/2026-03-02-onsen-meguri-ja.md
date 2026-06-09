@@ -1,11 +1,13 @@
 ---
 title: "日本全国の温泉を巡っています — おすすめの温泉があれば教えてください"
 date: 2026-03-02
+permalink: /ja/posts/onsen-meguri/
+legacy_permalink: /posts/onsen-meguri-ja/
 description: "セキュリティの話ばかりのブログですが、たまには趣味の話を。"
 categories: [Life, Travel]
 tags: [温泉, 旅行, 日本]
 content_lang: ja
-alt_en: /posts/onsen-meguri/
+alt_en: /en/posts/onsen-meguri/
 ---
 
 セキュリティの話ばかりのブログですが、たまには趣味の話を。

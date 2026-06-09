@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Windows PrivEsc Arena (Windows)"
 date: 2026-02-27
+permalink: /en/posts/thm-windows-privesc-arena/
+legacy_permalink: /posts/thm-windows-privesc-arena/
 description: "TryHackMe Windows PrivEsc Arena Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, rdp, sudo, suid, alwaysinstallelevated, unquoted-service-path, msfvenom, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-windows-privesc-arena-ja/
+alt_ja: /ja/posts/thm-windows-privesc-arena/
 ---
 
 ## Overview

@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Simple CTF (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-simple-ctf/
+legacy_permalink: /posts/thm-simple-ctf/
 description: "TryHackMe Simple CTF Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, dictionary-attack, sql-injection, apache, vsftpd, ftp, ssh, sudo, suid, searchsploit, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-simple-ctf-ja/
+alt_ja: /ja/posts/thm-simple-ctf/
 ---
 
 ## Overview

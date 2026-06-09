@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Vault (Windows)"
 date: 2026-03-24
+permalink: /ja/posts/pg-vault/
+legacy_permalink: /posts/pg-vault-ja/
 description: "Proving Grounds Vault Windows マシン解説。SMB Guest RID ブルートフォース、ntlm_theft による NTLMv2 ハッシュ窃取、GPO 悪用による権限昇格を解説。"
 categories: [Proving Grounds, Windows]
 tags: [proving-grounds, oscp, windows, netexec, smb-enum, dictionary-attack, smb, evil-winrm, winrm, sysvol, responder, llmnr-poisoning, hash-cracking, active-directory, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-vault/
+alt_en: /en/posts/pg-vault/
 ---
 
 ## 概要

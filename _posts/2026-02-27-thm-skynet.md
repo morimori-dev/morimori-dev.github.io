@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Skynet (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-skynet/
+legacy_permalink: /posts/thm-skynet/
 description: "TryHackMe Skynet Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, feroxbuster, enum4linux, rpc-enum, smb-enum, hydra, brute-force, apache, samba, smb, ssh, sudo, suid, cron]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-skynet-ja/
+alt_ja: /ja/posts/thm-skynet/
 ---
 
 ## Overview

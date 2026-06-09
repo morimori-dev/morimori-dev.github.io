@@ -1,12 +1,15 @@
 ---
 title: "Passing the HTB CPTS Exam"
 date: 2026-05-31
+permalink: /en/posts/cpts-passed/
+legacy_permalink: /posts/cpts-passed-en/
 description: "My experience passing the HTB Certified Penetration Testing Specialist (CPTS) on the first attempt with all 14 flags. A full breakdown of the multi-subnet enterprise network, AD attack approach, time management strategy, and report writing. Includes a difficulty comparison with OSCP and CJCA."
 categories: [TechBlog]
 tags: [cpts, htb, hackthebox, pentest, active-directory, certification, career]
 mermaid: true
 content_lang: en
 lang: en
+alt_ja: /ja/posts/cpts-passed/
 ---
 
 ## TL;DR

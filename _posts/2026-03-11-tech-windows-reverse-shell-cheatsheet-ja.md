@@ -1,12 +1,15 @@
 ---
 title: "Windowsリバースシェル チートシート — Win7〜Win11 x86/x64対応"
 date: 2026-03-11
+permalink: /ja/posts/tech-windows-reverse-shell-cheatsheet/
+legacy_permalink: /posts/tech-windows-reverse-shell-cheatsheet-ja/
 description: "Windowsペネトレーションテストのための完全なリバースシェルコマンドリファレンス。PowerShell、cmd.exe、certutil、mshta、rundll32、msfvenomペイロードなどをOSバージョン別・アーキテクチャ別（x86/x64）に整理し、互換性マトリックス付きで解説。"
 categories: [TechBlog]
 tags: [reverse-shell, windows, powershell, cmd, msfvenom, pentest, oscp, post-exploitation, rce, cheatsheet]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/tech-windows-reverse-shell-cheatsheet/
 ---
 
 ## TL;DR

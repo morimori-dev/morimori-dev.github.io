@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Mantis (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-mantis/
+legacy_permalink: /posts/pg-mantis-ja/
 description: "Proving Grounds Mantis Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, mysql, ssh, sudo, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-mantis/
+alt_en: /en/posts/pg-mantis/
 ---
 
 ## 概要

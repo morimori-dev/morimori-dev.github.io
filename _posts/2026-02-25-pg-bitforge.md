@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - BitForge (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-bitforge/
+legacy_permalink: /posts/pg-bitforge/
 description: "Proving Grounds BitForge Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, webshell, mysql, sudo, suid, cve-2024-27115, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-bitforge-ja/
+alt_ja: /ja/posts/pg-bitforge/
 ---
 
 ## Overview

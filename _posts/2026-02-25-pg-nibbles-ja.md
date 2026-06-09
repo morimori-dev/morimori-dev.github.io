@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Nibbles (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-nibbles/
+legacy_permalink: /posts/pg-nibbles-ja/
 description: "Proving Grounds Nibbles Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, apache, postgresql, vsftpd, ftp, ssh, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-nibbles/
+alt_en: /en/posts/pg-nibbles/
 ---
 
 ## 概要

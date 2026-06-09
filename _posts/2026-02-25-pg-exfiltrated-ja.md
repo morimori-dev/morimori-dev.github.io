@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Exfiltrated (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-exfiltrated/
+legacy_permalink: /posts/pg-exfiltrated-ja/
 description: "Proving Grounds Exfiltrated Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, csrf, file-upload, webshell, suid, reverse-shell, cve-2018-19422, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-exfiltrated/
+alt_en: /en/posts/pg-exfiltrated/
 ---
 
 ## 概要

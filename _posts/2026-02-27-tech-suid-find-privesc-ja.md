@@ -1,12 +1,14 @@
 ---
 title: "Linux 権限昇格：SUID を悪用した find による root 取得"
 date: 2026-02-27
+permalink: /ja/posts/tech-suid-find-privesc/
+legacy_permalink: /posts/tech-suid-find-privesc-ja/
 description: "SUID ビットが設定された find を使った Linux 権限昇格の仕組み、再現手順、検知ポイント、対策を解説。"
 categories: [TechBlog]
 tags: [suid, privilege-escalation, linux, gtfobins, beginner]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-suid-find-privesc/
+alt_en: /en/posts/tech-suid-find-privesc/
 ---
 
 ## TL;DR

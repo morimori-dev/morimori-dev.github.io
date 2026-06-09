@@ -1,12 +1,14 @@
 ---
 title: "MISP Docker Build Guide — Practical Deployment and Fixes"
 date: 2026-03-05
+permalink: /en/posts/tech-misp-docker-build-guide/
+legacy_permalink: /posts/tech-misp-docker-build-guide/
 description: "A practical setup guide for MISP with Docker Compose, including boot sequence, health checks, first login, and common startup fixes." 
 categories: [TechBlog]
 tags: [misp, threat-intelligence, docker, soc, osint, blue-team, devsecops]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-misp-docker-build-guide-ja/
+alt_ja: /ja/posts/tech-misp-docker-build-guide/
 ---
 
 ## TL;DR

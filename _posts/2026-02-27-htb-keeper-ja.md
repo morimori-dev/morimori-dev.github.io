@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Keeper (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/htb-keeper/
+legacy_permalink: /posts/htb-keeper-ja/
 description: "HackTheBox Keeper Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, nginx, ssh, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-keeper/
+alt_en: /en/posts/htb-keeper/
 ---
 
 ## 概要

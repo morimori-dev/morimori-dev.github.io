@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - ClamAV (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-clamav/
+legacy_permalink: /posts/pg-clamav-ja/
 description: "Proving Grounds ClamAV Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, apache, samba, smb, clamav, ssh, suid, searchsploit, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-clamav/
+alt_en: /en/posts/pg-clamav/
 ---
 
 ## 概要

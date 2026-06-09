@@ -1,12 +1,14 @@
 ---
 title: "Cobalt Strike Usage Summary — C2 Framework for Red Teams"
 date: 2026-03-06
+permalink: /en/posts/tech-cobalt-strike-guide/
+legacy_permalink: /posts/tech-cobalt-strike-guide/
 description: "A comprehensive reference for Cobalt Strike usage in authorized penetration testing. Covers Beacon payloads, listeners, Aggressor Script, lateral movement, post-exploitation modules, and operational tradecraft for red team engagements."
 categories: [TechBlog]
 tags: [cobalt-strike, c2, red-team, beacon, post-exploitation, lateral-movement, aggressor-script, pentest, active-directory]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-cobalt-strike-guide-ja/
+alt_ja: /ja/posts/tech-cobalt-strike-guide/
 ---
 
 > **Notice:** This guide is intended for authorized penetration testing, red team engagements, and security research only. Unauthorized use of Cobalt Strike against systems you do not own or have explicit written permission to test is illegal.

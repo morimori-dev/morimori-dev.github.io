@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - MZEEAV (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-mzeeav/
+legacy_permalink: /posts/pg-mzeeav-ja/
 description: "Proving Grounds MZEEAV Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, file-upload, apache, ssh, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-mzeeav/
+alt_en: /en/posts/pg-mzeeav/
 ---
 
 ## 概要

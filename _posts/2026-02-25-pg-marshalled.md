@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Marshalled (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-marshalled/
+legacy_permalink: /posts/pg-marshalled/
 description: "Proving Grounds Marshalled Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, ffuf, jenkins, ssh, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-marshalled-ja/
+alt_ja: /ja/posts/pg-marshalled/
 ---
 
 ## Overview

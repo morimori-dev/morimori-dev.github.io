@@ -1,12 +1,14 @@
 ---
 title: "ラテラルムーブメントまとめ — OSCP 対応"
 date: 2026-03-06
+permalink: /ja/posts/tech-lateral-movement-guide/
+legacy_permalink: /posts/tech-lateral-movement-guide-ja/
 description: "OSCPと社内ネットワークペンテスト向けのラテラルムーブメント完全リファレンス。SMB実行・WMI・WinRM・Pass-the-Hash・Pass-the-Ticket・トークン偽装・ピボットをまとめて解説。"
 categories: [TechBlog]
 tags: [windows, lateral-movement, impacket, smb, wmi, winrm, pass-the-hash, pass-the-ticket, oscp, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-lateral-movement-guide/
+alt_en: /en/posts/tech-lateral-movement-guide/
 ---
 
 ## TL;DR
@@ -388,7 +390,7 @@ nxc winrm 10.10.10.0/24 -u administrator -p Password1
 
 ## 10. ピボット / ネットワークトンネリング
 
-内部に侵入したら、直接到達できないネットワークセグメントにアクセスする必要があることが多い。詳細は [Chisel / Ligolo-ng ガイド](/posts/tech-chisel-ligolo-ligolo-mp/) を参照。
+内部に侵入したら、直接到達できないネットワークセグメントにアクセスする必要があることが多い。詳細は [Chisel / Ligolo-ng ガイド](/en/posts/tech-chisel-ligolo-ligolo-mp/) を参照。
 
 ```mermaid
 flowchart LR
@@ -526,12 +528,12 @@ netsh advfirewall firewall add rule name="Block ADMIN$ from non-mgmt" ...
 
 ## 関連記事
 
-- [psexec.py を深掘りしてみた](/posts/tech-psexec-lateral-movement-ja/)
-- [NetExec (nxc) — 初心者向け実践ガイド](/posts/tech-netexec-beginner-guide-ja/)
-- [Chisel / Ligolo-ng / Ligolo-mp — ピボットガイド](/posts/tech-chisel-ligolo-ligolo-mp-ja/)
-- [ntlmrelayx.py を深掘りしてみた](/posts/tech-ntlmrelayx-attack-guide-ja/)
-- [Mimikatz 完全使用ガイド](/posts/tech-mimikatz-guide-ja/)
-- [Kerberos OSCP 攻撃テクニック](/posts/tech-kerberos-oscp-guide-ja/)
+- [psexec.py を深掘りしてみた](/ja/en/posts/tech-psexec-lateral-movement/)
+- [NetExec (nxc) — 初心者向け実践ガイド](/ja/en/posts/tech-netexec-beginner-guide/)
+- [Chisel / Ligolo-ng / Ligolo-mp — ピボットガイド](/ja/en/posts/tech-chisel-ligolo-ligolo-mp/)
+- [ntlmrelayx.py を深掘りしてみた](/ja/en/posts/tech-ntlmrelayx-attack-guide/)
+- [Mimikatz 完全使用ガイド](/ja/en/posts/tech-mimikatz-guide/)
+- [Kerberos OSCP 攻撃テクニック](/ja/en/posts/tech-kerberos-oscp-guide/)
 
 ---
 

@@ -1,12 +1,14 @@
 ---
 title: "OpenCTI Docker Build Guide — Practical Deployment and First Login"
 date: 2026-03-05
+permalink: /en/posts/tech-opencti-docker-build-guide/
+legacy_permalink: /posts/tech-opencti-docker-build-guide/
 description: "A practical OpenCTI setup guide with Docker Compose: architecture, startup flow, health validation, first login, and connector strategy for stable operations."
 categories: [TechBlog]
 tags: [opencti, threat-intelligence, docker, stix, soc, blue-team, devsecops]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-opencti-docker-build-guide-ja/
+alt_ja: /ja/posts/tech-opencti-docker-build-guide/
 ---
 
 ## TL;DR

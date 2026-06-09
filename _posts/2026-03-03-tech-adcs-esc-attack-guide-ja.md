@@ -1,12 +1,14 @@
 ---
 title: "ADCS (Active Directory Certificate Services) 攻撃ガイド"
 date: 2026-03-03
+permalink: /ja/posts/tech-adcs-esc-attack-guide/
+legacy_permalink: /posts/tech-adcs-esc-attack-guide-ja/
 description: "Active Directory 証明書サービス (ADCS) の脆弱性 ESC1〜ESC16 を網羅したリファレンス。各攻撃の条件・悪用手順・対策をまとめた実践ガイド。"
 categories: [TechBlog]
 tags: [active-directory, adcs, certificate, privilege-escalation, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-adcs-esc-attack-guide/
+alt_en: /en/posts/tech-adcs-esc-attack-guide/
 ---
 
 # AD CS 脆弱性 (ESC1〜16) 完全攻撃ガイド

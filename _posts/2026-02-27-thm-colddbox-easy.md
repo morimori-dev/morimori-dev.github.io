@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - ColddBox - Easy (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-colddbox-easy/
+legacy_permalink: /posts/thm-colddbox-easy/
 description: "TryHackMe ColddBox - Easy Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, wpscan, wordpress, dictionary-attack, apache, ftp, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-colddbox-easy-ja/
+alt_ja: /ja/posts/thm-colddbox-easy/
 ---
 
 ## Overview

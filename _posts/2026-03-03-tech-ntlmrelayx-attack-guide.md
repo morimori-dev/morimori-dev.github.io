@@ -1,12 +1,14 @@
 ---
 title: "ntlmrelayx.py — Deep Dive"
 date: 2026-03-03
+permalink: /en/posts/tech-ntlmrelayx-attack-guide/
+legacy_permalink: /posts/tech-ntlmrelayx-attack-guide/
 description: "A practical reference for ntlmrelayx.py (Impacket). Covers relay targets, attack chains, limitations, and flow diagrams for SMB relay, LDAP relay (RBCD), and ADCS ESC8."
 categories: [TechBlog]
 tags: [active-directory, ntlm, relay, impacket, pentest, oscp, adcs, rbcd]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-ntlmrelayx-attack-guide-ja/
+alt_ja: /ja/posts/tech-ntlmrelayx-attack-guide/
 ---
 
 ## TL;DR

@@ -1,12 +1,14 @@
 ---
 title: "GetUserSPNs.py — Deep Dive"
 date: 2026-03-03
+permalink: /en/posts/tech-getuserspns-kerberoasting/
+legacy_permalink: /posts/tech-getuserspns-kerberoasting/
 description: "A practical reference for GetUserSPNs.py (Impacket Kerberoasting). Covers what the tool does, its limitations, when to use it, and attack flow with Mermaid sequence diagrams."
 categories: [TechBlog]
 tags: [active-directory, kerberos, kerberoasting, impacket, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-getuserspns-kerberoasting-ja/
+alt_ja: /ja/posts/tech-getuserspns-kerberoasting/
 ---
 
 ## TL;DR

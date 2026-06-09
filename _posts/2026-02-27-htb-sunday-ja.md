@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Sunday (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/htb-sunday/
+legacy_permalink: /posts/htb-sunday-ja/
 description: "HackTheBox Sunday Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, hydra, brute-force, dictionary-attack, apache, mysql, ftp, ssh, hash-cracking, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-sunday/
+alt_en: /en/posts/htb-sunday/
 ---
 
 ## 概要

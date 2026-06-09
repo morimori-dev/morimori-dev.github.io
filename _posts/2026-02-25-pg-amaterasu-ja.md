@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Amaterasu (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-amaterasu/
+legacy_permalink: /posts/pg-amaterasu-ja/
 description: "Proving Grounds Amaterasu Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, file-upload, ssh, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-amaterasu/
+alt_en: /en/posts/pg-amaterasu/
 ---
 
 ## 概要

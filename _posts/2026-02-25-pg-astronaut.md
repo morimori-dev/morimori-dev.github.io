@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Astronaut (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-astronaut/
+legacy_permalink: /posts/pg-astronaut/
 description: "Proving Grounds Astronaut Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, csrf, wordpress, ssh, suid, cron, kernel-exploit, metasploit, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-astronaut-ja/
+alt_ja: /ja/posts/pg-astronaut/
 ---
 
 ## Overview

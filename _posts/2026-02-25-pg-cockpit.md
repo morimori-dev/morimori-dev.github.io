@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Cockpit (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-cockpit/
+legacy_permalink: /posts/pg-cockpit/
 description: "Proving Grounds Cockpit Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, mysql, cockpit, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-cockpit-ja/
+alt_ja: /ja/posts/pg-cockpit/
 ---
 
 ## Overview

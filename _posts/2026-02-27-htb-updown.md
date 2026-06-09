@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - UpDown (Linux)"
 date: 2026-02-27
+permalink: /en/posts/htb-updown/
+legacy_permalink: /posts/htb-updown/
 description: "Hack The Box UpDown Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, apache, ftp, ssh, suid, git-dump, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/htb-updown-ja/
+alt_ja: /ja/posts/htb-updown/
 ---
 
 ## Overview

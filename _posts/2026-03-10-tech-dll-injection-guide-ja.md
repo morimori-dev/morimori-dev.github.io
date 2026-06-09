@@ -1,12 +1,15 @@
 ---
 title: "DLLインジェクションまとめ — 手法・ツール・検知"
 date: 2026-03-10
+permalink: /ja/posts/tech-dll-injection-guide/
+legacy_permalink: /posts/tech-dll-injection-guide-ja/
 description: "ペネトレーションテストにおけるDLLインジェクション技術の包括的リファレンス。Classic DLL Injection、Reflective DLL Injection、DLL Hollowing、Process Hollowing、DLL Search Order Hijackingを実践的な例と検知戦略とともに解説。"
 categories: [TechBlog]
 tags: [dll-injection, windows, post-exploitation, process-injection, reflective-dll, dll-hijacking, pentest, oscp, evasion, red-team]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/tech-dll-injection-guide/
 ---
 
 ## TL;DR

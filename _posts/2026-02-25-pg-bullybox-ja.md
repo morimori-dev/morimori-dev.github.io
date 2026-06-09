@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - bullyBox (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-bullybox/
+legacy_permalink: /posts/pg-bullybox-ja/
 description: "Proving Grounds bullyBox Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, ssti, mysql, sudo, suid, git-dump, cve-2022-3552, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-bullybox/
+alt_en: /en/posts/pg-bullybox/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "メール経由の侵入手法と OSCP 頻出脆弱性ガイド"
 date: 2026-03-06
+permalink: /ja/posts/tech-email-attack-oscp-guide/
+legacy_permalink: /posts/tech-email-attack-oscp-guide-ja/
 description: "OSCP 試験・実践ペネトレーションテストで役立つメール経由の攻撃ベクタ（フィッシング・添付ファイル・SMTP 悪用など）と、OSCP で頻出する脆弱性（BoF・SQLi・LFI・コマンドインジェクションなど）を網羅的に解説します。"
 categories: [TechBlog]
 tags: [oscp, phishing, email-attack, smtp, macro, html-smuggling, buffer-overflow, sqli, lfi, rfi, command-injection, file-upload, deserialization, xxe, ssrf, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-email-attack-oscp-guide/
+alt_en: /en/posts/tech-email-attack-oscp-guide/
 ---
 
 ## TL;DR

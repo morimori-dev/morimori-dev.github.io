@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Boolean (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-boolean/
+legacy_permalink: /posts/pg-boolean-ja/
 description: "Proving Grounds Boolean Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-boolean/
+alt_en: /en/posts/pg-boolean/
 ---
 
 ## 概要

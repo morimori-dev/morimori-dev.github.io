@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Extplorer (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-extplorer/
+legacy_permalink: /posts/pg-extplorer-ja/
 description: "Proving Grounds Extplorer Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, wordpress, extplorer, ssh, hash-cracking, suid, linpeas, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-extplorer/
+alt_en: /en/posts/pg-extplorer/
 ---
 
 ## 概要

@@ -1,12 +1,15 @@
 ---
 title: "OSCP 合格体験記"
 date: 2026-04-27
+permalink: /ja/posts/oscp-passed/
+legacy_permalink: /posts/oscp-passed-ja/
 description: "OSCP (OffSec Certified Professional) 合格までの学習ロードマップ、PEN-200 / Proving Grounds / HTB の活用方法、24時間試験の時間配分、Buffer Overflow撤廃後の試験傾向、そして実際に試験で使った自作チートシート (github.com/morimori-dev/OSCP) を公開。これから受験する方への実践的なガイド。"
 categories: [TechBlog]
 tags: [oscp, offsec, certification, pentest, pen-200, proving-grounds, htb, cheatsheet, career]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/oscp-passed/
 ---
 
 ## TL;DR

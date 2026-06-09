@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Poison (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/htb-poison/
+legacy_permalink: /posts/htb-poison-ja/
 description: "HackTheBox Poison Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, feroxbuster, hydra, brute-force, apache, ssh, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-poison/
+alt_en: /en/posts/htb-poison/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Stealth (Windows)"
 date: 2026-02-27
+permalink: /en/posts/thm-stealth/
+legacy_permalink: /posts/thm-stealth/
 description: "TryHackMe Stealth Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, ffuf, phpmyadmin, suid, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-stealth-ja/
+alt_ja: /ja/posts/thm-stealth/
 ---
 
 ## Overview

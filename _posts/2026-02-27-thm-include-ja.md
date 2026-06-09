@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Include (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/thm-include/
+legacy_permalink: /posts/thm-include-ja/
 description: "TryHackMe Include Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, hydra, brute-force, lfi, path-traversal, apache, phpmyadmin, ssh, sudo, suid, linux-capabilities, cron, web]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-include/
+alt_en: /en/posts/thm-include/
 ---
 
 ## 概要

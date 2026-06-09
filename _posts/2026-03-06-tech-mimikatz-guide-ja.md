@@ -1,12 +1,14 @@
 ---
 title: "Mimikatz 使い方まとめ — 資格情報ダンプ & ポストエクスプロイテーション"
 date: 2026-03-06
+permalink: /ja/posts/tech-mimikatz-guide/
+legacy_permalink: /posts/tech-mimikatz-guide-ja/
 description: "ペネトレーションテスト・OSCP向け Mimikatz 活用リファレンス。資格情報ダンプ・LSASS 抽出・Pass-the-Hash・Golden/Silver Ticket 偽造・DCSync・トークン偽装まで、コマンド例とともに解説。"
 categories: [TechBlog]
 tags: [mimikatz, credential-dumping, pass-the-hash, golden-ticket, dcsync, lsass, active-directory, post-exploitation, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-mimikatz-guide/
+alt_en: /en/posts/tech-mimikatz-guide/
 ---
 
 ## TL;DR

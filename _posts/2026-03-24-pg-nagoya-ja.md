@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Nagoya (Windows)"
 date: 2026-03-24
+permalink: /ja/posts/pg-nagoya/
+legacy_permalink: /posts/pg-nagoya-ja/
 description: "Proving Grounds Nagoya Windows マシン解説。パスワードスプレー、Kerberoasting、DACL悪用チェーン、.NETデコンパイル、Silver Ticket経由MSSQL sysadminを解説。"
 categories: [Proving Grounds, Windows]
 tags: [proving-grounds, oscp, windows, feroxbuster, netexec, kerbrute, smb-enum, password-spraying, dictionary-attack, iis, mssql, smb, evil-winrm, winrm, kerberoasting]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-nagoya/
+alt_en: /en/posts/pg-nagoya/
 ---
 
 ## 概要

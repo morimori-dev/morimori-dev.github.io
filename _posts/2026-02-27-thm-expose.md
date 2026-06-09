@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Expose (Windows)"
 date: 2026-02-27
+permalink: /en/posts/thm-expose/
+legacy_permalink: /posts/thm-expose/
 description: "TryHackMe Expose Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, ffuf, dirb, sqlmap, sql-injection, apache, mysql, redis, vsftpd, ftp, phpmyadmin, ssh, sudo, suid]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-expose-ja/
+alt_ja: /ja/posts/thm-expose/
 ---
 
 ## Overview

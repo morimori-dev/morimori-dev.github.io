@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Cockpit (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-cockpit/
+legacy_permalink: /posts/pg-cockpit-ja/
 description: "Proving Grounds Cockpit Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, mysql, cockpit, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-cockpit/
+alt_en: /en/posts/pg-cockpit/
 ---
 
 ## 概要

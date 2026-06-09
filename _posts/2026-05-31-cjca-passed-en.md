@@ -1,12 +1,15 @@
 ---
 title: "Passing the HTB CJCA Exam"
 date: 2026-05-31
+permalink: /en/posts/cjca-passed/
+legacy_permalink: /posts/cjca-passed-en/
 description: "My experience passing the HTB Certified Junior Cybersecurity Associate (CJCA). A detailed breakdown of the unique 3-phase structure — Red Team, Blue Team (SIEM alert triage), and a commercial-quality pentest report — including how I approached each phase and what to watch out for."
 categories: [TechBlog]
 tags: [cjca, htb, hackthebox, pentest, blue-team, siem, report, certification, career]
 mermaid: true
 content_lang: en
 lang: en
+alt_ja: /ja/posts/cjca-passed/
 ---
 
 ## TL;DR

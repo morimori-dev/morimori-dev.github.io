@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - BBScute (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-bbscute/
+legacy_permalink: /posts/pg-bbscute-ja/
 description: "Proving Grounds BBScute Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, ssh, sudo, suid, cron, kernel-exploit, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-bbscute/
+alt_en: /en/posts/pg-bbscute/
 ---
 
 ## 概要

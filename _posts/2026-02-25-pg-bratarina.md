@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Bratarina (Windows)"
 date: 2026-02-25
+permalink: /en/posts/pg-bratarina/
+legacy_permalink: /posts/pg-bratarina/
 description: "Proving Grounds Bratarina Windows walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Windows]
 tags: [proving-grounds, oscp, windows, netexec, smb-enum, postgresql, samba, smb, ssh, suid, searchsploit, cve-2020-7247, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-bratarina-ja/
+alt_ja: /ja/posts/pg-bratarina/
 ---
 
 ## Overview

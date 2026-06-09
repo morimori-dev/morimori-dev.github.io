@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Blogger (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-blogger/
+legacy_permalink: /posts/pg-blogger/
 description: "Proving Grounds Blogger Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, wpscan, wordpress, apache, mysql, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-blogger-ja/
+alt_ja: /ja/posts/pg-blogger/
 ---
 
 ## Overview

@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - All in One (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/thm-all-in-one/
+legacy_permalink: /posts/thm-all-in-one-ja/
 description: "TryHackMe All in One Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, wpscan, wordpress, dictionary-attack, apache, vsftpd, ftp, ssh, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-all-in-one/
+alt_en: /en/posts/thm-all-in-one/
 ---
 
 ## 概要

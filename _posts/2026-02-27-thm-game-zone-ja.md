@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Game Zone (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/thm-game-zone/
+legacy_permalink: /posts/thm-game-zone-ja/
 description: "TryHackMe Game Zone Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, feroxbuster, nikto, dictionary-attack, sqlmap, sql-injection, apache, mysql, ssh, hash-cracking, hashcat, sudo, suid, metasploit]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-game-zone/
+alt_en: /en/posts/thm-game-zone/
 ---
 
 ## 概要

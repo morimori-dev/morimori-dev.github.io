@@ -1,12 +1,15 @@
 ---
 title: "BloodHound 攻撃パス チートシート — クエリ・パス・悪用プレイブック"
 date: 2026-03-11
+permalink: /ja/posts/tech-bloodhound-attack-paths/
+legacy_permalink: /posts/tech-bloodhound-attack-paths-ja/
 description: "Active Directoryペネトレーションテストのための包括的なBloodHoundガイド。SharpHound/BloodHound.pyによるデータ収集、必須Cypherクエリ、すべての悪用可能な攻撃パス（ACL悪用、Kerberos委任、GPO悪用、証明書攻撃、信頼関係の悪用）、および各発見に対するステップバイステップの悪用コマンドを網羅。"
 categories: [TechBlog]
 tags: [bloodhound, active-directory, cypher, sharphound, pentest, oscp, osep, post-exploitation, kerberos, acl-abuse, cheatsheet]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/tech-bloodhound-attack-paths/
 ---
 
 ## TL;DR

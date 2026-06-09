@@ -1,12 +1,14 @@
 ---
 title: "RBCD (Resource-Based Constrained Delegation) Attack Guide"
 date: 2026-03-03
+permalink: /en/posts/tech-rbcd-attack-guide/
+legacy_permalink: /posts/tech-rbcd-attack-guide/
 description: "A complete guide to privilege escalation via Kerberos delegation abuse. Covers RBCD mechanics, S4U2Self/S4U2Proxy exploitation, practical attack commands, and detection/defense."
 categories: [TechBlog]
 tags: [active-directory, kerberos, rbcd, delegation, privilege-escalation, windows, impacket, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-rbcd-attack-guide-ja/
+alt_ja: /ja/posts/tech-rbcd-attack-guide/
 ---
 
 ## RBCD (Resource-Based Constrained Delegation) Attack Guide

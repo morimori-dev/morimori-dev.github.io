@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Bloker (Linux)"
 date: 2026-02-27
+permalink: /en/posts/htb-bloker/
+legacy_permalink: /posts/htb-bloker/
 description: "Hack The Box Bloker Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, nikto, deserialization, apache, nginx, mysql, vsftpd, ftp, ssh, sudo, suid, sgid, linux-capabilities, cron]
 mermaid: true
 content_lang: en
-alt_ja: /posts/htb-bloker-ja/
+alt_ja: /ja/posts/htb-bloker/
 ---
 
 ## Overview

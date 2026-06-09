@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Daily Bugle (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-daily-bugle/
+legacy_permalink: /posts/thm-daily-bugle/
 description: "TryHackMe Daily Bugle Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, feroxbuster, joomscan, joomla, dictionary-attack, csrf, apache, mysql, ssh, hash-cracking, sudo, suid, linpeas, reverse-shell]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-daily-bugle-ja/
+alt_ja: /ja/posts/thm-daily-bugle/
 ---
 
 ## Overview

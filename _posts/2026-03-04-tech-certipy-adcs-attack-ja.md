@@ -1,12 +1,14 @@
 ---
 title: "Certipy を深掘りしてみた"
 date: 2026-03-04
+permalink: /ja/posts/tech-certipy-adcs-attack/
+legacy_permalink: /posts/tech-certipy-adcs-attack-ja/
 description: "Certipy（ADCS攻撃ツール）の実践リファレンス。列挙・ESC1/ESC8の悪用・シャドウクレデンシャル・証明書認証・攻撃フローをMermaidシーケンス図で解説。"
 categories: [TechBlog]
 tags: [active-directory, adcs, certipy, kerberos, pkinit, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-certipy-adcs-attack/
+alt_en: /en/posts/tech-certipy-adcs-attack/
 ---
 
 ## TL;DR

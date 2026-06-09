@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - TartarSauce (Linux)"
 date: 2026-02-27
+permalink: /en/posts/htb-tartarsauce/
+legacy_permalink: /posts/htb-tartarsauce/
 description: "Hack The Box TartarSauce Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, apache, phpmyadmin, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/htb-tartarsauce-ja/
+alt_ja: /ja/posts/htb-tartarsauce/
 ---
 
 ## Overview

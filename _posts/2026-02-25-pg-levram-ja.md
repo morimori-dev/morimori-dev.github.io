@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Levram (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-levram/
+legacy_permalink: /posts/pg-levram-ja/
 description: "Proving Grounds Levram Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, suid, cve-2021-43857, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-levram/
+alt_en: /en/posts/pg-levram/
 ---
 
 ## 概要

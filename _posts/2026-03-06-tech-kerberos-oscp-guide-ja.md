@@ -1,12 +1,14 @@
 ---
 title: "OSCP で使う Kerberos 攻撃テクニックまとめ"
 date: 2026-03-06
+permalink: /ja/posts/tech-kerberos-oscp-guide/
+legacy_permalink: /posts/tech-kerberos-oscp-guide-ja/
 description: "OSCP 試験・Proving Grounds で活用できる Kerberos 攻撃テクニックを網羅したリファレンス。AS-REP Roasting・Kerberoasting・Pass-the-Ticket・Golden Ticket・Silver Ticket など各手法の仕組み・使いどころ・コマンド例を解説。"
 categories: [TechBlog]
 tags: [active-directory, kerberos, kerberoasting, asrep-roasting, pass-the-ticket, golden-ticket, silver-ticket, overpass-the-hash, impacket, rubeus, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-kerberos-oscp-guide/
+alt_en: /en/posts/tech-kerberos-oscp-guide/
 ---
 
 ## TL;DR
@@ -627,11 +629,11 @@ kdestroy
 
 ## 関連記事
 
-- [GetNPUsers.py — AS-REP Roasting 完全ガイド](/posts/tech-getnpusers-asrep-roasting-ja/)
-- [GetUserSPNs.py — Kerberoasting 完全ガイド](/posts/tech-getuserspns-kerberoasting-ja/)
-- [RBCD 攻撃ガイド](/posts/tech-rbcd-attack-guide-ja/)
-- [ADCS 攻撃ガイド (ESC1〜16)](/posts/tech-adcs-esc-attack-guide-ja/)
-- [NTLM Relay 攻撃ガイド](/posts/tech-ntlmrelayx-attack-guide-ja/)
+- [GetNPUsers.py — AS-REP Roasting 完全ガイド](/ja/en/posts/tech-getnpusers-asrep-roasting/)
+- [GetUserSPNs.py — Kerberoasting 完全ガイド](/ja/en/posts/tech-getuserspns-kerberoasting/)
+- [RBCD 攻撃ガイド](/ja/en/posts/tech-rbcd-attack-guide/)
+- [ADCS 攻撃ガイド (ESC1〜16)](/ja/en/posts/tech-adcs-esc-attack-guide/)
+- [NTLM Relay 攻撃ガイド](/ja/en/posts/tech-ntlmrelayx-attack-guide/)
 
 ---
 

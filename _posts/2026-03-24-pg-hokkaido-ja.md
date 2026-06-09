@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - hokkaido (Windows)"
 date: 2026-03-24
+permalink: /ja/posts/pg-hokkaido/
+legacy_permalink: /posts/pg-hokkaido-ja/
 description: "Proving Grounds hokkaido Windows マシン解説。Kerberoasting、パスワードスプレー、ForceChangePassword による横移動、UAC バイパス、SeBackupPrivilege 悪用を解説。"
 categories: [Proving Grounds, Windows]
 tags: [proving-grounds, oscp, windows, netexec, kerbrute, password-spraying, dictionary-attack, iis, mssql, rdp, evil-winrm, winrm, kerberoasting, pass-the-hash, secretsdump]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-hokkaido/
+alt_en: /en/posts/pg-hokkaido/
 ---
 
 ## 概要

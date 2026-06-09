@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Forest (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/htb-forest/
+legacy_permalink: /posts/htb-forest-ja/
 description: "HackTheBox Forest Windows マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Windows]
 tags: [hackthebox, windows, enum4linux, rpc-enum, smb-enum, smb, winrm, bloodhound, active-directory, dcsync, sudo, suid, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-forest/
+alt_en: /en/posts/htb-forest/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Weasel (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-weasel/
+legacy_permalink: /posts/thm-weasel-ja/
 description: "TryHackMe Weasel Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, enum4linux, smb-enum, smb, rdp, ssh, suid, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-weasel/
+alt_en: /en/posts/thm-weasel/
 ---
 
 ## 概要

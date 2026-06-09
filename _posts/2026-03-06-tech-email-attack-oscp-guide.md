@@ -1,12 +1,14 @@
 ---
 title: "Email Attack Vectors & OSCP Common Vulnerabilities Guide"
 date: 2026-03-06
+permalink: /en/posts/tech-email-attack-oscp-guide/
+legacy_permalink: /posts/tech-email-attack-oscp-guide/
 description: "A practical guide to email-based attack vectors (phishing, malicious attachments, SMTP abuse) and the most common vulnerabilities in OSCP exams (BoF, SQLi, LFI, command injection, file upload, etc.) with ready-to-use commands."
 categories: [TechBlog]
 tags: [oscp, phishing, email-attack, smtp, macro, html-smuggling, buffer-overflow, sqli, lfi, rfi, command-injection, file-upload, deserialization, xxe, ssrf, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-email-attack-oscp-guide-ja/
+alt_ja: /ja/posts/tech-email-attack-oscp-guide/
 ---
 
 ## TL;DR

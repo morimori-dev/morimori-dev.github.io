@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - blog (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-blog/
+legacy_permalink: /posts/thm-blog-ja/
 description: "TryHackMe blog Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, ffuf, wpscan, wordpress, dictionary-attack, apache, samba, smb, ftp, ssh, suid, metasploit, web, privilege-escalation]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-blog/
+alt_en: /en/posts/thm-blog/
 ---
 
 ## 概要

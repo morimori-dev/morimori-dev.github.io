@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - LaVita (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-lavita/
+legacy_permalink: /posts/pg-lavita-ja/
 description: "Proving Grounds LaVita Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, apache, mysql, laravel, ssh, sudo, suid, linux-capabilities, cron, pspy, reverse-shell, cve-2021-3129]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-lavita/
+alt_en: /en/posts/pg-lavita/
 ---
 
 ## 概要

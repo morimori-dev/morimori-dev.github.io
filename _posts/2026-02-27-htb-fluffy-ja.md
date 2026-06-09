@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Fluffy (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/htb-fluffy/
+legacy_permalink: /posts/htb-fluffy-ja/
 description: "HackTheBox Fluffy Windows マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Windows]
 tags: [hackthebox, windows, netexec, rpc-enum, smb-enum, dictionary-attack, samba, smb, evil-winrm, winrm, as-rep-roasting, bloodhound, active-directory, certipy, adcs]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-fluffy/
+alt_en: /en/posts/htb-fluffy/
 ---
 
 ## 概要

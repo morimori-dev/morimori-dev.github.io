@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Craft (Windows)"
 date: 2026-03-24
+permalink: /ja/posts/pg-craft/
+legacy_permalink: /posts/pg-craft-ja/
 description: "Proving Grounds Craft Windows マシン解説。ODFマクロアップロードとResponderによるNTLMv2ハッシュキャプチャを解説。"
 categories: [Proving Grounds, Windows]
 tags: [proving-grounds, oscp, windows, apache, responder, llmnr-poisoning, web, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-craft/
+alt_en: /en/posts/pg-craft/
 ---
 
 ## 概要

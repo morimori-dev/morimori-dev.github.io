@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Nibbles (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/htb-nibbles/
+legacy_permalink: /posts/htb-nibbles-ja/
 description: "HackTheBox Nibbles Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, feroxbuster, whatweb, hydra, brute-force, file-upload, apache, ssh, sudo, suid, metasploit, cve-2015-6967, web, privilege-escalation]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-nibbles/
+alt_en: /en/posts/htb-nibbles/
 ---
 
 ## 概要

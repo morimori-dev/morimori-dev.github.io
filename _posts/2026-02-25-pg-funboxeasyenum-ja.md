@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - FunboxEasyEnum (Linux)"
 date: 2026-02-25
+permalink: /ja/posts/pg-funboxeasyenum/
+legacy_permalink: /posts/pg-funboxeasyenum-ja/
 description: "Proving Grounds FunboxEasyEnum Linux マシン解説。偵察・初期アクセス・権限昇格を解説。"
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, dictionary-attack, phpmyadmin, hash-cracking, suid, cron, pspy, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-funboxeasyenum/
+alt_en: /en/posts/pg-funboxeasyenum/
 ---
 
 ## 概要

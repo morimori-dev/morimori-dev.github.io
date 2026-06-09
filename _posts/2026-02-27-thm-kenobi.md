@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Kenobi (Windows)"
 date: 2026-02-27
+permalink: /en/posts/thm-kenobi/
+legacy_permalink: /posts/thm-kenobi/
 description: "TryHackMe Kenobi Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, smb-enum, apache, proftpd, ftp, samba, smb, ssh, nfs, sysvol, sudo, suid, kernel-exploit, metasploit]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-kenobi-ja/
+alt_ja: /ja/posts/thm-kenobi/
 ---
 
 ## Overview

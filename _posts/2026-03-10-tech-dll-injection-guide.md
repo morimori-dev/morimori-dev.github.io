@@ -1,12 +1,14 @@
 ---
 title: "DLL Injection Summary — Techniques, Tools & Detection"
 date: 2026-03-10
+permalink: /en/posts/tech-dll-injection-guide/
+legacy_permalink: /posts/tech-dll-injection-guide/
 description: "A comprehensive reference for DLL injection techniques in penetration testing. Covers Classic DLL Injection, Reflective DLL Injection, DLL Hollowing, Process Hollowing, and DLL Search Order Hijacking with practical examples and detection strategies."
 categories: [TechBlog]
 tags: [dll-injection, windows, post-exploitation, process-injection, reflective-dll, dll-hijacking, pentest, oscp, evasion, red-team]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-dll-injection-guide-ja/
+alt_ja: /ja/posts/tech-dll-injection-guide/
 ---
 
 ## TL;DR

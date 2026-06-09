@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Jarvis (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/htb-jarvis/
+legacy_permalink: /posts/htb-jarvis-ja/
 description: "HackTheBox Jarvis Linux マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, sqlmap, sql-injection, apache, mysql, ssh, sudo, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-jarvis/
+alt_en: /en/posts/htb-jarvis/
 ---
 
 ## 概要

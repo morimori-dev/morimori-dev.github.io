@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Holo (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-holo/
+legacy_permalink: /posts/thm-holo-ja/
 description: "TryHackMe Holo Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, wpscan, wordpress, dictionary-attack, xss, csrf, apache, nginx, mysql, vsftpd, ftp, imagemagick, ssh, hash-cracking]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-holo/
+alt_en: /en/posts/thm-holo/
 ---
 
 ## 概要

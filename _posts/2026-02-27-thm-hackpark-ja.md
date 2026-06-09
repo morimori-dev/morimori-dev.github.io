@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - HackPark (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-hackpark/
+legacy_permalink: /posts/thm-hackpark-ja/
 description: "TryHackMe HackPark Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, nikto, hydra, brute-force, dictionary-attack, iis, rdp, winrm, ssh, mimikatz, gpp-decrypt, sysvol, ntds-dit, sudo]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-hackpark/
+alt_en: /en/posts/thm-hackpark/
 ---
 
 ## 概要

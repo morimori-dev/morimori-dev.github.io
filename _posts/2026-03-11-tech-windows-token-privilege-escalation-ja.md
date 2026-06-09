@@ -1,12 +1,15 @@
 ---
 title: "Windowsトークン特権による権限昇格 — whoami /priv 悪用ガイド"
 date: 2026-03-11
+permalink: /ja/posts/tech-windows-token-privilege-escalation/
+legacy_permalink: /posts/tech-windows-token-privilege-escalation-ja/
 description: "有効化されたトークン特権によるWindows権限昇格の包括的ガイド。SeImpersonatePrivilege、SeAssignPrimaryTokenPrivilege、SeBackupPrivilege、SeRestorePrivilege、SeDebugPrivilege、SeTakeOwnershipPrivilege、SeLoadDriverPrivilege、SeManageVolumePrivilegeなどを、各特権ごとに複数のツールとステップバイステップの悪用手順で解説。"
 categories: [TechBlog]
 tags: [windows, privilege-escalation, token-abuse, whoami, potato, pentest, oscp, post-exploitation, cheatsheet]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/tech-windows-token-privilege-escalation/
 ---
 
 ## TL;DR

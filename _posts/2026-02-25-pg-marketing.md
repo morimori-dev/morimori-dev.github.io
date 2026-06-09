@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Marketing (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-marketing/
+legacy_permalink: /posts/pg-marketing/
 description: "Proving Grounds Marketing Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, ffuf, dirb, nikto, whatweb, apache, mssql, mysql, ssh, sudo, reverse-shell, cve-2021-44967]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-marketing-ja/
+alt_ja: /ja/posts/pg-marketing/
 ---
 
 # Marketing (Proving Grounds) Writeup

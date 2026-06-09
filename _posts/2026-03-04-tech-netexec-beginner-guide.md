@@ -1,12 +1,14 @@
 ---
 title: "NetExec (nxc) — Beginner-Friendly Practical Guide"
 date: 2026-03-04
+permalink: /en/posts/tech-netexec-beginner-guide/
+legacy_permalink: /posts/tech-netexec-beginner-guide/
 description: "A detailed beginner-friendly guide to NetExec (nxc): SMB/LDAP/WinRM enumeration, password spraying, remote execution, and practical AD workflows with Mermaid sequence diagrams."
 categories: [TechBlog]
 tags: [active-directory, netexec, smb, ldap, winrm, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-netexec-beginner-guide-ja/
+alt_ja: /ja/posts/tech-netexec-beginner-guide/
 ---
 
 ## TL;DR

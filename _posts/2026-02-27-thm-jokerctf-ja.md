@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - jokerctf (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/thm-jokerctf/
+legacy_permalink: /posts/thm-jokerctf-ja/
 description: "TryHackMe jokerctf Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, dirb, apache, ssh, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-jokerctf/
+alt_en: /en/posts/thm-jokerctf/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - Active (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/htb-active/
+legacy_permalink: /posts/htb-active-ja/
 description: "HackTheBox Active Windows マシン解説。サービス列挙・初期足がかり・権限昇格経路を解説。"
 categories: [HackTheBox, Windows]
 tags: [hackthebox, windows, enum4linux, netexec, kerbrute, ldap-enum, rpc-enum, smb-enum, dictionary-attack, samba, smb, winrm, kerberoasting, gpp-decrypt, sysvol]
 mermaid: true
 content_lang: ja
-alt_en: /posts/htb-active/
+alt_en: /en/posts/htb-active/
 ---
 
 ## 概要

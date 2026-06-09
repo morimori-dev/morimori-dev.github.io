@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - BlackGate (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-blackgate/
+legacy_permalink: /posts/pg-blackgate/
 description: "Proving Grounds BlackGate Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, redis, sudo, suid, linpeas, kernel-exploit, cve-2021-4034, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-blackgate-ja/
+alt_ja: /ja/posts/pg-blackgate/
 ---
 
 ## Overview

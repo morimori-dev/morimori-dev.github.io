@@ -1,11 +1,13 @@
 ---
 title: "Touring Hot Springs Across Japan — Share Your Recommendations!"
 date: 2026-03-02
+permalink: /en/posts/onsen-meguri/
+legacy_permalink: /posts/onsen-meguri/
 description: "Taking a break from security — sharing my journey touring onsen across Japan."
 categories: [Life, Travel]
 tags: [onsen, travel, japan]
 content_lang: en
-alt_ja: /posts/onsen-meguri-ja/
+alt_ja: /ja/posts/onsen-meguri/
 ---
 
 セキュリティの話ばかりのブログですが、たまには趣味の話を。

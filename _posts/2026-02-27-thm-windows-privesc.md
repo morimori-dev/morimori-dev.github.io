@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Windows PrivEsc (Windows)"
 date: 2026-02-27
+permalink: /en/posts/thm-windows-privesc/
+legacy_permalink: /posts/thm-windows-privesc/
 description: "TryHackMe Windows PrivEsc Windows walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, sudo, suid, winpeas, reverse-shell, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-windows-privesc-ja/
+alt_ja: /ja/posts/thm-windows-privesc/
 ---
 
 ## Overview

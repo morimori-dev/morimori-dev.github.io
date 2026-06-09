@@ -1,12 +1,14 @@
 ---
 title: "psexec.py を深掘りしてみた"
 date: 2026-03-03
+permalink: /ja/posts/tech-psexec-lateral-movement/
+legacy_permalink: /posts/tech-psexec-lateral-movement-ja/
 description: "Impacket の psexec.py 実践リファレンス。内部動作・認証方式（パスワード / PTH / PTK）・ラテラルムーブメントのフロー図・smbexec / wmiexec との比較。"
 categories: [TechBlog]
 tags: [windows, lateral-movement, impacket, smb, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-psexec-lateral-movement/
+alt_en: /en/posts/tech-psexec-lateral-movement/
 ---
 
 ## TL;DR

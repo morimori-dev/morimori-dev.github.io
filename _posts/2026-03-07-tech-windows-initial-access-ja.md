@@ -1,6 +1,8 @@
 ---
 title: "Windows 初期侵入後の調査ファイルまとめ — RCE・LFI で確認すべき場所"
 date: 2026-03-07
+permalink: /ja/posts/tech-windows-initial-access/
+legacy_permalink: /posts/tech-windows-initial-access-ja/
 description: "RCE・LFI を取得した後に確認すべき Windows のファイル・レジストリ・コマンドをまとめたペネトレーションテスト向けリファレンス。"
 categories: [TechBlog]
 tags: [windows, initial-access, rce, lfi, file-inclusion, pentest, oscp, credential-hunting]

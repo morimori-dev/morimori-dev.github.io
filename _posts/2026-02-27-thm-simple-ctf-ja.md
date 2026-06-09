@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Simple CTF (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/thm-simple-ctf/
+legacy_permalink: /posts/thm-simple-ctf-ja/
 description: "TryHackMe Simple CTF Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, dictionary-attack, sql-injection, apache, vsftpd, ftp, ssh, sudo, suid, searchsploit, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-simple-ctf/
+alt_en: /en/posts/thm-simple-ctf/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "GetNPUsers.py を深掘りしてみた"
 date: 2026-03-03
+permalink: /ja/posts/tech-getnpusers-asrep-roasting/
+legacy_permalink: /posts/tech-getnpusers-asrep-roasting-ja/
 description: "Impacket の GetNPUsers.py (AS-REP Roasting) 実践リファレンス。できること・制限・使いどころ・Mermaid シーケンス図付きで解説。"
 categories: [TechBlog]
 tags: [active-directory, kerberos, asrep-roasting, impacket, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-getnpusers-asrep-roasting/
+alt_en: /en/posts/tech-getnpusers-asrep-roasting/
 ---
 
 ## TL;DR

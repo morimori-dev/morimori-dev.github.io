@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - ToolsRus (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-toolsrus/
+legacy_permalink: /posts/thm-toolsrus/
 description: "TryHackMe ToolsRus Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, hydra, brute-force, dictionary-attack, csrf, tomcat, ssh, suid, metasploit, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-toolsrus-ja/
+alt_ja: /ja/posts/thm-toolsrus/
 ---
 
 ## Overview

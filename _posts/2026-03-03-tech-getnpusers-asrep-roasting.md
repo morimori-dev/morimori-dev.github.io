@@ -1,12 +1,14 @@
 ---
 title: "GetNPUsers.py — Deep Dive"
 date: 2026-03-03
+permalink: /en/posts/tech-getnpusers-asrep-roasting/
+legacy_permalink: /posts/tech-getnpusers-asrep-roasting/
 description: "A practical reference for GetNPUsers.py (Impacket AS-REP Roasting). Covers what the tool does, its limitations, when to use it, and attack flow with Mermaid sequence diagrams."
 categories: [TechBlog]
 tags: [active-directory, kerberos, asrep-roasting, impacket, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-getnpusers-asrep-roasting-ja/
+alt_ja: /ja/posts/tech-getnpusers-asrep-roasting/
 ---
 
 ## TL;DR

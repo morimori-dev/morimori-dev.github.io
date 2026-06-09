@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Disgruntled (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-disgruntled/
+legacy_permalink: /posts/thm-disgruntled/
 description: "TryHackMe Disgruntled Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, apache, ssh, sudo, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-disgruntled-ja/
+alt_ja: /ja/posts/thm-disgruntled/
 ---
 
 ## Overview

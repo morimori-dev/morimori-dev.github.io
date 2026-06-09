@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Attacktive Directory (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-attacktive-directory/
+legacy_permalink: /posts/thm-attacktive-directory-ja/
 description: "TryHackMe Attacktive Directory Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, enum4linux, kerbrute, iis, samba, smb, rdp, evil-winrm, winrm, as-rep-roasting, secretsdump, hash-cracking, suid, active-directory]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-attacktive-directory/
+alt_en: /en/posts/thm-attacktive-directory/
 ---
 
 ## 概要

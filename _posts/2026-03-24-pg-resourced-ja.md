@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Resourced (Windows)"
 date: 2026-03-24
+permalink: /ja/posts/pg-resourced/
+legacy_permalink: /posts/pg-resourced-ja/
 description: "Proving Grounds Resourced Windows マシン解説。RPC null session によるユーザー列挙、LDAP description パスワード漏洩、ntds.dit 抽出、RBCD 権限昇格を解説。"
 categories: [Proving Grounds, Windows]
 tags: [proving-grounds, oscp, windows, rpc-enum, smb-enum, smb, evil-winrm, winrm, pass-the-hash, rbcd, constrained-delegation, ntds-dit, secretsdump, psexec, active-directory]
 mermaid: true
 content_lang: ja
-alt_en: /posts/pg-resourced/
+alt_en: /en/posts/pg-resourced/
 ---
 
 ## 概要

@@ -1,12 +1,14 @@
 ---
 title: "BloodHound Attack Path Cheatsheet — Queries, Paths & Exploitation Playbook"
 date: 2026-03-11
+permalink: /en/posts/tech-bloodhound-attack-paths/
+legacy_permalink: /posts/tech-bloodhound-attack-paths/
 description: "A comprehensive BloodHound guide for Active Directory penetration testing. Covers data collection with SharpHound/BloodHound.py, essential Cypher queries, every exploitable attack path (ACL abuse, Kerberos delegation, GPO abuse, certificate attacks, trust exploitation), and step-by-step exploitation commands for each finding."
 categories: [TechBlog]
 tags: [bloodhound, active-directory, cypher, sharphound, pentest, oscp, osep, post-exploitation, kerberos, acl-abuse, cheatsheet]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-bloodhound-attack-paths-ja/
+alt_ja: /ja/posts/tech-bloodhound-attack-paths/
 ---
 
 ## TL;DR

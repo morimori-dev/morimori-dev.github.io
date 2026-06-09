@@ -1,12 +1,14 @@
 ---
 title: "NetExec (nxc) 入門実践ガイド"
 date: 2026-03-04
+permalink: /ja/posts/tech-netexec-beginner-guide/
+legacy_permalink: /posts/tech-netexec-beginner-guide-ja/
 description: "NetExec（nxc）を初心者向けに詳しく解説。SMB/LDAP/WinRM 列挙、パスワードスプレー、リモート実行、実践ワークフローを Mermaid シーケンス図付きで整理。"
 categories: [TechBlog]
 tags: [active-directory, netexec, smb, ldap, winrm, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-netexec-beginner-guide/
+alt_en: /en/posts/tech-netexec-beginner-guide/
 ---
 
 ## TL;DR

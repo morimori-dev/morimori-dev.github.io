@@ -1,12 +1,14 @@
 ---
 title: "Windows Privilege Escalation via Token Privileges — whoami /priv Exploitation Guide"
 date: 2026-03-11
+permalink: /en/posts/tech-windows-token-privilege-escalation/
+legacy_permalink: /posts/tech-windows-token-privilege-escalation/
 description: "A comprehensive guide to Windows privilege escalation through enabled token privileges. Covers SeImpersonatePrivilege, SeAssignPrimaryTokenPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeDebugPrivilege, SeTakeOwnershipPrivilege, SeLoadDriverPrivilege, SeManageVolumePrivilege and more — with multiple tools and step-by-step exploitation for each privilege."
 categories: [TechBlog]
 tags: [windows, privilege-escalation, token-abuse, whoami, potato, pentest, oscp, post-exploitation, cheatsheet]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-windows-token-privilege-escalation-ja/
+alt_ja: /ja/posts/tech-windows-token-privilege-escalation/
 ---
 
 ## TL;DR

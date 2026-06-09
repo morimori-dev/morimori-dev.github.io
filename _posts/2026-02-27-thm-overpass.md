@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Overpass (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-overpass/
+legacy_permalink: /posts/thm-overpass/
 description: "TryHackMe Overpass Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, dictionary-attack, ssh, hash-cracking, suid, cron, reverse-shell, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-overpass-ja/
+alt_ja: /ja/posts/thm-overpass/
 ---
 
 ## Overview

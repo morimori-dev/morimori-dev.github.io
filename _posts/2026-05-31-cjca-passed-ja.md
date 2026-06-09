@@ -1,12 +1,15 @@
 ---
 title: "CJCA 合格体験記"
 date: 2026-05-31
+permalink: /ja/posts/cjca-passed/
+legacy_permalink: /posts/cjca-passed-ja/
 description: "HTB Certified Junior Cybersecurity Associate (CJCA) 満点合格までの流れ。Red Team（5マシン完全制覇）・Blue Team（SIEM アラート triage）・商用品質レポートという独自の3フェーズ構成、SIEM triage の考え方、SysReptor でのレポート作成まで詳しく解説。"
 categories: [TechBlog]
 tags: [cjca, htb, hackthebox, pentest, blue-team, siem, report, certification, career]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/cjca-passed/
 ---
 
 ## TL;DR

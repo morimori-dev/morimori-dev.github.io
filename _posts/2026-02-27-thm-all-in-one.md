@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - All in One (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-all-in-one/
+legacy_permalink: /posts/thm-all-in-one/
 description: "TryHackMe All in One Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, ffuf, wpscan, wordpress, dictionary-attack, apache, vsftpd, ftp, ssh, suid, cron, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-all-in-one-ja/
+alt_ja: /ja/posts/thm-all-in-one/
 ---
 
 ## Overview

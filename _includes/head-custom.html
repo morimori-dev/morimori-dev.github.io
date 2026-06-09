@@ -221,21 +221,21 @@
      d-flex !important, and persists across Turbo navigations.
      ───────────────────────────────────────────────────────── */
 
-  /* Japanese preference → hide English posts (slugs NOT ending in -ja/) */
-  html.lang-pref-ja #post-list article.card-wrapper:not(:has(a[href$="-ja/"])),
-  html.lang-pref-ja #page-category ul.content li:not(:has(a[href$="-ja/"])),
-  html.lang-pref-ja #page-tag      ul.content li:not(:has(a[href$="-ja/"])),
-  html.lang-pref-ja #archives ul.list-unstyled li:not(:has(a[href$="-ja/"])),
-  html.lang-pref-ja #search-results article:not(:has(a[href$="-ja/"])) {
+  /* Japanese preference → hide English posts. */
+  html.lang-pref-ja #post-list article.card-wrapper:has(a[href*="/en/posts/"]),
+  html.lang-pref-ja #page-category ul.content li:has(a[href*="/en/posts/"]),
+  html.lang-pref-ja #page-tag      ul.content li:has(a[href*="/en/posts/"]),
+  html.lang-pref-ja #archives ul.list-unstyled li:has(a[href*="/en/posts/"]),
+  html.lang-pref-ja #search-results article:has(a[href*="/en/posts/"]) {
     display: none !important;
   }
 
-  /* English preference → hide Japanese posts (slugs ending in -ja/) */
-  html.lang-pref-en #post-list article.card-wrapper:has(a[href$="-ja/"]),
-  html.lang-pref-en #page-category ul.content li:has(a[href$="-ja/"]),
-  html.lang-pref-en #page-tag      ul.content li:has(a[href$="-ja/"]),
-  html.lang-pref-en #archives ul.list-unstyled li:has(a[href$="-ja/"]),
-  html.lang-pref-en #search-results article:has(a[href$="-ja/"]) {
+  /* English preference → hide Japanese posts. */
+  html.lang-pref-en #post-list article.card-wrapper:has(a[href*="/ja/posts/"]),
+  html.lang-pref-en #page-category ul.content li:has(a[href*="/ja/posts/"]),
+  html.lang-pref-en #page-tag      ul.content li:has(a[href*="/ja/posts/"]),
+  html.lang-pref-en #archives ul.list-unstyled li:has(a[href*="/ja/posts/"]),
+  html.lang-pref-en #search-results article:has(a[href*="/ja/posts/"]) {
     display: none !important;
   }
 
@@ -313,6 +313,8 @@
     function resolvePostLang(rawHref) {
       var path = normalizePostPath(rawHref);
       if (!path) return null;
+      if (path.indexOf("/ja/posts/") === 0) return "ja";
+      if (path.indexOf("/en/posts/") === 0) return "en";
       return POST_LANG_MAP[path] || (/-ja\/?$/.test(path) ? "ja" : "en");
     }
 

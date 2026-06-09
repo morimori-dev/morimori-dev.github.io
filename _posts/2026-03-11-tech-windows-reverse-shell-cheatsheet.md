@@ -1,12 +1,14 @@
 ---
 title: "Windows Reverse Shell Cheatsheet — x86/x64 from Win7 to Win11"
 date: 2026-03-11
+permalink: /en/posts/tech-windows-reverse-shell-cheatsheet/
+legacy_permalink: /posts/tech-windows-reverse-shell-cheatsheet/
 description: "A complete reverse shell command reference for Windows penetration testing. Covers PowerShell, cmd.exe, certutil, mshta, rundll32, msfvenom payloads, and more — organized by OS version and architecture (x86/x64) with compatibility matrices."
 categories: [TechBlog]
 tags: [reverse-shell, windows, powershell, cmd, msfvenom, pentest, oscp, post-exploitation, rce, cheatsheet]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-windows-reverse-shell-cheatsheet-ja/
+alt_ja: /ja/posts/tech-windows-reverse-shell-cheatsheet/
 ---
 
 ## TL;DR

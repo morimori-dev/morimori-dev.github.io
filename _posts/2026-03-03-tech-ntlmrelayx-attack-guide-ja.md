@@ -1,12 +1,14 @@
 ---
 title: "ntlmrelayx.py を深掘りしてみた"
 date: 2026-03-03
+permalink: /ja/posts/tech-ntlmrelayx-attack-guide/
+legacy_permalink: /posts/tech-ntlmrelayx-attack-guide-ja/
 description: "Impacket の ntlmrelayx.py 実践リファレンス。SMB リレー・LDAP リレー (RBCD)・ADCS ESC8 の3つの攻撃シナリオをMermaid シーケンス図で解説。"
 categories: [TechBlog]
 tags: [active-directory, ntlm, relay, impacket, pentest, oscp, adcs, rbcd]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-ntlmrelayx-attack-guide/
+alt_en: /en/posts/tech-ntlmrelayx-attack-guide/
 ---
 
 ## TL;DR

@@ -1,12 +1,14 @@
 ---
 title: "Chisel / Ligolo-ng / Ligolo-mp 実践ガイド（2026年版）"
 date: 2026-03-04
+permalink: /ja/posts/tech-chisel-ligolo-ligolo-mp/
+legacy_permalink: /posts/tech-chisel-ligolo-ligolo-mp-ja/
 description: "ピボット・内部侵入で使う Chisel / Ligolo-ng / Ligolo-mp の違い、最新の実戦運用、構成判断、検知ポイントまでを Mermaid シーケンス図付きで解説。"
 categories: [TechBlog]
 tags: [pivoting, tunneling, chisel, ligolo-ng, ligolo-mp, redteam, pentest, c2]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-chisel-ligolo-ligolo-mp/
+alt_en: /en/posts/tech-chisel-ligolo-ligolo-mp/
 ---
 
 ## TL;DR

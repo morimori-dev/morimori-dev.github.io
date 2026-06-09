@@ -1,12 +1,14 @@
 ---
 title: "MISP Docker 構築ガイド — 実践デプロイとトラブル対応"
 date: 2026-03-05
+permalink: /ja/posts/tech-misp-docker-build-guide/
+legacy_permalink: /posts/tech-misp-docker-build-guide-ja/
 description: "MISP を Docker Compose で構築する実践手順。起動シーケンス、ヘルスチェック、初回ログイン、よくある起動エラーの対処まで解説。"
 categories: [TechBlog]
 tags: [misp, threat-intelligence, docker, soc, osint, blue-team, devsecops]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-misp-docker-build-guide/
+alt_en: /en/posts/tech-misp-docker-build-guide/
 ---
 
 ## TL;DR

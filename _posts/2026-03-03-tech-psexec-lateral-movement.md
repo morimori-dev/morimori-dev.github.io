@@ -1,12 +1,14 @@
 ---
 title: "psexec.py — Deep Dive"
 date: 2026-03-03
+permalink: /en/posts/tech-psexec-lateral-movement/
+legacy_permalink: /posts/tech-psexec-lateral-movement/
 description: "A practical reference for psexec.py (Impacket). Covers what the tool does, its limitations, authentication options, and attack flow with Mermaid sequence diagrams."
 categories: [TechBlog]
 tags: [windows, lateral-movement, impacket, smb, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-psexec-lateral-movement-ja/
+alt_ja: /ja/posts/tech-psexec-lateral-movement/
 ---
 
 ## TL;DR

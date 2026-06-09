@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - hydra (Linux)"
 date: 2026-02-27
+permalink: /ja/posts/thm-hydra/
+legacy_permalink: /posts/thm-hydra-ja/
 description: "TryHackMe hydra Linux マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, hydra, brute-force, dictionary-attack, ssh, suid, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-hydra/
+alt_en: /en/posts/thm-hydra/
 ---
 
 ## 概要

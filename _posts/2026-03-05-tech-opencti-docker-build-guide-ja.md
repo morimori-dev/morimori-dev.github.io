@@ -1,12 +1,14 @@
 ---
 title: "OpenCTI Docker 構築ガイド — 実践デプロイと初回ログイン"
 date: 2026-03-05
+permalink: /ja/posts/tech-opencti-docker-build-guide/
+legacy_permalink: /posts/tech-opencti-docker-build-guide-ja/
 description: "OpenCTI を Docker Compose で構築する実践手順。構成、起動順、ヘルス確認、初回ログイン、コネクタ運用の初期戦略まで解説。"
 categories: [TechBlog]
 tags: [opencti, threat-intelligence, docker, stix, soc, blue-team, devsecops]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-opencti-docker-build-guide/
+alt_en: /en/posts/tech-opencti-docker-build-guide/
 ---
 
 ## TL;DR

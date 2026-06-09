@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Steel Mountain (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-steel-mountain/
+legacy_permalink: /posts/thm-steel-mountain-ja/
 description: "TryHackMe Steel Mountain Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, smb-enum, xss, csrf, file-upload, apache, iis, smb, ftp, rdp, sudo, suid, metasploit, searchsploit]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-steel-mountain/
+alt_en: /en/posts/thm-steel-mountain/
 ---
 
 ## 概要

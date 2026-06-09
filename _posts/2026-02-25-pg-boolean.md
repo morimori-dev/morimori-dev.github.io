@@ -1,12 +1,14 @@
 ---
 title: "Proving Grounds - Boolean (Linux)"
 date: 2026-02-25
+permalink: /en/posts/pg-boolean/
+legacy_permalink: /posts/pg-boolean/
 description: "Proving Grounds Boolean Linux walkthrough covering reconnaissance, initial access, and privilege escalation."
 categories: [Proving Grounds, Linux]
 tags: [proving-grounds, oscp, linux, feroxbuster, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/pg-boolean-ja/
+alt_ja: /ja/posts/pg-boolean/
 ---
 
 ## Overview

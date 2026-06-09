@@ -1,12 +1,14 @@
 ---
 title: "GetUserSPNs.py を深掘りしてみた"
 date: 2026-03-03
+permalink: /ja/posts/tech-getuserspns-kerberoasting/
+legacy_permalink: /posts/tech-getuserspns-kerberoasting-ja/
 description: "Impacket の GetUserSPNs.py (Kerberoasting) 実践リファレンス。できること・制限・使いどころ・Mermaid シーケンス図付きで解説。GetNPUsers.py との違いも比較。"
 categories: [TechBlog]
 tags: [active-directory, kerberos, kerberoasting, impacket, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-getuserspns-kerberoasting/
+alt_en: /en/posts/tech-getuserspns-kerberoasting/
 ---
 
 ## TL;DR

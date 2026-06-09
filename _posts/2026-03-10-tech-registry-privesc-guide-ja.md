@@ -1,12 +1,15 @@
 ---
 title: "Windowsレジストリ権限昇格まとめ"
 date: 2026-03-10
+permalink: /ja/posts/tech-registry-privesc-guide/
+legacy_permalink: /posts/tech-registry-privesc-guide-ja/
 description: "Windowsレジストリを活用した権限昇格技術の包括的リファレンス。AlwaysInstallElevated、AutoRun悪用、サービスレジストリの設定ミス、認証情報窃取、Image File Execution Optionsを実践的なOSCP指向の例とともに解説。"
 categories: [TechBlog]
 tags: [windows, privilege-escalation, registry, alwaysinstallelevated, autorun, service-misconfig, credential-harvesting, pentest, oscp]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/tech-registry-privesc-guide/
 ---
 
 ## TL;DR

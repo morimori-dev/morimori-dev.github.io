@@ -1,12 +1,15 @@
 ---
 title: "CPTS 合格体験記"
 date: 2026-05-31
+permalink: /ja/posts/cpts-passed/
+legacy_permalink: /posts/cpts-passed-ja/
 description: "HTB Certified Penetration Testing Specialist (CPTS) 初回合格・14/14 フラグ完全制覇。複数サブネットを持つ企業模擬ネットワークへのフルスコープペンテスト、AD 攻撃の進め方、試験で意識した戦略とレポート作成まで詳しく解説。OSCP・CJCA との難易度比較も。"
 categories: [TechBlog]
 tags: [cpts, htb, hackthebox, pentest, active-directory, certification, career]
 mermaid: true
 content_lang: ja
 lang: ja
+alt_en: /en/posts/cpts-passed/
 ---
 
 ## TL;DR

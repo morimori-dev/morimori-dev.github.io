@@ -1,12 +1,14 @@
 ---
 title: "Certipy — Deep Dive"
 date: 2026-03-04
+permalink: /en/posts/tech-certipy-adcs-attack/
+legacy_permalink: /posts/tech-certipy-adcs-attack/
 description: "A practical reference for Certipy (ADCS attack tool). Covers enumeration, ESC1/ESC8 exploitation, Shadow Credentials, certificate authentication, and attack flows with Mermaid sequence diagrams."
 categories: [TechBlog]
 tags: [active-directory, adcs, certipy, kerberos, pkinit, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-certipy-adcs-attack-ja/
+alt_ja: /ja/posts/tech-certipy-adcs-attack/
 ---
 
 ## TL;DR

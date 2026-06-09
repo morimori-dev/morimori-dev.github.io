@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - Attacking Kerberos (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-attacking-kerberos/
+legacy_permalink: /posts/thm-attacking-kerberos-ja/
 description: "TryHackMe Attacking Kerberos Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, kerbrute, kerberoasting, as-rep-roasting, mimikatz, pass-the-ticket, samaccountname-spoofing, hash-cracking, hashcat, sudo, suid, active-directory, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-attacking-kerberos/
+alt_en: /en/posts/thm-attacking-kerberos/
 ---
 
 ## 概要

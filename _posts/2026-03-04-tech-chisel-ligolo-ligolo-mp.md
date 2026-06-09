@@ -1,12 +1,14 @@
 ---
 title: "Chisel / Ligolo-ng / Ligolo-mp — Practical Pivoting Guide (2026)"
 date: 2026-03-04
+permalink: /en/posts/tech-chisel-ligolo-ligolo-mp/
+legacy_permalink: /posts/tech-chisel-ligolo-ligolo-mp/
 description: "A practical comparison of Chisel, Ligolo-ng, and Ligolo-mp for pivoting and internal network access — covering tool selection, setup, detection, and real-world usage patterns."
 categories: [TechBlog]
 tags: [pivoting, tunneling, chisel, ligolo-ng, ligolo-mp, redteam, pentest, c2]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-chisel-ligolo-ligolo-mp-ja/
+alt_ja: /ja/posts/tech-chisel-ligolo-ligolo-mp/
 ---
 
 ## TL;DR

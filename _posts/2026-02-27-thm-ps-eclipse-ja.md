@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - PS Eclipse (Windows)"
 date: 2026-02-27
+permalink: /ja/posts/thm-ps-eclipse/
+legacy_permalink: /posts/thm-ps-eclipse-ja/
 description: "TryHackMe PS Eclipse Windows マシン解説。実践的な悪用手順と権限昇格テクニックを解説。"
 categories: [TryHackMe, Windows]
 tags: [tryhackme, windows, suid, privilege-escalation, pentest]
 mermaid: true
 content_lang: ja
-alt_en: /posts/thm-ps-eclipse/
+alt_en: /en/posts/thm-ps-eclipse/
 ---
 
 ## 概要

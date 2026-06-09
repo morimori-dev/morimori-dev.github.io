@@ -1,12 +1,14 @@
 ---
 title: "HackTheBox - SolidState (Linux)"
 date: 2026-02-27
+permalink: /en/posts/htb-solidstate/
+legacy_permalink: /posts/htb-solidstate/
 description: "Hack The Box SolidState Linux writeup with service enumeration, foothold strategy, and privilege escalation path."
 categories: [HackTheBox, Linux]
 tags: [hackthebox, linux, apache, ssh, hash-cracking, suid, cve-2015-7611, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/htb-solidstate-ja/
+alt_ja: /ja/posts/htb-solidstate/
 ---
 
 ## Overview

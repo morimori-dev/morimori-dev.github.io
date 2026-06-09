@@ -1,12 +1,14 @@
 ---
 title: "TryHackMe - StuxCTF (Linux)"
 date: 2026-02-27
+permalink: /en/posts/thm-stuxctf/
+legacy_permalink: /posts/thm-stuxctf/
 description: "TryHackMe StuxCTF Linux walkthrough focused on practical exploitation steps and privilege escalation techniques."
 categories: [TryHackMe, Linux]
 tags: [tryhackme, linux, feroxbuster, nikto, webshell, sudo, suid, web, privilege-escalation, pentest]
 mermaid: true
 content_lang: en
-alt_ja: /posts/thm-stuxctf-ja/
+alt_ja: /ja/posts/thm-stuxctf/
 ---
 
 ## Overview

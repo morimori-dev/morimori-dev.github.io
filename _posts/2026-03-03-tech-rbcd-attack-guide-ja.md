@@ -1,12 +1,14 @@
 ---
 title: "RBCD (Resource-Based Constrained Delegation) 攻撃ガイド"
 date: 2026-03-03
+permalink: /ja/posts/tech-rbcd-attack-guide/
+legacy_permalink: /posts/tech-rbcd-attack-guide-ja/
 description: "リソースベースの制約付き委任 (RBCD) を悪用した権限昇格の完全ガイド。攻撃の仕組み・前提条件・コマンド・防御策を解説。"
 categories: [TechBlog]
 tags: [active-directory, kerberos, rbcd, privilege-escalation, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-rbcd-attack-guide/
+alt_en: /en/posts/tech-rbcd-attack-guide/
 ---
 
 # RBCD (Resource-Based Constrained Delegation) 攻撃ガイド

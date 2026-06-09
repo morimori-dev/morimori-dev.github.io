@@ -1,12 +1,14 @@
 ---
 title: "Windows Potato 権限昇格まとめ"
 date: 2026-03-03
+permalink: /ja/posts/tech-windows-potato-privesc/
+legacy_permalink: /posts/tech-windows-potato-privesc-ja/
 description: "Hot Potato から GodPotato まで、Windows Potato ファミリーの権限昇格テクニックを網羅したリファレンス。攻撃条件・仕組み・コマンド・対象 OS を解説。"
 categories: [TechBlog]
 tags: [windows, privilege-escalation, potato, seimpersonateprivilege, pentest, oscp]
 mermaid: true
 content_lang: ja
-alt_en: /posts/tech-windows-potato-privesc/
+alt_en: /en/posts/tech-windows-potato-privesc/
 ---
 
 ## TL;DR

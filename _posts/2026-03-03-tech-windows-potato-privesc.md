@@ -1,12 +1,14 @@
 ---
 title: "Windows Potato Privilege Escalation — Summary"
 date: 2026-03-03
+permalink: /en/posts/tech-windows-potato-privesc/
+legacy_permalink: /posts/tech-windows-potato-privesc/
 description: "A comprehensive reference covering all Potato-family privilege escalation techniques on Windows — from Hot Potato to GodPotato. Covers attack conditions, mechanisms, commands, and target OS support."
 categories: [TechBlog]
 tags: [windows, privilege-escalation, potato, seimpersonateprivilege, pentest, oscp]
 mermaid: true
 content_lang: en
-alt_ja: /posts/tech-windows-potato-privesc-ja/
+alt_ja: /ja/posts/tech-windows-potato-privesc/
 ---
 
 ## TL;DR
