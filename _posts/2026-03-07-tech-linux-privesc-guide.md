@@ -1,9 +1,9 @@
 ---
-title: "Linux Privilege Escalation — Writeup Summary (OSCP Edition)"
+title: "Linux Privilege Escalation Checklist for OSCP"
 date: 2026-03-07
 permalink: /en/posts/tech-linux-privesc-guide/
 legacy_permalink: /posts/tech-linux-privesc-guide/
-description: "A comprehensive Linux privilege escalation reference distilled from 60+ TryHackMe, HackTheBox, and Proving Grounds writeups. Covers sudo abuse, SUID, capabilities, cron jobs, kernel exploits, LXD escape, and more — with real machine examples and detection notes."
+description: "OSCP-focused Linux privilege escalation checklist: sudo -l, SUID, capabilities, cron jobs, writable files, LXD/Docker escape, kernel exploits, and command examples."
 categories: [TechBlog]
 tags: [linux, privilege-escalation, suid, sudo, capabilities, cron, lxd, kernel-exploit, oscp, pentest, gtfobins]
 mermaid: true
@@ -13,7 +13,7 @@ alt_ja: /ja/posts/tech-linux-privesc-guide/
 
 ## TL;DR
 
-Linux privilege escalation is consistently the decisive phase in CTF machines and OSCP labs. After gaining a low-privilege foothold, the path to root typically runs through one of the patterns below. This guide distills the techniques that appear most frequently across 60+ writeups.
+Linux privilege escalation is consistently the decisive phase in CTF machines and OSCP labs. Use this as a checklist after gaining a low-privilege foothold: start with `sudo -l`, SUID binaries, capabilities, cron jobs, writable files, containers, and kernel version checks. The guide distills the techniques that appear most frequently across 60+ writeups.
 
 | Category | Techniques |
 |---|---|

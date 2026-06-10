@@ -1,9 +1,9 @@
 ---
-title: "Certipy — Deep Dive"
+title: "Certipy AD CS Attack Guide — ESC1, ESC8, Shadow Credentials"
 date: 2026-03-04
 permalink: /en/posts/tech-certipy-adcs-attack/
 legacy_permalink: /posts/tech-certipy-adcs-attack/
-description: "A practical reference for Certipy (ADCS attack tool). Covers enumeration, ESC1/ESC8 exploitation, Shadow Credentials, certificate authentication, and attack flows with Mermaid sequence diagrams."
+description: "Hands-on Certipy guide for AD CS attacks: find vulnerable templates, exploit ESC1/ESC8, abuse Shadow Credentials, authenticate with PKINIT, and recover hashes."
 categories: [TechBlog]
 tags: [active-directory, adcs, certipy, kerberos, pkinit, pentest, oscp]
 mermaid: true
