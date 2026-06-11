@@ -3,6 +3,14 @@ layout: page
 title: Tech Blog
 icon: fas fa-book-open
 order: 2
+description: "Technical articles on Active Directory, OSCP, Windows and Linux privilege escalation, web security, and security tooling."
+---
+
+## Topic Hubs
+
+- [Active Directory Pentest Roadmap](/en/topics/active-directory/)
+- [Active Directory 攻撃ロードマップ](/ja/topics/active-directory/)
+
 ---
 
 <table>

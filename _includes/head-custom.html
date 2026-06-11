@@ -8,14 +8,18 @@
   }
 </style>
 
-{% if page.layout == "post" %}
-<meta name="page-lang" content="{{ page.content_lang | default: page.lang | default: 'en' }}">
+{% assign current_page_lang = page.content_lang | default: page.lang | default: site.lang | default: 'en' %}
+{% if page.content_lang or page.lang or page.alt_ja or page.alt_en %}
+<meta name="page-lang" content="{{ current_page_lang }}">
 {% if page.alt_ja %}
 <meta name="lang-alt-ja" content="{{ page.alt_ja }}">
 {% endif %}
 {% if page.alt_en %}
 <meta name="lang-alt-en" content="{{ page.alt_en }}">
 {% endif %}
+{% endif %}
+
+{% if page.layout == "post" %}
 
 {%- comment -%}
   TechArticle JSON-LD — supplements Chirpy's default BlogPosting schema.
@@ -74,6 +78,7 @@
   "license": "https://creativecommons.org/licenses/by/4.0/"
 }
 </script>
+{% endif %}
 
 {%- comment -%} hreflang alternates for EN/JA sister pages {%- endcomment -%}
 {%- if page.alt_ja %}
@@ -85,7 +90,6 @@
 <link rel="alternate" hreflang="ja" href="{{ page.url | absolute_url }}">
 <link rel="alternate" hreflang="x-default" href="{{ page.alt_en | absolute_url }}">
 {%- endif %}
-{% endif %}
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TTQZGYE15D"></script>
