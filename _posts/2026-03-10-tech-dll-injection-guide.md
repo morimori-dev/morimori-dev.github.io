@@ -1,9 +1,9 @@
 ---
-title: "DLL Injection Summary — Techniques, Tools & Detection"
+title: "DLL Injection Techniques Guide — Examples, Tools, Detection"
 date: 2026-03-10
 permalink: /en/posts/tech-dll-injection-guide/
 legacy_permalink: /posts/tech-dll-injection-guide/
-description: "A comprehensive reference for DLL injection techniques in penetration testing. Covers Classic DLL Injection, Reflective DLL Injection, DLL Hollowing, Process Hollowing, and DLL Search Order Hijacking with practical examples and detection strategies."
+description: "Practical DLL injection guide for Windows security testing: CreateRemoteThread, reflective DLL injection, DLL hollowing, process hollowing, search order hijacking, and detection."
 categories: [TechBlog]
 tags: [dll-injection, windows, post-exploitation, process-injection, reflective-dll, dll-hijacking, pentest, oscp, evasion, red-team]
 mermaid: true
@@ -14,6 +14,17 @@ alt_ja: /ja/posts/tech-dll-injection-guide/
 ## TL;DR
 
 DLL Injection is a technique that forces a target process to load and execute code from an attacker-controlled Dynamic Link Library (DLL). It is a foundational post-exploitation and persistence mechanism on Windows, used for **privilege escalation, credential theft, lateral movement, and defense evasion**. This guide covers the major injection methods with working examples and detection guidance.
+
+Use this as a map for authorized Windows security testing and detection engineering:
+
+| Technique | Primary API / Pattern | Best Search Intent |
+|---|---|---|
+| Classic DLL Injection | `OpenProcess` -> `VirtualAllocEx` -> `WriteProcessMemory` -> `CreateRemoteThread` | LoadLibrary-based examples |
+| Reflective DLL Injection | In-memory PE loader | Fileless execution concepts |
+| DLL Hollowing | Overwrite a legitimate DLL's code section | Evasion-oriented injection |
+| Process Hollowing | Suspended process + image replacement | Process replacement workflow |
+| DLL Search Order Hijacking | Place a DLL in a trusted search path | Persistence and privilege escalation |
+| Thread Hijacking | Suspend thread, modify context, resume | Existing-thread execution |
 
 ---
 

