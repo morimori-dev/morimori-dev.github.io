@@ -629,11 +629,11 @@ kdestroy
 
 ## 関連記事
 
-- [GetNPUsers.py — AS-REP Roasting 完全ガイド](/ja/en/posts/tech-getnpusers-asrep-roasting/)
-- [GetUserSPNs.py — Kerberoasting 完全ガイド](/ja/en/posts/tech-getuserspns-kerberoasting/)
-- [RBCD 攻撃ガイド](/ja/en/posts/tech-rbcd-attack-guide/)
-- [ADCS 攻撃ガイド (ESC1〜16)](/ja/en/posts/tech-adcs-esc-attack-guide/)
-- [NTLM Relay 攻撃ガイド](/ja/en/posts/tech-ntlmrelayx-attack-guide/)
+- [GetNPUsers.py — AS-REP Roasting 完全ガイド](/ja/posts/tech-getnpusers-asrep-roasting/)
+- [GetUserSPNs.py — Kerberoasting 完全ガイド](/ja/posts/tech-getuserspns-kerberoasting/)
+- [RBCD 攻撃ガイド](/ja/posts/tech-rbcd-attack-guide/)
+- [ADCS 攻撃ガイド (ESC1〜16)](/ja/posts/tech-adcs-esc-attack-guide/)
+- [NTLM Relay 攻撃ガイド](/ja/posts/tech-ntlmrelayx-attack-guide/)
 
 ---
 

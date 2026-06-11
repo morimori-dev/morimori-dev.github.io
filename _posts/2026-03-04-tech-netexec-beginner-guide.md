@@ -1,11 +1,11 @@
 ---
-title: "NetExec (nxc) — Beginner-Friendly Practical Guide"
+title: "NetExec Commands Cheatsheet — SMB, LDAP, WinRM, Password Spraying"
 date: 2026-03-04
 permalink: /en/posts/tech-netexec-beginner-guide/
 legacy_permalink: /posts/tech-netexec-beginner-guide/
-description: "A detailed beginner-friendly guide to NetExec (nxc): SMB/LDAP/WinRM enumeration, password spraying, remote execution, and practical AD workflows with Mermaid sequence diagrams."
+description: "NetExec (nxc) commands cheatsheet for Active Directory pentesting: SMB and LDAP enumeration, WinRM checks, password spraying, Pass-the-Hash, BloodHound, and relay prep."
 categories: [TechBlog]
-tags: [active-directory, netexec, smb, ldap, winrm, pentest, oscp]
+tags: [active-directory, netexec, nxc, smb, ldap, winrm, password-spraying, pass-the-hash, bloodhound, pentest, oscp, cheatsheet]
 mermaid: true
 content_lang: en
 alt_ja: /ja/posts/tech-netexec-beginner-guide/
@@ -14,6 +14,24 @@ alt_ja: /ja/posts/tech-netexec-beginner-guide/
 ## TL;DR
 
 `NetExec` (`nxc`) is a fast post-enumeration and credential-validation framework for internal network and Active Directory assessments. It lets you use one command style across protocols (`smb`, `ldap`, `winrm`, `mssql`, `ssh`, etc.), so you can move from discovery to validated access without constantly switching tools. For beginners, the biggest win is consistency: once you understand the core pattern, the rest is mostly protocol-specific options.
+
+Use these commands only in an authorized lab or assessment. Start with low-impact discovery, check lockout policy, then validate credentials with strict failure limits.
+
+| Goal | NetExec Command |
+|---|---|
+| SMB host sweep | `nxc smb targets.txt` |
+| Find SMB relay candidates | `nxc smb targets.txt --gen-relay-list no_signing_hosts.txt` |
+| Check password policy | `nxc smb <DC_IP> -u '<USER>' -p '<PASS>' --pass-pol` |
+| List readable shares | `nxc smb <TARGET> -u '<USER>' -p '<PASS>' --shares` |
+| RID brute users | `nxc smb <TARGET> -u 'guest' -p '' --rid-brute` |
+| Safe password spray | `nxc smb targets.txt -u users.txt -p '<PASS>' --gfail-limit 5 --ufail-limit 2 --jitter 2` |
+| Pass-the-Hash validation | `nxc smb targets.txt -u '<USER>' -H '<NTHASH>' --continue-on-success` |
+| LDAP users/groups/SID | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --users --groups --get-sid` |
+| Kerberoasting | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --kerberoasting kerberoast_hashes.txt` |
+| AS-REP roasting | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --asreproast asrep_hashes.txt` |
+| BloodHound collection | `nxc ldap <DC_IP> -u '<USER>' -p '<PASS>' --bloodhound -c All` |
+| WinRM access check | `nxc winrm targets.txt -u '<USER>' -p '<PASS>'` |
+| Remote command proof | `nxc winrm <TARGET> -u '<USER>' -p '<PASS>' -x 'whoami && hostname'` |
 
 ---
 
@@ -294,6 +312,18 @@ sequenceDiagram
 - Alert on rapid LDAP enumeration bursts and bulk object queries.
 - Enforce SMB signing and strong account lockout policies where feasible.
 - Reduce credential reuse and apply tiered admin models to limit lateral movement.
+
+---
+
+## Related Articles
+
+- [Active Directory Certificate Services ESC Attack Guide](/en/posts/tech-adcs-esc-attack-guide/)
+- [Certipy AD CS Attack Guide](/en/posts/tech-certipy-adcs-attack/)
+- [ntlmrelayx.py — Deep Dive](/en/posts/tech-ntlmrelayx-attack-guide/)
+- [BloodHound Attack Path Cheatsheet](/en/posts/tech-bloodhound-attack-paths/)
+- [Mimikatz Commands Cheatsheet](/en/posts/tech-mimikatz-guide/)
+- [Lateral Movement — OSCP Summary](/en/posts/tech-lateral-movement-guide/)
+- [Windows Privilege Escalation — Full Analysis](/en/posts/tech-windows-privesc-summary/)
 
 ---
 

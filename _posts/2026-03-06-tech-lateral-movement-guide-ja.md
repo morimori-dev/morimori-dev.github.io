@@ -528,12 +528,12 @@ netsh advfirewall firewall add rule name="Block ADMIN$ from non-mgmt" ...
 
 ## 関連記事
 
-- [psexec.py を深掘りしてみた](/ja/en/posts/tech-psexec-lateral-movement/)
-- [NetExec (nxc) — 初心者向け実践ガイド](/ja/en/posts/tech-netexec-beginner-guide/)
-- [Chisel / Ligolo-ng / Ligolo-mp — ピボットガイド](/ja/en/posts/tech-chisel-ligolo-ligolo-mp/)
-- [ntlmrelayx.py を深掘りしてみた](/ja/en/posts/tech-ntlmrelayx-attack-guide/)
-- [Mimikatz 完全使用ガイド](/ja/en/posts/tech-mimikatz-guide/)
-- [Kerberos OSCP 攻撃テクニック](/ja/en/posts/tech-kerberos-oscp-guide/)
+- [psexec.py を深掘りしてみた](/ja/posts/tech-psexec-lateral-movement/)
+- [NetExecコマンドチートシート](/ja/posts/tech-netexec-beginner-guide/)
+- [Chisel / Ligolo-ng / Ligolo-mp — ピボットガイド](/ja/posts/tech-chisel-ligolo-ligolo-mp/)
+- [ntlmrelayx.py を深掘りしてみた](/ja/posts/tech-ntlmrelayx-attack-guide/)
+- [Mimikatzコマンドチートシート](/ja/posts/tech-mimikatz-guide/)
+- [Kerberos OSCP 攻撃テクニック](/ja/posts/tech-kerberos-oscp-guide/)
 
 ---
 
