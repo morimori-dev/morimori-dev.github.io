@@ -29,3 +29,6 @@ medium-export/
 
 # Claude Code
 .claude/
+
+# Jekyll drafts are WIP — keep them local-only, never publish to remote
+_drafts/
