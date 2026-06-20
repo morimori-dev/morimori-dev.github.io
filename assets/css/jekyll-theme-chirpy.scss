@@ -134,78 +134,12 @@
   }
 }
 
-/* Apply dark mermaid colors: (1) explicit dark toggle, or
-   (2) OS dark mode unless the user explicitly forced light. */
-[data-mode="dark"] .mermaid {
-  @include mermaid-dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  html:not([data-mode="light"]) .mermaid {
-    @include mermaid-dark;
-  }
-}
-
-/* Light mode overrides */
+/* Render every mermaid diagram as a dark "figure" in BOTH light and dark
+   site modes — consistent, high-contrast, and avoids the harsh white boxes
+   that light mode used to produce. The diagram sits on its own dark card. */
 .mermaid {
-  /* Sequence diagram */
-  .actor {
-    fill: #ebf8ff !important;
-    stroke: #3182ce !important;
-  }
-  text.actor > tspan {
-    fill: #1a202c !important;
-  }
-  .messageLine0,
-  .messageLine1 {
-    stroke: #3182ce !important;
-  }
-  .messageText {
-    fill: #1a202c !important;
-  }
-  .loopText > tspan,
-  .noteText > tspan {
-    fill: #1a202c !important;
-  }
-  .note {
-    fill: #fefcbf !important;
-    stroke: #d69e2e !important;
-  }
-  .loopLine {
-    stroke: #718096 !important;
-  }
-  .activation0,
-  .activation1,
-  .activation2 {
-    fill: #bee3f8 !important;
-    stroke: #3182ce !important;
-  }
-  .sequenceNumber {
-    fill: #fff !important;
-  }
-
-  /* Flowchart */
-  .node rect,
-  .node polygon,
-  .node circle {
-    fill: #ebf8ff !important;
-    stroke: #3182ce !important;
-  }
-  .nodeLabel {
-    color: #1a202c !important;
-  }
-  .edgeLabel {
-    background-color: #fff !important;
-    color: #1a202c !important;
-  }
-  .edgePath .path {
-    stroke: #3182ce !important;
-  }
-  .cluster rect {
-    fill: #f7fafc !important;
-    stroke: #a0aec0 !important;
-  }
-  .cluster span {
-    color: #2d3748 !important;
-  }
+  @include mermaid-dark;
+  background: #1b1b1e;
+  border-radius: 8px;
+  padding: 1rem 0.5rem;
 }
