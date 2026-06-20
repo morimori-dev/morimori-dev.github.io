@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - Tracer (DFIR)"
-date: 2026-06-26
+date: 2026-06-26 19:00:00 +0900
 description: "HackTheBox Sherlock Tracer 解説。PSEXESVC の Operational ログ「だけ」から Windows ワークステーション上の PsExec 横展開を追跡する。実行回数を数え、ドロップされた PSEXESVC サービスバイナリ・.key ファイル・名前付きパイプを特定し、記録されたコマンドラインから攻撃者がどのホストから横展開してきたかを立証する。"
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, psexec, lateral-movement, psexesvc, named-pipes, event-id-7045, threat-hunting, mitre-attack]

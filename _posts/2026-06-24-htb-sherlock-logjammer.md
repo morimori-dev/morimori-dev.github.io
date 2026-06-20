@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - LogJammer (DFIR)"
-date: 2026-06-24
+date: 2026-06-24 19:00:00 +0900
 description: "HackTheBox Sherlock LogJammer walkthrough: reconstructing an attacker's post-compromise activity from a single Windows host's event logs — tracing the first logon (4624), a malicious outbound firewall rule (2004), an audit-policy change (4719), a scheduled task (4698), a Defender SharpHound detection (1116/1117), PowerShell ScriptBlock logging (4104), and the firewall log being cleared (104) across five EVTX channels."
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, windows-event-logs, evtx, scheduled-tasks, windows-firewall, windows-defender, powershell-logging, log-clearing, mitre-attack]

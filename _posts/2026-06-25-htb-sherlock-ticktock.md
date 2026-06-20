@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - TickTock (DFIR)"
-date: 2026-06-25
+date: 2026-06-25 19:00:00 +0900
 description: "HackTheBox Sherlock TickTock walkthrough: triaging a KAPE collection to reconstruct a remote-access intrusion — reading the KAPE ConsoleLog/CopyLog and CSV bookmarks, identifying the Merlin C2 executable that was dropped, and pulling the TeamViewer session ID for the initial access out of TeamViewer15_Logfile.log."
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, kape, triage-collection, teamviewer, merlin-c2, remote-access, eric-zimmerman, timeline-explorer, mitre-attack]

@@ -11,7 +11,7 @@ on:
 
   workflow_dispatch:
   schedule:
-    - cron: "0 21 * * *"   # daily ~06:00 JST: reveal that day's scheduled post
+    - cron: "5 10 * * *"   # daily 19:05 JST (10:05 UTC): reveal that day's 19:00 post
 
 permissions:
   contents: read
