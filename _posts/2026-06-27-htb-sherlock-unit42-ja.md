@@ -225,7 +225,6 @@ flowchart LR
 <!-- DFIR 関係図 (hokkaido 図B 流): 丸数字①〜⑤=各設問の証跡。矢印は 実線=フロー / 太線=IOC抽出(強調) / 点線=ATT&CK対応。値は省略しない。 -->
 ```mermaid
 flowchart TB
-    ANALYST["アナリスト — Microsoft-Windows-Sysmon-Operational.evtx"]
 
     subgraph EVID["Sysmon 証跡"]
         direction LR
@@ -252,19 +251,14 @@ flowchart TB
         T4["T1071 C2"]
     end
 
-    ANALYST -->|"EvtxECmd → Timeline Explorer"| V1
-    V1 ==>|"偽装"| O1
-    V1 --> V2
-    V2 ==>|"ドロップされたスクリプト"| O2
-    V1 --> V3
-    V3 -.-|"過去日付化"| T3
-    V1 --> V4
-    V4 ==>|"到達性チェック"| O3
-    V1 --> V5
-    V5 ==>|"インプラント設置"| O4
-    O1 -.- T1
-    O1 -.- T2
-    O3 -.- T4
+    V1 ==> O1
+    V2 ==> O2
+    V3 -.-> T3
+    V4 ==> O3
+    V5 ==> O4
+    O1 -.-> T1
+    O1 -.-> T2
+    O3 -.-> T4
 ```
 
 ## 検知と防御（ブルーチーム）

@@ -170,7 +170,6 @@ PsExec creates three named pipes per session — `stdin`, `stdout`, `stderr` —
 
 ```mermaid
 flowchart TB
-    ANALYST["Analyst — Forela-Wkstn002 triage (PSEXESVC Operational)"]
 
     subgraph EVID["Evidence"]
         direction LR
@@ -193,15 +192,12 @@ flowchart TB
         T3["T1570 Lateral Tool Transfer"]
     end
 
-    ANALYST -->|"EvtxECmd / Timeline Explorer"| V1
-    V1 ==>|"service binary"| O1
-    ANALYST -->|"raw record"| V2
-    V2 ==>|"source host"| O2
-    ANALYST -->|"5th-last run"| V3
-    V3 ==>|"session IOCs"| O3
-    V1 -.- T2
-    V2 -.- T1
-    V3 -.-|"binary copied to ADMIN$"| T3
+    V1 ==> O1
+    V2 ==> O2
+    V3 ==> O3
+    V1 -.-> T2
+    V2 -.-> T1
+    V3 -.-> T3
 ```
 
 ## Detection & Hardening (Blue Team)

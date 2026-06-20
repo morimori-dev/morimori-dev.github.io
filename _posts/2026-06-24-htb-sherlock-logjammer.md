@@ -248,7 +248,6 @@ Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
 
 ```mermaid
 flowchart TB
-    ANALYST["Analyst — 5 EVTX channels (DESKTOP-887GK2L)"]
 
     subgraph EVID["Evidence"]
         direction LR
@@ -271,15 +270,12 @@ flowchart TB
         T3["T1070.001 Clear Windows Event Logs"]
     end
 
-    ANALYST -->|"EvtxECmd / Timeline Explorer"| V1
-    ANALYST -->|"Firewall channel CSV"| V2
-    ANALYST -->|"Defender + PowerShell CSV"| V3
-    V1 ==>|"persistence"| O1
-    V2 ==>|"C2 egress"| O2
-    V3 ==>|"AD recon tool"| O3
-    V1 -.- T1
-    V2 -.- T2
-    V2 -.-|"104 log cleared"| T3
+    V1 ==> O1
+    V2 ==> O2
+    V3 ==> O3
+    V1 -.-> T1
+    V2 -.-> T2
+    V2 -.-> T3
 ```
 
 ## Detection & Hardening (Blue Team)

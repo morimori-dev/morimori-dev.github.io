@@ -141,7 +141,6 @@ happy.grunwald
 
 ```mermaid
 flowchart TB
-    ANALYST["Analyst — Security.evtx (DC only)"]
 
     subgraph EVID["Evidence"]
         direction LR
@@ -164,16 +163,13 @@ flowchart TB
         T3["T1110.002 Password Cracking"]
     end
 
-    ANALYST -->|"EvtxECmd / Timeline Explorer"| V1
-    V1 ==>|"roasted user"| O1
-    V1 ==>|"source host"| O2
-    ANALYST -->|"same DC log"| V2
-    V2 ==>|"workstation"| O2
-    ANALYST -->|"logon correlation"| V3
-    V3 ==>|"who ran it"| O3
-    V1 -.- T1
-    V3 -.- T2
-    V1 -.-|"crack AS-REP"| T3
+    V1 ==> O1
+    V1 ==> O2
+    V2 ==> O2
+    V3 ==> O3
+    V1 -.-> T1
+    V3 -.-> T2
+    V1 -.-> T3
 ```
 
 ## Detection & Hardening (Blue Team)

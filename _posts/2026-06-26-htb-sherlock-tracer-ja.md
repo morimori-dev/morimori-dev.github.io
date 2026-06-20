@@ -170,7 +170,6 @@ PsExec はセッションごとに 3 つの名前付きパイプ(`stdin`・`stdo
 
 ```mermaid
 flowchart TB
-    ANALYST["アナリスト — Forela-Wkstn002 トリアージ (PSEXESVC Operational)"]
 
     subgraph EVID["証跡"]
         direction LR
@@ -193,15 +192,12 @@ flowchart TB
         T3["T1570 Lateral Tool Transfer"]
     end
 
-    ANALYST -->|"EvtxECmd / Timeline Explorer"| V1
-    V1 ==>|"サービスバイナリ"| O1
-    ANALYST -->|"生レコード"| V2
-    V2 ==>|"攻撃元ホスト"| O2
-    ANALYST -->|"後ろから5番目"| V3
-    V3 ==>|"セッションIOC"| O3
-    V1 -.- T2
-    V2 -.- T1
-    V3 -.-|"バイナリを ADMIN$ にコピー"| T3
+    V1 ==> O1
+    V2 ==> O2
+    V3 ==> O3
+    V1 -.-> T2
+    V2 -.-> T1
+    V3 -.-> T3
 ```
 
 ## 検知と防御(ブルーチーム)
