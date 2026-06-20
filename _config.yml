@@ -4,6 +4,7 @@
 theme: jekyll-theme-chirpy
 lang: en
 timezone: Asia/Tokyo
+future: false   # 未来日付の記事は当日までビルドしない(ドリップ公開用)
 
 title: "morimori Security Blog"
 tagline: "Penetration Tester | Security Writeups"

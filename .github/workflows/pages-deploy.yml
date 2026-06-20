@@ -10,6 +10,8 @@ on:
       - LICENSE
 
   workflow_dispatch:
+  schedule:
+    - cron: "0 21 * * *"   # daily ~06:00 JST: reveal that day's scheduled post
 
 permissions:
   contents: read
