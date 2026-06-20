@@ -30,6 +30,31 @@
 }
 
 /* ---------------------------------------------------------
+   Tighten the right info panel (Recently Updated / Trending Tags / Contents)
+   into a compact strip pinned to the right edge, and let the article content
+   flex to fill the freed width. `min-width:0` on <main> lets it shrink so wide
+   code blocks don't force horizontal overflow on narrower desktops.
+   --------------------------------------------------------- */
+@media (min-width: 1200px) {
+  #main-wrapper .container > .row.flex-grow-1 {
+    flex-wrap: nowrap !important;
+  }
+
+  #main-wrapper .container > .row.flex-grow-1 > main {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+  }
+
+  #panel-wrapper {
+    flex: 0 0 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+  }
+}
+
+/* ---------------------------------------------------------
    Mermaid diagram color overrides for better readability
    --------------------------------------------------------- */
 
