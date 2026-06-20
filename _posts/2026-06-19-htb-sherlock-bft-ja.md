@@ -58,7 +58,7 @@ MFTECmd.exe -f '.\$MFT' --csv . --csvf mft.csv
 
 ## 調査
 
-<h2 id="q1" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q1. Simon がリンクからダウンロードした ZIP の名前は？</h2>
+<h2 id="q1" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q1. What was the name of the ZIP file Simon downloaded from the link?</h2>
 
 `mft.csv` を Timeline Explorer で開き、2024-02-13 前後のユーザー `Downloads` を見る。ダウンロードされた書庫が目立つ。
 
@@ -72,7 +72,7 @@ Stage-20240213T093324Z-001.zip
 
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.2 1.5 1.4 2.5"/></svg> **解説** — 報告された日付付近を作成時刻でソートすると、最初のダウンロードが活動の山の先頭に来る。`Stage-...zip`(Google ドライブの一括エクスポート命名パターン)がチェーンの最初のリンクだと分かる。
 
-<h2 id="q2" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q2. ZIP のダウンロード元 Host URL は何か？（Zone.Identifier）</h2>
+<h2 id="q2" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q2. What is the full Host URL the ZIP was downloaded from? (Zone.Identifier)</h2>
 
 ダウンロードされたファイルは `Zone.Identifier` **代替データストリーム**(Mark-of-the-Web)を持つ。MFTECmd がこれを抽出するので `HostUrl` を読む。
 
@@ -86,7 +86,7 @@ https://storage.googleapis.com/drive-bulk-export-anonymous/20240213T093324.039Z/
 
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.2 1.5 1.4 2.5"/></svg> **解説** — Mark-of-the-Web はディスク上で最も価値の高い IOC の1つ。Windows はインターネットから落としたファイルに取得元 URL を `Zone.Identifier` ADS で付与する。これは `$MFT` に残り、ペイロードが*どこから*来たか(ここでは Google Cloud Storage の一括エクスポートリンク)を証明する — IOC 横展開やメールゲートウェイ調査の金脈。(MITRE ATT&CK **T1566 — Phishing**、後続 **T1059**)
 
-<h2 id="q3" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q3. コードを実行し C2 に接続した悪性ファイルのフルパスと名前は？</h2>
+<h2 id="q3" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q3. What is the full path and name of the malicious file that executed code and connected to C2?</h2>
 
 ZIP からユーザー `Downloads` 配下に展開された内容を辿る。1つが、欺瞞的に深くネストした `invoice` パスのバッチスクリプトだ。
 
@@ -100,7 +100,7 @@ c:\Users\simon.stark\Downloads\Stage-20240213T093324Z-001\Stage\invoice\invoices
 
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.2 1.5 1.4 2.5"/></svg> **解説** — 二重にネストした `invoice\invoices\` フォルダと、請求書を装った `.bat` は典型的な囮の構造。拡張子＋場所＋タイミング(ZIP 書き込み直後)で実行された stager を特定できる。(MITRE ATT&CK **T1204 — User Execution**)
 
-<h2 id="q4" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q4. そのファイルの <code>$Created0x30</code> タイムスタンプ（ディスク上の作成日時）は何か？</h2>
+<h2 id="q4" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q4. What is the <code>$Created0x30</code> timestamp of that file (when was it created on disk)?</h2>
 
 `invoice.bat` の **`$FILE_NAME` (0x30)** 作成タイムスタンプ(列 `Created0x30`)を読む。
 
@@ -114,7 +114,7 @@ c:\Users\simon.stark\Downloads\Stage-20240213T093324Z-001\Stage\invoice\invoices
 
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.2 1.5 1.4 2.5"/></svg> **解説** — NTFS は2組のタイムスタンプを持つ: `$STANDARD_INFORMATION`(0x10、エクスプローラ表示、改ざん容易)と `$FILE_NAME`(0x30、カーネル管理、偽装困難)。0x10 と 0x30 の比較が time stomping 検出の定石で、0x30 の作成時刻こそ*信頼できる*ディスク上の作成時点。
 
-<h2 id="q5" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q5. stager の MFT レコードの hex オフセットは？</h2>
+<h2 id="q5" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q5. What is the hex offset of the stager's MFT record?</h2>
 
 各 MFT レコードは **1024 バイト**なので、レコードのバイトオフセット = **エントリ番号 × 1024** を16進数で表したもの。
 
@@ -128,7 +128,7 @@ c:\Users\simon.stark\Downloads\Stage-20240213T093324Z-001\Stage\invoice\invoices
 
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.2 1.5 1.4 2.5"/></svg> **解説** — `0x16E3000 = 23,998,464 = 23,436 × 1024` — つまり `invoice.bat` は MFT エントリ **23436**。オフセットが分かれば、CSV では完全に描画されない属性(次問)を見るために、hex エディタで生レコードへ直接ジャンプできる。
 
-<h2 id="q6" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q6. stager の内容から復元する C2 の IP とポートは何か？（MFT resident ファイル）</h2>
+<h2 id="q6" style="background:rgba(255,159,67,.16);border-left:5px solid #ff9f43;border-radius:6px;padding:.5rem .85rem;margin:2.5rem 0 1rem;">Q6. What is the C2 IP and port recovered from the stager's content? (MFT-resident file)</h2>
 
 `invoice.bat` は小さい(約 1024 B 未満)ため **resident**: 外部クラスタではなく自分の MFT レコード内に格納される。hex エディタで `$MFT` のオフセット `0x16E3000` へシークし `$DATA` 属性を読むと、スクリプト本体(と C2 エンドポイント)がそこにある。
 
