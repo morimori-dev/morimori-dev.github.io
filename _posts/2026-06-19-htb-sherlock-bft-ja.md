@@ -189,8 +189,6 @@ flowchart LR
 <!-- DFIR 関係図 (hokkaido 図B 流): 丸数字①〜⑤=各設問の証跡。矢印は 実線=フロー / 太線=IOC抽出(強調) / 点線=ATT&CK対応。値は省略しない。 -->
 ```mermaid
 flowchart TB
-    ANALYST["アナリスト — $MFT のみ"]
-
     subgraph EVID["MFT 証跡"]
         direction LR
         V1["① Stage-20240213T093324Z-001.zip"]
@@ -215,18 +213,14 @@ flowchart TB
         T4["T1071 C2"]
     end
 
-    ANALYST -->|"MFTECmd → Timeline Explorer"| V1
-    V1 -->|"MotW を読む"| V2
-    V2 ==>|"抽出"| O1
-    V1 --> V3
-    V3 ==>|"フルパス"| O2
-    V3 --> V4
-    V4 -.-|"time stomp"| T3
-    V3 --> V5
-    V5 ==>|"hex @ 0x16E3000"| O3
-    O1 -.- T1
-    O2 -.- T2
-    O3 -.- T4
+    V1 ==> O1
+    V2 ==> O1
+    V3 ==> O2
+    V5 ==> O3
+    V4 -.-> T3
+    O1 -.-> T1
+    O2 -.-> T2
+    O3 -.-> T4
 ```
 
 ## 検知と防御（ブルーチーム）
