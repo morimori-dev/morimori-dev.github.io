@@ -104,7 +104,6 @@ Initial access here was an inbound remote-access session, and TeamViewer records
 
 ```mermaid
 flowchart TB
-    ANALYST["Analyst — KAPE triage collection"]
 
     subgraph EVID["Evidence"]
         direction LR
@@ -127,15 +126,12 @@ flowchart TB
         T3["T1071.001 Web Protocols (C2)"]
     end
 
-    ANALYST -->|"Timeline Explorer / CopyLog.csv"| V1
-    V1 ==>|"dropped implant"| O1
-    ANALYST -->|"read TeamViewer log"| V2
-    V2 ==>|"session id"| O2
-    ANALYST -->|"KAPE run logs"| V3
-    V3 ==>|"scope & host"| O3
-    V2 -.- T1
-    V1 -.- T2
-    V1 -.-|"Merlin beacons"| T3
+    V1 ==> O1
+    V2 ==> O2
+    V3 ==> O3
+    V2 -.-> T1
+    V1 -.-> T2
+    V1 -.-> T3
 ```
 
 ## Detection & Hardening (Blue Team)

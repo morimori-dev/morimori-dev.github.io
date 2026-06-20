@@ -177,7 +177,6 @@ Read the last-run time of `RUBEUS.EXE-*.pf` from the Prefetch.
 
 ```mermaid
 flowchart TB
-    ANALYST["Analyst — Security.evtx + PowerShell log + Prefetch"]
 
     subgraph EVID["Evidence"]
         direction LR
@@ -200,17 +199,14 @@ flowchart TB
         T3["T1059.001 PowerShell"]
     end
 
-    ANALYST -->|"EvtxECmd / Timeline Explorer"| V1
-    V1 ==>|"roasted service"| O1
-    V1 ==>|"source host"| O2
-    ANALYST -->|"PowerShell Operational"| V2
-    V2 ==>|"enum tool"| O3
-    ANALYST -->|"PECmd"| V3
-    V3 ==>|"roasting tool"| O3
-    V2 -.-|"enumerate SPNs"| T1
-    V3 -.-|"request TGS"| T2
-    V1 -.- T2
-    V2 -.- T3
+    V1 ==> O1
+    V1 ==> O2
+    V2 ==> O3
+    V3 ==> O3
+    V2 -.-> T1
+    V3 -.-> T2
+    V1 -.-> T2
+    V2 -.-> T3
 ```
 
 ## Detection & Hardening (Blue Team)

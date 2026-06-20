@@ -141,7 +141,6 @@ happy.grunwald
 
 ```mermaid
 flowchart TB
-    ANALYST["アナリスト — Security.evtx (DC のみ)"]
 
     subgraph EVID["証跡"]
         direction LR
@@ -164,16 +163,13 @@ flowchart TB
         T3["T1110.002 Password Cracking"]
     end
 
-    ANALYST -->|"EvtxECmd / Timeline Explorer"| V1
-    V1 ==>|"roast対象ユーザー"| O1
-    V1 ==>|"発信元ホスト"| O2
-    ANALYST -->|"同一 DC ログ"| V2
-    V2 ==>|"ワークステーション"| O2
-    ANALYST -->|"ログオン突き合わせ"| V3
-    V3 ==>|"実行者"| O3
-    V1 -.- T1
-    V3 -.- T2
-    V1 -.-|"AS-REP を解析"| T3
+    V1 ==> O1
+    V1 ==> O2
+    V2 ==> O2
+    V3 ==> O3
+    V1 -.-> T1
+    V3 -.-> T2
+    V1 -.-> T3
 ```
 
 ## 検知と防御(ブルーチーム)

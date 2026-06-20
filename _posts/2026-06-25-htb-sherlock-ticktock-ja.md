@@ -104,7 +104,6 @@ merlin.exe
 
 ```mermaid
 flowchart TB
-    ANALYST["アナリスト — KAPE トリアージ収集物"]
 
     subgraph EVID["証跡"]
         direction LR
@@ -127,15 +126,12 @@ flowchart TB
         T3["T1071.001 Web Protocols (C2)"]
     end
 
-    ANALYST -->|"Timeline Explorer / CopyLog.csv"| V1
-    V1 ==>|"ドロップされたインプラント"| O1
-    ANALYST -->|"TeamViewer ログを読む"| V2
-    V2 ==>|"セッション ID"| O2
-    ANALYST -->|"KAPE 実行ログ"| V3
-    V3 ==>|"範囲 & ホスト"| O3
-    V2 -.- T1
-    V1 -.- T2
-    V1 -.-|"Merlin がビーコン"| T3
+    V1 ==> O1
+    V2 ==> O2
+    V3 ==> O3
+    V2 -.-> T1
+    V1 -.-> T2
+    V1 -.-> T3
 ```
 
 ## 検知と防御(ブルーチーム)
