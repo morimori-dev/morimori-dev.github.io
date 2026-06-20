@@ -58,9 +58,11 @@
    Mermaid diagram color overrides for better readability
    --------------------------------------------------------- */
 
-/* Dark mode overrides */
-[data-mode="dark"] .mermaid,
-html[data-mode="dark"] .mermaid {
+/* Dark-mode mermaid colors as a mixin, so we can apply them for BOTH the
+   explicit dark toggle AND OS dark mode (prefers-color-scheme). The previous
+   selector only matched [data-mode="dark"], so OS-dark (data-mode unset)
+   rendered light boxes on a dark page. */
+@mixin mermaid-dark {
   /* Sequence diagram */
   .actor {
     fill: #2d3748 !important;
@@ -129,6 +131,18 @@ html[data-mode="dark"] .mermaid {
   }
   .cluster span {
     color: #cbd5e0 !important;
+  }
+}
+
+/* Apply dark mermaid colors: (1) explicit dark toggle, or
+   (2) OS dark mode unless the user explicitly forced light. */
+[data-mode="dark"] .mermaid {
+  @include mermaid-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode="light"]) .mermaid {
+    @include mermaid-dark;
   }
 }
 
