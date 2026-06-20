@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - Campfire-2 (DFIR)"
-date: 2026-06-23
+date: 2026-06-23 19:00:00 +0900
 description: "HackTheBox Sherlock Campfire-2 walkthrough: detecting an AS-REP Roasting attack against Active Directory from the Domain Controller security log alone — spotting Event ID 4768 with Pre-Authentication Type 0 and RC4 (0x17), then correlating logons to attribute the compromised account that launched it."
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, active-directory, asrep-roasting, event-id-4768, kerberos, pre-authentication, threat-hunting, mitre-attack]

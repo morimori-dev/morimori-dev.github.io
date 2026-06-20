@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - Campfire-1 (DFIR)"
-date: 2026-06-22
+date: 2026-06-22 19:00:00 +0900
 description: "HackTheBox Sherlock Campfire-1 walkthrough: detecting a Kerberoasting attack against an Active Directory domain by correlating Domain Controller Event ID 4769 (RC4 TGS requests) with endpoint PowerShell ScriptBlock logs (PowerView) and Prefetch (Rubeus)."
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, active-directory, kerberoasting, event-id-4769, powershell-logging, prefetch, rubeus, powerview, threat-hunting, mitre-attack]

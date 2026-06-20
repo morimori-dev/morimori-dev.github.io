@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - LogJammer (DFIR)"
-date: 2026-06-24
+date: 2026-06-24 19:00:00 +0900
 description: "HackTheBox Sherlock LogJammer 解説。1台の Windows ホストのイベントログだけから攻撃者の侵入後の活動を復元する。初回ログオン(4624)、悪性のアウトバウンド・ファイアウォール規則(2004)、監査ポリシー変更(4719)、スケジュールタスク(4698)、Defender の SharpHound 検知(1116/1117)、PowerShell の ScriptBlock ログ(4104)、そしてファイアウォールログのクリア(104)を、5つの EVTX チャネルに跨って追う。"
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, windows-event-logs, evtx, scheduled-tasks, windows-firewall, windows-defender, powershell-logging, log-clearing, mitre-attack]

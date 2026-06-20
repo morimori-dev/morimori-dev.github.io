@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - Unit42 (DFIR)"
-date: 2026-06-27
+date: 2026-06-27 19:00:00 +0900
 description: "HackTheBox Sherlock Unit42 walkthrough: reconstructing a malware infection from a single Sysmon event log — malicious double-extension binary, time stomping, connectivity check, C2 reachout, and a backdoored UltraVNC implant."
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, sysmon, windows, event-logs, malware-analysis, incident-response, time-stomping, threat-hunting, mitre-attack]

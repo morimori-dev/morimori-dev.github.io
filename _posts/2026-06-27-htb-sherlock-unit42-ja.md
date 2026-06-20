@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox Sherlock - Unit42 (DFIR)"
-date: 2026-06-27
+date: 2026-06-27 19:00:00 +0900
 description: "HackTheBox Sherlock Unit42 解説。たった1つの Sysmon イベントログから、二重拡張子マルウェア・タイムスタンプ改ざん・到達性チェック・C2通信・バックドア化された UltraVNC までの感染チェーンを再構築する。"
 categories: [HackTheBox, Sherlock]
 tags: [hackthebox, sherlock, dfir, blue-team, sysmon, windows, event-logs, malware-analysis, incident-response, time-stomping, threat-hunting, mitre-attack]
