@@ -11,7 +11,9 @@ on:
 
   workflow_dispatch:
   schedule:
-    - cron: "5 10 * * *"   # daily 19:05 JST (10:05 UTC): reveal that day's 19:00 post
+    - cron: "5 10 * * *"   # 19:05 JST — reveal that day's 19:00 post
+    - cron: "5 12 * * *"   # 21:05 JST — backstop if the first run is skipped/late
+    - cron: "5 14 * * *"   # 23:05 JST — backstop (GitHub schedules can lag on weekends)
 
 permissions:
   contents: read
